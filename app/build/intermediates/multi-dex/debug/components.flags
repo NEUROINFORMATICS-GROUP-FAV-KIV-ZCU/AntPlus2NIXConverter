@@ -1,0 +1,30 @@
+-injars 'C:\Users\Filip\Documents\FAV\2_LS\ZSWI\MojeNaHledani\app\build\intermediates\transforms\jarMerging\debug\jars\1\1f\combined.jar'
+-outjars 'C:\Users\Filip\Documents\FAV\2_LS\ZSWI\MojeNaHledani\app\build\intermediates\multi-dex\debug\componentClasses.jar'
+
+-libraryjars 'C:\Android\SDK\build-tools\23.0.3\lib\shrinkedAndroid.jar'
+
+-forceprocessing
+-dontoptimize
+-dontobfuscate
+-dontusemixedcaseclassnames
+-dontpreverify
+-dontwarn
+-printconfiguration 'C:\Users\Filip\Documents\FAV\2_LS\ZSWI\MojeNaHledani\app\build\intermediates\multi-dex\debug\components.flags'
+
+
+-keep class com.example.filip.mojenahledani.MainActivity {
+    <init>();
+}
+
+-keep class com.example.filip.mojenahledani.Activity_HeartRateDisplayBase {
+    <init>();
+}
+
+-keep public class * extends android.app.backup.BackupAgent {
+    <init>();
+}
+
+-keep public class * extends java.lang.annotation.Annotation {
+    <fields>;
+    <methods>;
+}
