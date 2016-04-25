@@ -1,8 +1,0 @@
--keep class com.example.filip.mojenahledani.MainActivity { <init>(); }
--keep class com.example.filip.mojenahledani.Activity_HeartRateDisplayBase { <init>(); }
--keep public class * extends android.app.backup.BackupAgent {
-    <init>();
-}
--keep public class * extends java.lang.annotation.Annotation {
-    *;
-}
