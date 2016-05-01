@@ -19,6 +19,13 @@ public class Block {
 		
 	}
 	
+	@Override
+	public String toString() {
+	
+		return "Block: [name " + this.name + "], [type " + this.type + "], [id " + this.ID + "], [date " + this.date+ "]";
+			
+	}
+	
 	
 	public String getID() {
 		return ID;

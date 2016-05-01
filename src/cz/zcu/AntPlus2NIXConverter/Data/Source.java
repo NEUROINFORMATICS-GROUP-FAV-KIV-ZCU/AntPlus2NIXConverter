@@ -15,6 +15,13 @@ public class Source {
 		
 		
 	}
+	
+	@Override
+	public String toString() {
+	
+		return "Block: [name " + this.name + "], [type " + this.type + "], [id " + this.ID + "]";
+			
+	}
 
 	public String getID() {
 		return ID;

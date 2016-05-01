@@ -5,22 +5,35 @@ public class DataArray {
 	private String ID;
 	private String type;
 	private String name;
+	private String dataType;
+	
 	private int dataInt;
 	private int[] dataArrayInt;
 	private double dataDouble;
 	private double[] dataArrayDouble;
+	private boolean dataArrayBoolean;
 	private String unit;
 	
 	
 	
-	public DataArray(String ID, String type, String name, String unit) {
+	public DataArray(String ID, String type, String name, String unit, String dataType) {
 		
 		setID(ID);
 		setType(type);
 		setName(name);
 		setUnit(unit);
+		setDataType(dataType);
 		
 		}
+	
+	@Override
+	public String toString() {
+	
+		return "Block: [name " + this.name + "], [type " + this.type + "], [id " + this.ID + "], [unit " + this.unit+ "]";
+			
+	}
+	
+	
 	
 	public void setData(int data){
 		this.dataInt = data;
@@ -38,6 +51,12 @@ public class DataArray {
 		this.dataArrayDouble = dataArrayDouble;
 	}
 	
+	public void setData(boolean dataArrayDouble){
+		this.dataArrayBoolean = dataArrayDouble;
+	}
+	
+	
+	/************** Getrs and Setrs ************/
 	
 	public String getID() {
 		return ID;
@@ -75,10 +94,10 @@ public class DataArray {
 	public void setDataDouble(double dataDouble) {
 		this.dataDouble = dataDouble;
 	}
-	public double getDataArrayDouble() {
+	public double[] getDataArrayDouble() {
 		return dataArrayDouble;
 	}
-	public void setDataArrayDouble(double dataArrayDouble) {
+	public void setDataArrayDouble(double[] dataArrayDouble) {
 		this.dataArrayDouble = dataArrayDouble;
 	}
 	public String getUnit() {
@@ -86,6 +105,22 @@ public class DataArray {
 	}
 	public void setUnit(String unit) {
 		this.unit = unit;
+	}
+
+	public String getDataType() {
+		return dataType;
+	}
+
+	public void setDataType(String dataType) {
+		this.dataType = dataType;
+	}
+
+	public boolean isDataArrayBoolean() {
+		return dataArrayBoolean;
+	}
+
+	public void setDataArrayBoolean(boolean dataArrayBoolean) {
+		this.dataArrayBoolean = dataArrayBoolean;
 	}
 	
 	
