@@ -24,7 +24,7 @@ public class AntHeartRate {
 
 	private AntPlusHeartRatePcc hr = null;
 
-	public AntHeartRate(int[] hearBeatCounter, int computedHeartRade, double[] timeOfPreviousHeartBeat) {
+	/*public AntHeartRate(int[] hearBeatCounter, int computedHeartRade, double[] timeOfPreviousHeartBeat) {
 
 		id = new ID();
 		/*createFile();
@@ -33,7 +33,7 @@ public class AntHeartRate {
 		createDataArrayHeartBeat(hearBeatCounter);
 		createDataArrayComputedHeartRate(computedHeartRade);
 		createDataArrayTimeOfPrevious(timeOfPreviousHeartBeat);*/
-		index++;
+		/*index++;
 	}
 
 	public AntHeartRate(AntPlusHeartRatePcc hr, int[] hearBeatCounter, int computedHeartRade,
@@ -42,17 +42,19 @@ public class AntHeartRate {
 		this(hearBeatCounter, computedHeartRade, timeOfPreviousHeartBeat);
 		this.hr = hr;
 
-	}
+	}*/
 	
 	public void createFile(int[] heartBeatCounter, int[] computedHeartRate, double[] timeOfPreviousHeartBeat){
 		file = File.open("AntHeartRate.h5", FileMode.Overwrite);
-		file.setCreatedAt();
 		
 		Block block = file.createBlock("recording" + index, "recording");
 
 		Source source = block.createSource("HeartRate" + index, "antMessage");
 		
-		dataHeartBeatCounter = block.createDataArray("heartBeatCounter" + index, "antMessage", DataType.Int32,
+		System.out.println("Block ID: " + block.getId());
+		System.out.println("Source ID: " + source.getId());
+		
+		/*dataHeartBeatCounter = block.createDataArray("heartBeatCounter" + index, "antMessage", DataType.Int32,
 				null);
 			dataHeartBeatCounter.setData(heartBeatCounter, null, null);
 			
@@ -63,8 +65,13 @@ public class AntHeartRate {
 		dataTimeOfPreviousHeartBeat = block.createDataArray("timeOfPreviousHeartBeat" + index, "antMessage", DataType.Double, 
 				null);
 			dataHeartBeatCounter.setData(timeOfPreviousHeartBeat, null, null);
-
+*/
 		file.close();
+	}
+	
+	public static void main(String[] args) {
+		AntHeartRate a = new AntHeartRate();
+		a.createFile(null, null, null);
 	}
 
 }
