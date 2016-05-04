@@ -1,6 +1,6 @@
 package cz.zcu.AntPlus2NIXConverter.Data;
 
-public class DataArray {
+public class CreateDataArray {
 
 	private String ID;
 	private String type;
@@ -16,7 +16,7 @@ public class DataArray {
 	
 	
 	
-	public DataArray(String ID, String type, String name, String unit, String dataType) {
+	public CreateDataArray(String ID, String type, String name, String unit, String dataType) {
 		
 		setID(ID);
 		setType(type);

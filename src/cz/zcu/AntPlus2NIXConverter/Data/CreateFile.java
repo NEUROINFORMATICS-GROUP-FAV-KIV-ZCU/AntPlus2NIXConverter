@@ -1,16 +1,18 @@
 package cz.zcu.AntPlus2NIXConverter.Data;
 
 import java.time.LocalDate;
+import org.g_node.nix.*;
 
-public class Block {
+public class CreateFile {
 
 	private String ID;
 	private String type;
 	private String name;
+	private int mode;
 	private LocalDate date;
 	
 	
-	public Block(String ID, String type, String name, LocalDate date) {
+	public CreateFile(String ID, String type, String name, LocalDate date) {
 		
 		setID(ID);
 		setType(type);
@@ -50,6 +52,31 @@ public class Block {
 	}
 	public void setDate(LocalDate date) {
 		this.date = date;
+	}
+	
+	public File createFile(String name){
+		File file = File.open(name, FileMode.Overwrite);
+		
+		return file;
+		
+	}
+	
+	public CreateFile createBlock(String ID, String type, String name, LocalDate date){
+		CreateFile block = new CreateFile(ID, name, type, date);
+		
+		return block;
+	}
+	
+	public Source createSource(String ID, String type, String name){
+		Source source = new Source(ID, type, name);
+		
+		return source;
+	}
+	
+	public CreateDataArray createDataArray(String ID, String type, String name, String unit, String dataType){
+		CreateDataArray dataArray = new CreateDataArray(ID, type, name, unit, dataType);
+		
+		return dataArray;
 	}
 	
 	
