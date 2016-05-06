@@ -1,68 +1,97 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
-import com.dsi.ant.plugins.antplus.pcc.AntPlusWeightScalePcc;
-import com.dsi.ant.plugins.antplus.pcc.AntPlusWeightScalePcc.BodyWeightStatus;
-import com.dsi.ant.plugins.antplus.pcc.defines.BatteryStatus;
-import com.dsi.ant.plugins.antplus.pccbase.AntPlusCommonPcc;
-import com.dsi.ant.plugins.antplus.pccbase.AntPlusCommonPcc.IBatteryStatusReceiver;
-
 import org.g_node.nix.*;
 
-import cz.zcu.AntPlus2NIXConverter.Convert.ID;
+import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
+
 public class AntWeightScale {
 
-	private static int index = 0 ;
-	
-	  private AntPlusWeightScalePcc wsp;
-	  private AntPlusCommonPcc com;
-	  
-	  private int weight;
-	  
-	  private File file;
-	  private Block block;
-	  private Source source;
-	  private DataArray data;
-	  private ID id;
-	  
-	  
-	  
-	  public AntWeightScale(AntPlusWeightScalePcc wsp, int weight, AntPlusCommonPcc pcc) {
-	
-		 this(weight);
-		 this.wsp = wsp;
-		 wsp.getAntDeviceNumber();
-		 wsp.getDeviceName();
-		 
-	  }
-	  
+	private static int index = 0;
 
-	  public AntWeightScale(int weight) {
-		  
-		 this.weight = weight;
-		 /*id = new ID(8);
-		 createBlock();
-		 createSource();
-		 createDataArray(weight);*/
-		 index ++;
-	  
-	  }
-	  
-	  
-	  
-	
-	  public void createFile(){
-		  file = File.open("AntWeightScale.h5", FileMode.Overwrite);
-		  
-		  block = file.createBlock("recording" + index, "recording");
-		  
-		  source = block.createSource("weightScale" + index, "antMessage");
-		  
-		  file.close();
+	private int[] weight;
+	private OdMLData metaData;
+	private File file;
+	private Block block;
+	private Source source;
+	private DataArray dataWeight;
 
-	  }
-	  
-	  /*public void createDataArray(int weight){
-		  data = new DataArray("weight", "antMessage", "weight" + index, "kg", "int");
-		  data.setData(weight);
-	  }*/
+	public AntWeightScale(int[] weight, OdMLData metaData) {
+
+		this.weight = weight;
+		this.metaData = metaData;
+		index++;
+
+	}
+
+	public void createFile(String fileName) {
+		file = File.open(fileName, FileMode.Overwrite);
+
+		block = file.createBlock("recording" + index, "recording");
+
+		source = block.createSource("weightScale" + index, "antMessage");
+
+		dataWeight = block.createDataArray("weight" + index, "antMessage", DataType.Int32,
+				new NDSize(new int[] { 1, weight.length }));
+		dataWeight.setData(weight, new NDSize(new int[] { 1, weight.length }), new NDSize(2, 0));
+
+		file.close();
+
+	}
+
+	public static int getIndex() {
+		return index;
+	}
+
+	public static void setIndex(int index) {
+		AntWeightScale.index = index;
+	}
+
+	public int[] getWeight() {
+		return weight;
+	}
+
+	public void setWeight(int[] weight) {
+		this.weight = weight;
+	}
+
+	public OdMLData getMetaData() {
+		return metaData;
+	}
+
+	public void setMetaData(OdMLData metaData) {
+		this.metaData = metaData;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+
+	public Block getBlock() {
+		return block;
+	}
+
+	public void setBlock(Block block) {
+		this.block = block;
+	}
+
+	public Source getSource() {
+		return source;
+	}
+
+	public void setSource(Source source) {
+		this.source = source;
+	}
+
+	public DataArray getDataWeight() {
+		return dataWeight;
+	}
+
+	public void setDataWeight(DataArray dataWeight) {
+		this.dataWeight = dataWeight;
+	}
+
 }

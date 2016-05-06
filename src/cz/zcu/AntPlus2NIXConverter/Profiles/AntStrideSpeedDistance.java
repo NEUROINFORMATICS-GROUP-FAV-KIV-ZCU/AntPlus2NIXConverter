@@ -3,6 +3,7 @@ package cz.zcu.AntPlus2NIXConverter.Profiles;
 import org.g_node.nix.*;
 
 import cz.zcu.AntPlus2NIXConverter.Convert.ID;
+import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 
 public class AntStrideSpeedDistance {
 
@@ -14,50 +15,126 @@ public class AntStrideSpeedDistance {
 	private DataArray dataStrideCount;
 	private DataArray dataDistance;
 	private DataArray dataSpeed;
-	private ID id;
+	
+	private long[] strideCount;
+	private double[] distance;
+	private double[] speed;
+	private OdMLData metaData ;
 
 	
-	public AntStrideSpeedDistance(long strideCount, double[] distance, double[] speed) {
+	public AntStrideSpeedDistance(long[] strideCount, double[] distance, double[] speed,OdMLData metaData ) {
 	
-		/*id = new ID(8);
-		createBlock();
-		createSource();
-		createDataArrayStrideCount(strideCount);
-		createDataArrayDistance(distance);
-		createDataArraySpeed(speed);*/
+		this.strideCount = strideCount;
+		this.distance = distance;
+		this.speed = speed;
+		this.metaData = metaData;
+		
 		index++;
 	}
 	
-	public void createFile() {
-		file = File.open("AntStrideSpeedDistance.h5", FileMode.Overwrite);
+	public void createFile(String fileName) {
+		file = File.open(fileName, FileMode.Overwrite);
 		
 		block = file.createBlock("recording" + index, "recording");
 		
 		source = block.createSource("strideSpeedDistance" + index, "antMessage");
 		
+		dataStrideCount = block.createDataArray("StrideCount" + index, "antMessage", DataType.Int64,
+				new NDSize(new int[] {1,strideCount.length}));
+		dataStrideCount.setData(strideCount, new NDSize(new int [] {1,strideCount.length}), new NDSize(2,0));
+			
+		dataDistance = block.createDataArray("Distance" + index, "antMessage", DataType.Double,
+				new NDSize(new int[] {1,distance.length}));
+			dataDistance.setData(distance, new NDSize(new int[] {1,distance.length}), new NDSize(2,0));
+
+		dataSpeed = block.createDataArray("Speed" + index, "antMessage", DataType.Double, 
+				new NDSize(new int[] {1,speed.length}));
+			dataSpeed.setData(speed, new NDSize(new int[] {1,speed.length}), new NDSize(2,0));
+
 		file.close();
 
 	}
 
-	/*public void createSource() {
-		source = new CreateSource("StrideSpeedDistance_" + id.nextString(), "antMessage", "strideSpeedDistance" + index);
+	public File getFile() {
+		return file;
 	}
 
-	public void createDataArrayStrideCount(long strideCount) {
-		dataStrideCount = new DataArray("StrideCount_" + id.nextString(), "antMessage", "strideCount" + index, "strides",
-				"long");
-		dataStrideCount.setData(strideCount);
+	public void setFile(File file) {
+		this.file = file;
 	}
 
-	public void createDataArrayDistance(double[] distance) {
-		dataDistance = new DataArray("Distance_" + id.nextString(), "antMessage", "distance" + index, "metrs",
-				"double");
-		dataDistance.setData(distance, null, null);
+	public Block getBlock() {
+		return block;
 	}
 
-	public void createDataArraySpeed(double[] speed) {
-		dataSpeed = new DataArray("Speed_" + id.nextString(), "antMessage",
-				"speed" + index, "second", "double");
-		dataSpeed.setData(speed, null, null);
-	}*/
+	public void setBlock(Block block) {
+		this.block = block;
+	}
+
+	public Source getSource() {
+		return source;
+	}
+
+	public void setSource(Source source) {
+		this.source = source;
+	}
+
+	public DataArray getDataStrideCount() {
+		return dataStrideCount;
+	}
+
+	public void setDataStrideCount(DataArray dataStrideCount) {
+		this.dataStrideCount = dataStrideCount;
+	}
+
+	public DataArray getDataDistance() {
+		return dataDistance;
+	}
+
+	public void setDataDistance(DataArray dataDistance) {
+		this.dataDistance = dataDistance;
+	}
+
+	public DataArray getDataSpeed() {
+		return dataSpeed;
+	}
+
+	public void setDataSpeed(DataArray dataSpeed) {
+		this.dataSpeed = dataSpeed;
+	}
+
+	public long[] getStrideCount() {
+		return strideCount;
+	}
+
+	public void setStrideCount(long[] strideCount) {
+		this.strideCount = strideCount;
+	}
+
+	public double[] getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double[] distance) {
+		this.distance = distance;
+	}
+
+	public double[] getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(double[] speed) {
+		this.speed = speed;
+	}
+
+	public OdMLData getMetaData() {
+		return metaData;
+	}
+
+	public void setMetaData(OdMLData metaData) {
+		this.metaData = metaData;
+	}
+
+	
+	
 }
