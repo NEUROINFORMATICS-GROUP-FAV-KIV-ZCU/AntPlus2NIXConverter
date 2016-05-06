@@ -1,12 +1,12 @@
 package cz.zcu.AntPlus2NIXConverter.Data;
 
-public class Source {
+public class CreateSource {
 
 	private String ID;
 	private String type;
 	private String name;
 	
-	public Source(String ID, String type, String name) {
+	public CreateSource(String ID, String type, String name) {
 		
 		setID(ID);
 		setType(type);

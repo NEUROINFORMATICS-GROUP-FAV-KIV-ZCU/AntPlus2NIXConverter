@@ -5,6 +5,11 @@ import org.g_node.nix.*;
 
 public class CreateFile {
 
+	private File file;
+	private Block block;
+	private Source source;
+	private DataArray dataArray;
+	private int index;
 	private String ID;
 	private String type;
 	private String name;
@@ -18,15 +23,16 @@ public class CreateFile {
 		setType(type);
 		setName(name);
 		setDate(date);
+		index++;
 		
 	}
 	
-	@Override
+	/*@Override
 	public String toString() {
 	
 		return "Block: [name " + this.name + "], [type " + this.type + "], [id " + this.ID + "], [date " + this.date+ "]";
 			
-	}
+	}*/
 	
 	
 	public String getID() {
@@ -54,30 +60,23 @@ public class CreateFile {
 		this.date = date;
 	}
 	
-	public File createFile(String name){
-		File file = File.open(name, FileMode.Overwrite);
+	public File createFile(String fileName, String blockName, String sourceName,
+			String arrayName, int dataType, NDSize shape, int count){
+		file = File.open(fileName, FileMode.Overwrite);
+		
+		block = file.createBlock(blockName + index, "recording");
+		
+		source = block.createSource(sourceName, "antMessage");
+		
+		for (int i = 0; i <= count;i++){
+		dataArray = block.createDataArray(arrayName, "antMessage", dataType, shape);
+		}
 		
 		return file;
 		
 	}
 	
-	public CreateFile createBlock(String ID, String type, String name, LocalDate date){
-		CreateFile block = new CreateFile(ID, name, type, date);
-		
-		return block;
-	}
 	
-	public Source createSource(String ID, String type, String name){
-		Source source = new Source(ID, type, name);
-		
-		return source;
-	}
-	
-	public CreateDataArray createDataArray(String ID, String type, String name, String unit, String dataType){
-		CreateDataArray dataArray = new CreateDataArray(ID, type, name, unit, dataType);
-		
-		return dataArray;
-	}
 	
 	
 }
