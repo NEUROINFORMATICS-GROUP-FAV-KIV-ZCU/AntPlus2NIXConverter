@@ -1,20 +1,18 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
-import java.time.LocalDate;
+import org.g_node.nix.*;
 
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikePowerPcc;
 
 import cz.zcu.AntPlus2NIXConverter.Convert.ID;
-import cz.zcu.AntPlus2NIXConverter.Data.Block;
-import cz.zcu.AntPlus2NIXConverter.Data.DataArray;
-import cz.zcu.AntPlus2NIXConverter.Data.Source;
 
 public class AntBikePower {
 
 	private static int index = 0 ;
 	
 	  private AntPlusBikePowerPcc bikPower = null;
-	     
+	  
+	  private File file;
 	  private Block block;
 	  private Source source;
 	  private DataArray dataArrayBikePower;
@@ -23,10 +21,10 @@ public class AntBikePower {
 	  
 	  public AntBikePower(double power) {
 		
-		  id = new ID(8);
+		/*  id = new ID(8);
 			createBlock();
 			createSource();
-			createDataArrayBikePower(power);
+			createDataArrayBikePower(power);*/
 			index++;
 		  
 	}
@@ -40,19 +38,21 @@ public class AntBikePower {
 	}
 	  
 	  
-	  public void createBlock() {
-			block = new Block("BikePower_" + id.nextString(), "recording", "recording" + index, LocalDate.now());
+	  public void createFile() {
+		  	file = File.open("AntBikePower.h5", FileMode.Overwrite);
+			
+		  	block = file.createBlock("recording" + index, "recording");
+			
+			source = block.createSource("bikePower" + index, "antMessage");
+			
+			file.close();
 
-		}
+	  }
 
-		public void createSource() {
-			source = new Source("BikePower_" + id.nextString(), "antMessage", "bikePower" + index);
-		}
-
-		public void createDataArrayBikePower(double power) {
+		/*public void createDataArrayBikePower(double power) {
 			dataArrayBikePower = new DataArray("BikePower_" + id.nextString(), "antMessage", "powerOnly" + index, "N/A",
 					"double");
 			dataArrayBikePower.setData(power);
-		}
+		}*/
 
 }

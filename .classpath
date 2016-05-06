@@ -2,5 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/home/petr/Stažené/nix-linux-x86_64.jar"/>
+	<classpathentry kind="lib" path="/home/petr/Stažené/javacpp.jar"/>
+	<classpathentry kind="lib" path="/home/petr/Stažené/ANT+_Android_SDK/API/antpluginlib_3-5-0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

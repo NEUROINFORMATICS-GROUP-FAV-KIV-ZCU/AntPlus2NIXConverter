@@ -1,13 +1,10 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
-import java.time.LocalDate;
-
 import com.dsi.ant.plugins.antplus.pcc.AntPlusWeightScalePcc.BodyWeightStatus;
 
+import org.g_node.nix.*;
+
 import cz.zcu.AntPlus2NIXConverter.Convert.ID;
-import cz.zcu.AntPlus2NIXConverter.Data.Block;
-import cz.zcu.AntPlus2NIXConverter.Data.DataArray;
-import cz.zcu.AntPlus2NIXConverter.Data.Source;
 
 public class AntMuscleOxygenMonitor {
 	
@@ -16,6 +13,7 @@ public class AntMuscleOxygenMonitor {
 	
 	  private int weight;
 	  
+	  private File file;
 	  private Block block;
 	  private Source source;
 	  private DataArray dataHemoglobinConcentrate;
@@ -26,26 +24,28 @@ public class AntMuscleOxygenMonitor {
 	  
 	  public AntMuscleOxygenMonitor(double saturatedHemoglPerc, double hemoglobinConcentrate) {
 		  
-		  id = new ID(8);
+		  /*id = new ID(8);
 			createBlock();
 			createSource();
 			createDataArrayHeartBeat(hemoglobinConcentrate);
-			createDataArrayComputedHeartRade(saturatedHemoglPerc);
-						index++;
+			createDataArrayComputedHeartRade(saturatedHemoglPerc);*/
+			index++;
 	  
 	  }
 	  
 
-	  public void createBlock() {
-			block = new Block("MuscleOxygenMonitor_" + id.nextString(), "recording", "recording" + index, LocalDate.now());
+	  public void createFile() {
+		  file = File.open("AntMuscleOxygenMonitor", FileMode.Overwrite);
+		  
+		  block = file.createBlock("recording" + index, "recording");
+		  
+		  source = block.createSource("muscleOxygenMonitor" + index, "antMessage");
+		  
+		  file.close();
 
 		}
 
-		public void createSource() {
-			source = new Source("MuscleOxygenMonitor_" + id.nextString(), "antMessage", "muscleOxygenMonitor" + index);
-		}
-
-		public void createDataArrayHeartBeat(double hemoglobinConcentrate) {
+		/*public void createDataArrayHeartBeat(double hemoglobinConcentrate) {
 			dataHemoglobinConcentrate = new DataArray("MuscleOxygenMonitor_" + id.nextString(), "antMessage", "hemoglobinConcentr" + index, "g/dl",
 					"double");
 			dataHemoglobinConcentrate.setData(hemoglobinConcentrate);
@@ -55,7 +55,7 @@ public class AntMuscleOxygenMonitor {
 			dataSaturatedHemoglPerc = new DataArray("MuscleOxygenMonitor_" + id.nextString(), "antMessage", " saturatedHemoglPerc" + index, "%",
 					"double");
 			dataSaturatedHemoglPerc.setData(saturatedHemoglPerc);
-		}
+		}*/
 
 	
 

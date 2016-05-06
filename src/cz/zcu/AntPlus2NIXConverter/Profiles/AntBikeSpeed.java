@@ -1,13 +1,10 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
-import java.time.LocalDate;
-
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeSpeedDistancePcc;
 
+import org.g_node.nix.*;
+
 import cz.zcu.AntPlus2NIXConverter.Convert.ID;
-import cz.zcu.AntPlus2NIXConverter.Data.Block;
-import cz.zcu.AntPlus2NIXConverter.Data.DataArray;
-import cz.zcu.AntPlus2NIXConverter.Data.Source;
 
 public class AntBikeSpeed {
 
@@ -15,6 +12,7 @@ public class AntBikeSpeed {
 
 	private AntPlusBikeSpeedDistancePcc bikSpeed = null;
 
+	private File file;
 	private Block block;
 	private Source source;
 	private DataArray dataArrayLatSpEvTime;
@@ -23,11 +21,11 @@ public class AntBikeSpeed {
 
 	public AntBikeSpeed(int cumWheelRew, int latSpEvTime) {
 
-		id = new ID(8);
+		/*id = new ID(8);
 		createBlock();
 		createSource();
 		createDataArrayLatSpEvTime(latSpEvTime);
-		createDataArrayCumWheelRew(cumWheelRew);
+		createDataArrayCumWheelRew(cumWheelRew);*/
 		index++;
 
 	}
@@ -39,16 +37,18 @@ public class AntBikeSpeed {
 
 	}
 
-	public void createBlock() {
-		block = new Block("BikeSpeed_" + id.nextString(), "recording", "recording" + index, LocalDate.now());
+	public void createFile() {
+		file = File.open("AntBikeSpeed.h5", FileMode.Overwrite);
+		
+		block = file.createBlock("recording" + index, "recording");
+		
+		source = block.createSource("bikeSpeed" + index, "antMessage");
+		
+		file.close();
 
 	}
 
-	public void createSource() {
-		source = new Source("BikeSpeed_" + id.nextString(), "antMessage", "bikeSpeed" + index);
-	}
-
-	public void createDataArrayLatSpEvTime(int latSpEvTime) {
+	/*public void createDataArrayLatSpEvTime(int latSpEvTime) {
 		dataArrayLatSpEvTime = new DataArray("LatSpEvTime_" + id.nextString(), "antMessage", "LatSpEvTime" + index,
 				"N/A", "int");
 		dataArrayLatSpEvTime.setData(latSpEvTime);
@@ -58,6 +58,6 @@ public class AntBikeSpeed {
 		dataArrayCumWheelRew = new DataArray("CumWheelRew_" + id.nextString(), "antMessage", "cumWheelRew" + index,
 				"N/A", "int");
 		dataArrayCumWheelRew.setData(cumWheelRew);
-	}
+	}*/
 
 }

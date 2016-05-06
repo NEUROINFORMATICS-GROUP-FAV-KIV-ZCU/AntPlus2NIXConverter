@@ -2,10 +2,9 @@ package cz.zcu.AntPlus2NIXConverter.Profiles;
 
 import java.time.LocalDate;
 
+import org.g_node.nix.*;
+
 import cz.zcu.AntPlus2NIXConverter.Convert.ID;
-import cz.zcu.AntPlus2NIXConverter.Data.Block;
-import cz.zcu.AntPlus2NIXConverter.Data.DataArray;
-import cz.zcu.AntPlus2NIXConverter.Data.Source;
 
 public class AntLightElectricVehicle {
 
@@ -13,38 +12,41 @@ private static int index = 0 ;
 	
 	//  private  AntPlusBloodPressurePcc.BloodPressureMeasurement bpr = null;
 	  
-	  private Block block;
-	  private Source source;
-	  private DataArray dataSpeedDistance;
-	  private DataArray dataSysGearState;
-	  private DataArray dataMode;
-	  private DataArray dataBatStatus;
+	private File file;
+	private Block block;
+	private Source source;
+	private DataArray dataSpeedDistance;
+	private DataArray dataSysGearState;
+	private DataArray dataMode;
+	private DataArray dataBatStatus;
 	  
-	  private ID id;
+	private ID id;
 	  
 	  
-	  public AntLightElectricVehicle( double[] speedDistance, boolean sysGearState, int mode, int[] BatStatus ) {
+	public AntLightElectricVehicle( double[] speedDistance, boolean sysGearState, int mode, int[] BatStatus ) {
 		
-		  id = new ID(8);
+		 /* id = new ID(8);
 			 createBlock();
 			 createSource();
 			 createDataArraySpeedDistance(speedDistance);
 			 createDataArraySysGearState(sysGearState);
 			 createDataArrayMode(mode);
-			 createDataArrayBatStatus(BatStatus);
+			 createDataArrayBatStatus(BatStatus);*/
 			 index ++;
 	}
 	  
-	  public void createBlock(){
-			 block = new Block("LightElectricVehicle_" + id.nextString(), "recording", "recording" + index, LocalDate.now());
+	public void createFile(){
+		file = File.open("AntLightElectricVehicle.h5", FileMode.Overwrite);
+		
+		block = file.createBlock("recording" + index, "recording");
+		
+		source = block.createSource("lightElectricVehicle" + index, "antMessage");
+		
+		file.close();
 
 	  }
-	
-	  public void createSource(){
-		  source = new Source("LightElectricVehicle_" + id.nextString(), "antMessage", "lightElectricVehicle" + index);
-	  }
 	  
-	  public void  createDataArraySpeedDistance(double[] speedDistance){
+	  /*public void  createDataArraySpeedDistance(double[] speedDistance){
 		  dataSpeedDistance = new DataArray("systolicBloodPress_" + id.nextString(), "antMessage", "distolicBloodPress" + index, "N/A", "double");
 		  dataSpeedDistance.setData(speedDistance);
 	  }
@@ -61,6 +63,6 @@ private static int index = 0 ;
 	  public void createDataArrayBatStatus(int[] batStatus){
 		  dataBatStatus = new DataArray("BatStatus_" + id.nextString(), "antMessage", "batStatus" + index, "N/A", "int");
 		  dataBatStatus.setData(batStatus);
-	  }
+	  }*/
 	
 }

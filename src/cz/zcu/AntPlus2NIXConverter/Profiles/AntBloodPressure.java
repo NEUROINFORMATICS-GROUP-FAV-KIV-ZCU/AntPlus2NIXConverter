@@ -5,10 +5,9 @@ import java.util.GregorianCalendar;
 
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBloodPressurePcc;
 
+import org.g_node.nix.*;
+
 import cz.zcu.AntPlus2NIXConverter.Convert.ID;
-import cz.zcu.AntPlus2NIXConverter.Data.Block;
-import cz.zcu.AntPlus2NIXConverter.Data.DataArray;
-import cz.zcu.AntPlus2NIXConverter.Data.Source;
 
 public class AntBloodPressure {
 
@@ -16,24 +15,25 @@ public class AntBloodPressure {
 	
 	//  private  AntPlusBloodPressurePcc.BloodPressureMeasurement bpr = null;
 	  
-	  private Block block;
-	  private Source source;
-	  private DataArray dataSystolic;
-	  private DataArray dataDistolic;
-	  private DataArray dataHeartRade;
-	  private DataArray dataTime;
+	private File file;
+	private Block block;
+	private Source source;
+	private DataArray dataSystolic;
+	private DataArray dataDistolic;
+	private DataArray dataHeartRade;
+	private DataArray dataTime;
 	  
-	  private ID id;
+	private ID id;
 	  
-	  public AntBloodPressure(int systolic, int distolic, int heartRade, GregorianCalendar timeStamp) {
+	public AntBloodPressure(int systolic, int distolic, int heartRade, GregorianCalendar timeStamp) {
 		  
-			  id = new ID(8);
+			 /* id = new ID(8);
 				 createBlock();
 				 createSource();
 				 createDataArraySystolic(systolic);
 				 createDataArrayDistolic(distolic);
 				 createDataArrayHeartRade(heartRade);
-				 createDataArrayTimeStamp(timeStamp);
+				 createDataArrayTimeStamp(timeStamp);*/
 				 index ++;
 		  
 		  }
@@ -49,16 +49,17 @@ public class AntBloodPressure {
 	  
 	  }*/
 	  
-	  public void createBlock(){
-			 block = new Block("BloodPressure_" + id.nextString(), "recording", "recording" + index, LocalDate.now());
-
-	  }
-	
-	  public void createSource(){
-		  source = new Source("BloodPressure_" + id.nextString(), "antMessage", "BloodPressure" + index);
+	  public void createFile(){
+		  file = File.open("AntBloodPressure.h5", FileMode.Overwrite);
+		  
+		  block = file.createBlock("recording" + index, "recording");
+		  
+		  source = block.createSource("BloodPressure" + index, "antMessage");
+		  
+		  file.close();
 	  }
 	  
-	  public void createDataArraySystolic(int systolic){
+	  /*public void createDataArraySystolic(int systolic){
 		  dataSystolic = new DataArray("systolicBloodPress_" + id.nextString(), "antMessage", "distolicBloodPress" + index, "mmHg", "int");
 		  dataSystolic.setData(systolic);
 	  }
@@ -75,6 +76,6 @@ public class AntBloodPressure {
 	  public void createDataArrayTimeStamp(GregorianCalendar date){
 		  dataTime = new DataArray("timeStamp_" + id.nextString(), "antMessage", "timeStamp" + index, "N/A", "GreorgianCalendar");
 		  dataTime.setData(date);
-	  }
+	  }*/
 	
 }

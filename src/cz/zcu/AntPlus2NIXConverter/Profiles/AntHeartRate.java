@@ -1,13 +1,8 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
-import java.time.LocalDate;
-
 import com.dsi.ant.plugins.antplus.pcc.AntPlusHeartRatePcc;
 
 import cz.zcu.AntPlus2NIXConverter.Convert.ID;
-import cz.zcu.AntPlus2NIXConverter.Data.CreateFile;
-import cz.zcu.AntPlus2NIXConverter.Data.CreateDataArray;
-//import cz.zcu.AntPlus2NIXConverter.Data.Source;
 
 import org.g_node.nix.*;
 
@@ -15,12 +10,13 @@ public class AntHeartRate {
 
 	private static int index = 0;
 	
-	//private Block block;
+	private File file;
+	private Block block;
+	private Source source;
 	private DataArray dataHeartBeatCounter;
 	private DataArray dataComputedHeartRade;
 	private DataArray dataTimeOfPreviousHeartBeat;
 	private ID id;
-	private File file;
 
 	private AntPlusHeartRatePcc hr = null;
 
@@ -45,14 +41,15 @@ public class AntHeartRate {
 	}*/
 	
 	public void createFile(int[] heartBeatCounter, int[] computedHeartRate, double[] timeOfPreviousHeartBeat){
-		file = File.open("AntHeartRate.h5", FileMode.Overwrite);
+		file = File.open("AntHeartRateRate.h5", FileMode.Overwrite);
 		
-		Block block = file.createBlock("recording" + index, "recording");
+		block = file.createBlock("recording" + index, "recording");
 
-		Source source = block.createSource("HeartRate" + index, "antMessage");
+		source = block.createSource("HeartRate" + index, "antMessage");
 		
 		System.out.println("Block ID: " + block.getId());
 		System.out.println("Source ID: " + source.getId());
+		System.out.println("Created at: " + block.getCreatedAt());
 		
 		/*dataHeartBeatCounter = block.createDataArray("heartBeatCounter" + index, "antMessage", DataType.Int32,
 				null);
