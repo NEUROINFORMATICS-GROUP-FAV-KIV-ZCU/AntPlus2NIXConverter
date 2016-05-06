@@ -12,6 +12,7 @@ public class AntStrideSpeedDistance {
 	private File file;
 	private Block block;
 	private Source source;
+	private Section section;
 	private DataArray dataStrideCount;
 	private DataArray dataDistance;
 	private DataArray dataSpeed;
@@ -32,22 +33,33 @@ public class AntStrideSpeedDistance {
 		index++;
 	}
 	
-	public void createFile(String fileName) {
+	public void createNixFile(String fileName) {
 		file = File.open(fileName, FileMode.Overwrite);
 		
 		block = file.createBlock("recording" + index, "recording");
 		
 		source = block.createSource("strideSpeedDistance" + index, "antMessage");
 		
+		section = file.createSection("AntMetaData", "metadata");
+		section.createProperty("deviceName", metaData.getDeviceName());
+		section.createProperty("deviceType", metaData.getDeviceType());
+		section.createProperty("deviceState", metaData.getDeviceState());
+		section.createProperty("deviceNumber", metaData.getDeviceNumber());
+		section.createProperty("batteryStatus", metaData.getBatteryStatus());
+		section.createProperty("signalStrength", metaData.getSignalStrength());
+		section.createProperty("manufacturerIdentification", metaData.getManIdentification());
+		section.createProperty("manufacturerSpecificData", metaData.getManSpecData());
+		section.createProperty("productInfo", metaData.getProdInfo());
+
 		dataStrideCount = block.createDataArray("StrideCount" + index, "antMessage", DataType.Int64,
 				new NDSize(new int[] {1,strideCount.length}));
 		dataStrideCount.setData(strideCount, new NDSize(new int [] {1,strideCount.length}), new NDSize(2,0));
 			
-		dataDistance = block.createDataArray("Distance" + index, "antMessage", DataType.Double,
+		dataDistance = block.createDataArray("distance" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] {1,distance.length}));
 			dataDistance.setData(distance, new NDSize(new int[] {1,distance.length}), new NDSize(2,0));
 
-		dataSpeed = block.createDataArray("Speed" + index, "antMessage", DataType.Double, 
+		dataSpeed = block.createDataArray("speed" + index, "antMessage", DataType.Double, 
 				new NDSize(new int[] {1,speed.length}));
 			dataSpeed.setData(speed, new NDSize(new int[] {1,speed.length}), new NDSize(2,0));
 
@@ -133,6 +145,14 @@ public class AntStrideSpeedDistance {
 
 	public void setMetaData(OdMLData metaData) {
 		this.metaData = metaData;
+	}
+
+	public Section getSection() {
+		return section;
+	}
+
+	public void setSection(Section section) {
+		this.section = section;
 	}
 
 	

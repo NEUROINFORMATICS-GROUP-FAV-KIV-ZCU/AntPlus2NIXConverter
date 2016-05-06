@@ -13,6 +13,7 @@ public class AntWeightScale {
 	private File file;
 	private Block block;
 	private Source source;
+	private Section section;
 	private DataArray dataWeight;
 
 	public AntWeightScale(int[] weight, OdMLData metaData) {
@@ -23,12 +24,23 @@ public class AntWeightScale {
 
 	}
 
-	public void createFile(String fileName) {
+	public void createNixFile(String fileName) {
 		file = File.open(fileName, FileMode.Overwrite);
 
 		block = file.createBlock("recording" + index, "recording");
 
 		source = block.createSource("weightScale" + index, "antMessage");
+
+		section = file.createSection("AntMetaData", "metadata");
+		section.createProperty("deviceName", metaData.getDeviceName());
+		section.createProperty("deviceType", metaData.getDeviceType());
+		section.createProperty("deviceState", metaData.getDeviceState());
+		section.createProperty("deviceNumber", metaData.getDeviceNumber());
+		section.createProperty("batteryStatus", metaData.getBatteryStatus());
+		section.createProperty("signalStrength", metaData.getSignalStrength());
+		section.createProperty("manufacturerIdentification", metaData.getManIdentification());
+		section.createProperty("manufacturerSpecificData", metaData.getManSpecData());
+		section.createProperty("productInfo", metaData.getProdInfo());
 
 		dataWeight = block.createDataArray("weight" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, weight.length }));
@@ -92,6 +104,14 @@ public class AntWeightScale {
 
 	public void setDataWeight(DataArray dataWeight) {
 		this.dataWeight = dataWeight;
+	}
+
+	public Section getSection() {
+		return section;
+	}
+
+	public void setSection(Section section) {
+		this.section = section;
 	}
 
 }

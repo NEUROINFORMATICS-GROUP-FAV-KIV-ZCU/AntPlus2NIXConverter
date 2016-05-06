@@ -42,22 +42,22 @@ public class AntHeartRate {
 		source = block.createSource("HeartRate" + index, "antMessage");
 				
 		section = file.createSection("metadata", "metadata");
-			section.createProperty("deviceName", metaData.getDeviceName());
-			section.createProperty("deviceType", metaData.getDeviceType());
-			section.createProperty("deviceState", metaData.getDeviceState());
-			section.createProperty("deviceNumber", metaData.getDeviceNumber());
-			section.createProperty("batteryStatus", metaData.getBatteryStatus());
-			section.createProperty("signalStrength", metaData.getSignalStrength());
-			section.createProperty("manufacturerIdentification", metaData.getManIdentification());
-			section.createProperty("manufacturerSpecificData", metaData.getManSpecData());
-			section.createProperty("productInfo", metaData.getProdInfo());
+		section.createProperty("deviceName", metaData.getDeviceName());
+		section.createProperty("deviceType", metaData.getDeviceType());
+		section.createProperty("deviceState", metaData.getDeviceState());
+		section.createProperty("deviceNumber", metaData.getDeviceNumber());
+		section.createProperty("batteryStatus", metaData.getBatteryStatus());
+		section.createProperty("signalStrength", metaData.getSignalStrength());
+		section.createProperty("manufacturerIdentification", metaData.getManIdentification());
+		section.createProperty("manufacturerSpecificData", metaData.getManSpecData());
+		section.createProperty("productInfo", metaData.getProdInfo());
 
-		dataHeartBeatCounter = block.createDataArray("heartBeatCounter" + index, "antMessage", DataType.Int32,
+		dataHeartBeatCounter = block.createDataArray("heartBeatCount" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, heartBeatCounter.length }));
 		dataHeartBeatCounter.setData(heartBeatCounter, new NDSize(new int[] { 1, heartBeatCounter.length }),
 				new NDSize(2, 0));
 
-		dataComputedHeartRate = block.createDataArray("computedHeartRate" + index, "antMessage", DataType.Int32,
+		dataComputedHeartRate = block.createDataArray("comluptedHeartRate" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, computedHeartRate.length }));
 		dataComputedHeartRate.setData(computedHeartRate, new NDSize(new int[] { 1, computedHeartRate.length }),
 				new NDSize(2, 0));
@@ -76,6 +76,14 @@ public class AntHeartRate {
 
 	public void setBlock(Block block) {
 		this.block = block;
+	}
+
+	public Section getSection() {
+		return section;
+	}
+
+	public void setSection(Section section) {
+		this.section = section;
 	}
 
 	public Source getSource() {

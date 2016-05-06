@@ -26,7 +26,7 @@ public class AntBikePower {
 
 	}
 
-	public void createFile(String fileName) {
+	public void createNixFile(String fileName) {
 		file = File.open(fileName, FileMode.Overwrite);
 
 		block = file.createBlock("recording" + index, "recording");

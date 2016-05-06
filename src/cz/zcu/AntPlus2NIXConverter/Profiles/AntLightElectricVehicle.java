@@ -15,6 +15,7 @@ private static int index = 0 ;
 	private File file;
 	private Block block;
 	private Source source;
+	private Section section;
 	private DataArray dataSpeedDistance;
 	private DataArray dataSysGearState;
 	private DataArray dataMode;
@@ -46,16 +47,27 @@ private static int index = 0 ;
 				sysGearStateB[i] = Byte.parseByte(String.valueOf(sysGearState[i]));
 		}
 	}
-	public void createFile(){
+	public void createNixFile(String fileName){
 		
 		prevedSysGearState();
 		
-		file = File.open("AntLightElectricVehicle.h5", FileMode.Overwrite);
+		file = File.open(fileName, FileMode.Overwrite);
 		
 		block = file.createBlock("recording" + index, "recording");
 		
-		source = block.createSource("lightElectricVehicle" + index, "antMessage");
+		source = block.createSource("lightElVeh" + index, "antMessage");
 		
+		section = file.createSection("AntMetaData", "metadata");
+		section.createProperty("deviceName", metaData.getDeviceName());
+		section.createProperty("deviceType", metaData.getDeviceType());
+		section.createProperty("deviceState", metaData.getDeviceState());
+		section.createProperty("deviceNumber", metaData.getDeviceNumber());
+		section.createProperty("batteryStatus", metaData.getBatteryStatus());
+		section.createProperty("signalStrength", metaData.getSignalStrength());
+		section.createProperty("manufacturerIdentification", metaData.getManIdentification());
+		section.createProperty("manufacturerSpecificData", metaData.getManSpecData());
+		section.createProperty("productInfo", metaData.getProdInfo());
+
 		
 		dataBatStatus = block.createDataArray("BatStatus" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] {1,batStatus.length}));
@@ -81,6 +93,17 @@ private static int index = 0 ;
 		file.close();
 
 	  }
+
+	
+	
+	
+	public Section getSection() {
+		return section;
+	}
+
+	public void setSection(Section section) {
+		this.section = section;
+	}
 
 	public static int getIndex() {
 		return index;

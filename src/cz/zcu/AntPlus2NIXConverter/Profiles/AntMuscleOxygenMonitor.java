@@ -11,6 +11,7 @@ public class AntMuscleOxygenMonitor {
 	private File file;
 	private Block block;
 	private Source source;
+	private Section section;
 	private DataArray dataHemoglobinConcentrate;
 	private DataArray dataSaturatedHemoglPerc;
 
@@ -27,19 +28,30 @@ public class AntMuscleOxygenMonitor {
 
 	}
 
-	public void createFile(String fileName) {
+	public void createNixFile(String fileName) {
 		file = File.open(fileName, FileMode.Overwrite);
 
 		block = file.createBlock("recording" + index, "recording");
 
 		source = block.createSource("muscleOxygenMonitor" + index, "antMessage");
 
-		dataSaturatedHemoglPerc = block.createDataArray("SaturatedHemoglobin" + index, "antMessage", DataType.Double,
+		section = file.createSection("AntMetaData", "metadata");
+		section.createProperty("deviceName", metaData.getDeviceName());
+		section.createProperty("deviceType", metaData.getDeviceType());
+		section.createProperty("deviceState", metaData.getDeviceState());
+		section.createProperty("deviceNumber", metaData.getDeviceNumber());
+		section.createProperty("batteryStatus", metaData.getBatteryStatus());
+		section.createProperty("signalStrength", metaData.getSignalStrength());
+		section.createProperty("manufacturerIdentification", metaData.getManIdentification());
+		section.createProperty("manufacturerSpecificData", metaData.getManSpecData());
+		section.createProperty("productInfo", metaData.getProdInfo());
+
+		dataSaturatedHemoglPerc = block.createDataArray("saturatedHemoglPerc" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, saturatedHemoglPerc.length }));
 		dataSaturatedHemoglPerc.setData(saturatedHemoglPerc, new NDSize(new int[] { 1, saturatedHemoglPerc.length }),
 				new NDSize(2, 0));
 
-		dataHemoglobinConcentrate = block.createDataArray("HemoglobinConcentrate" + index, "antMessage", DataType.Double,
+		dataHemoglobinConcentrate = block.createDataArray("hemoglobinConcentr" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, hemoglobinConcentrate.length }));
 		dataHemoglobinConcentrate.setData(hemoglobinConcentrate,
 				new NDSize(new int[] { 1, hemoglobinConcentrate.length }), new NDSize(2, 0));
@@ -49,6 +61,14 @@ public class AntMuscleOxygenMonitor {
 	}
 
 	
+
+	public Section getSection() {
+		return section;
+	}
+
+	public void setSection(Section section) {
+		this.section = section;
+	}
 
 	public Block getBlock() {
 		return block;
