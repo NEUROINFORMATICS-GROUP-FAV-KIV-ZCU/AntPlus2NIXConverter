@@ -40,9 +40,7 @@ public class AntHeartRate {
 		block = file.createBlock("recording" + index, "recording");
 
 		source = block.createSource("HeartRate" + index, "antMessage");
-		
-		metaData = new OdMLData();
-		
+				
 		section = file.createSection("metadata", "metadata");
 			section.createProperty("deviceName", metaData.getDeviceName());
 			section.createProperty("deviceType", metaData.getDeviceType());
