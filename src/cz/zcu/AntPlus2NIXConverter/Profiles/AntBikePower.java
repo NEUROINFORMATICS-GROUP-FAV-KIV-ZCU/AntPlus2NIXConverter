@@ -12,6 +12,7 @@ public class AntBikePower {
 	private File file;
 	private Block block;
 	private Source source;
+	private Section section;
 	private DataArray dataArrayBikePower;
 
 	private double[] power;
@@ -32,12 +33,31 @@ public class AntBikePower {
 
 		source = block.createSource("bikePower" + index, "antMessage");
 
-		file.close();
+		section = file.createSection("AntMetaData", "metadata");
+		section.createProperty("deviceName", metaData.getDeviceName());
+		section.createProperty("deviceType", metaData.getDeviceType());
+		section.createProperty("deviceState", metaData.getDeviceState());
+		section.createProperty("deviceNumber", metaData.getDeviceNumber());
+		section.createProperty("batteryStatus", metaData.getBatteryStatus());
+		section.createProperty("signalStrength", metaData.getSignalStrength());
+		section.createProperty("manufacturerIdentification", metaData.getManIdentification());
+		section.createProperty("manufacturerSpecificData", metaData.getManSpecData());
+		section.createProperty("productInfo", metaData.getProdInfo());
 
-		dataArrayBikePower = block.createDataArray("BikePower" + index, "antMessage", DataType.Double,
+		dataArrayBikePower = block.createDataArray("powerOnly" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, power.length }));
 		dataArrayBikePower.setData(power, new NDSize(new int[] { 1, power.length }), new NDSize(2, 0));
 
+		file.close();
+	}
+
+	
+	public Section getSection() {
+		return section;
+	}
+
+	public void setSection(Section section) {
+		this.section = section;
 	}
 
 	public File getFile() {
