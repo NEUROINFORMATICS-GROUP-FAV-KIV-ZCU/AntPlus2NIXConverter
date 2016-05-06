@@ -12,6 +12,7 @@ public class AntHeartRate {
 	private File file;
 	private Block block;
 	private Source source;
+	private Section section;
 	private DataArray dataHeartBeatCounter;
 	private DataArray dataComputedHeartRate;
 	private DataArray dataTimeOfPreviousHeartBeat;
@@ -39,6 +40,19 @@ public class AntHeartRate {
 		block = file.createBlock("recording" + index, "recording");
 
 		source = block.createSource("HeartRate" + index, "antMessage");
+		
+		metaData = new OdMLData();
+		
+		section = file.createSection("metadata", "metadata");
+			section.createProperty("deviceName", metaData.getDeviceName());
+			section.createProperty("deviceType", metaData.getDeviceType());
+			section.createProperty("deviceState", metaData.getDeviceState());
+			section.createProperty("deviceNumber", metaData.getDeviceNumber());
+			section.createProperty("batteryStatus", metaData.getBatteryStatus());
+			section.createProperty("signalStrength", metaData.getSignalStrength());
+			section.createProperty("manufacturerIdentification", metaData.getManIdentification());
+			section.createProperty("manufacturerSpecificData", metaData.getManSpecData());
+			section.createProperty("productInfo", metaData.getProdInfo());
 
 		dataHeartBeatCounter = block.createDataArray("heartBeatCounter" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, heartBeatCounter.length }));
