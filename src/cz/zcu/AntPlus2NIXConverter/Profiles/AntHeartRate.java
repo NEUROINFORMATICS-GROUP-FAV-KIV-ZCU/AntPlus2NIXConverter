@@ -5,6 +5,12 @@ import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 
 import org.g_node.nix.*;
 
+/**
+ * Profil pro vytvorení HDF5 souboru ze zarizeni Heart Rate.
+ * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
+ * @version 1.0
+ */
+
 public class AntHeartRate {
 
 	private static int index = 0;
@@ -22,11 +28,19 @@ public class AntHeartRate {
 	private double[] timeOfPreviousHeartBeat = new double[3];
 
 	private OdMLData metaData;
-
-	public AntHeartRate(int[] hearBeatCounter, int[] computedHeartRate, double[] timeOfPreviousHeartBeat,
+	
+	
+	/**
+	 * Konstruktor tridy.
+	 * @param heartBeatCounter Pocet srdecnich tepu
+	 * @param computedHeartRate Vypocitany tep
+	 * @param timeOfPreviousHeartBeat Cas predchoziho uderu srdce
+	 * @param metaData MetaData
+	 */
+	public AntHeartRate(int[] heartBeatCounter, int[] computedHeartRate, double[] timeOfPreviousHeartBeat,
 			OdMLData metaData) {
 
-		this.heartBeatCounter = hearBeatCounter;
+		this.heartBeatCounter = heartBeatCounter;
 		this.computedHeartRate = computedHeartRate;
 		this.timeOfPreviousHeartBeat = timeOfPreviousHeartBeat;
 		this.metaData = metaData;
@@ -34,6 +48,10 @@ public class AntHeartRate {
 
 	}
 
+	/**
+	 * Metoda pro vytvoreni HDF5 souboru i s celou jeho strukturou vcetne dat a metadat.
+	 * @param fileName Nazev souboru
+	 */
 	public void createNixFile(String fileName) {
 		file = File.open(fileName, FileMode.Overwrite);
 

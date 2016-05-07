@@ -5,6 +5,11 @@ import org.g_node.nix.*;
 import cz.zcu.AntPlus2NIXConverter.Convert.ID;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 
+/**
+ * Profil pro vytvorení HDF5 souboru ze zarizeni Multi Sport Speed & Distance.
+ * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
+ * @version 1.0
+ */
 public class AntMultiSportSpeedDist {
 
 	private static int index = 0;
@@ -20,6 +25,12 @@ public class AntMultiSportSpeedDist {
 	private double[] distance;
 	private OdMLData metaData;
 
+	/**
+	 * Konstruktor tridy.
+	 * @param timeStamp Casova znamka
+	 * @param distance Vzdalenost
+	 * @param metaData MetaData
+	 */
 	public AntMultiSportSpeedDist(double[] timeStamp, double[] distance, OdMLData metaData) {
 
 		this.timeStamp = timeStamp;
@@ -29,6 +40,10 @@ public class AntMultiSportSpeedDist {
 		index++;
 	}
 
+	/**
+	 * Metoda pro vytvoreni HDF5 souboru i s celou jeho strukturou vcetne dat a metadat.
+	 * @param fileName Nazev souboru
+	 */
 	public void createNixFile(String fileName) {
 		
 		file = File.open(fileName, FileMode.Overwrite);

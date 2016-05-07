@@ -7,6 +7,11 @@ import org.g_node.nix.*;
 
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 
+/**
+ * Profil pro vytvorení HDF5 souboru ze zarizeni Light Electric Vehicle.
+ * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
+ * @version 1.0
+ */
 public class AntLightElectricVehicle {
 
 private static int index = 0 ;
@@ -27,8 +32,16 @@ private static int index = 0 ;
 	private int[] mode;
 	private int[] batStatus;
 	private OdMLData metaData; 
-	  
-	public AntLightElectricVehicle( double[] speedDistance, boolean[] sysGearState, int[] mode, int[] BatStatus, OdMLData metaData ) {
+	
+	/**
+	 * Konstruktor tridy.
+	 * @param speedDistance Vzdalenost
+	 * @param sysGearState Status systemu a zarizeni
+	 * @param mode Mod
+	 * @param BatStatus Status baterie
+	 * @param metaData MetaData
+	 */
+	public AntLightElectricVehicle(double[] speedDistance, boolean[] sysGearState, int[] mode, int[] BatStatus, OdMLData metaData ) {
 		
 		this.speedDistance =speedDistance;
 		this.sysGearState = sysGearState;
@@ -37,7 +50,10 @@ private static int index = 0 ;
 		this.metaData = metaData;
 		index ++;
 	}
-	  
+	
+	/**
+	 * Prevod statusu systemu a zarizeni z pole Stringu na pole bytu.
+	 */
 	public void prevedSysGearState(){
 		
 		sysGearStateB = new byte[sysGearState.length];
@@ -47,6 +63,11 @@ private static int index = 0 ;
 				sysGearStateB[i] = Byte.parseByte(String.valueOf(sysGearState[i]));
 		}
 	}
+	
+	/**
+	 * Metoda pro vytvoreni HDF5 souboru i s celou jeho strukturou vcetne dat a metadat.
+	 * @param fileName Nazev souboru
+	 */
 	public void createNixFile(String fileName){
 		
 		prevedSysGearState();

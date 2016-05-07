@@ -4,6 +4,11 @@ import org.g_node.nix.*;
 
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 
+/**
+ * Profil pro vytvorení HDF5 souboru ze zarizeni Muscle Oxygen Monitor.
+ * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
+ * @version 1.0
+ */
 public class AntMuscleOxygenMonitor {
 
 	private static int index = 0;
@@ -19,6 +24,12 @@ public class AntMuscleOxygenMonitor {
 	private double[] hemoglobinConcentrate;
 	private OdMLData metaData;
 
+	/**
+	 * Konstruktor tridy.
+	 * @param saturatedHemoglPerc Predchozi a soucasny hemoglobin
+	 * @param hemoglobinConcentrate Koncentrace hemoglobinu
+	 * @param metaData MetaData
+	 */
 	public AntMuscleOxygenMonitor(double[] saturatedHemoglPerc, double[] hemoglobinConcentrate, OdMLData metaData) {
 
 		this.saturatedHemoglPerc = saturatedHemoglPerc;
@@ -28,6 +39,10 @@ public class AntMuscleOxygenMonitor {
 
 	}
 
+	/**
+	 * Metoda pro vytvoreni HDF5 souboru i s celou jeho strukturou vcetne dat a metadat.
+	 * @param fileName Nazev souboru
+	 */
 	public void createNixFile(String fileName) {
 		file = File.open(fileName, FileMode.Overwrite);
 

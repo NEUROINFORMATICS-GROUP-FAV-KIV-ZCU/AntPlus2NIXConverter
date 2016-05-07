@@ -4,6 +4,11 @@ import org.g_node.nix.*;
 
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 
+/**
+ * Profil pro vytvorení HDF5 souboru ze zarizeni Weight Scale.
+ * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
+ * @version 1.0
+ */
 public class AntWeightScale {
 
 	private static int index = 0;
@@ -16,6 +21,11 @@ public class AntWeightScale {
 	private Section section;
 	private DataArray dataWeight;
 
+	/**
+	 * Konstruktor tridy.
+	 * @param weight Vaha
+	 * @param metaData MetaData
+	 */
 	public AntWeightScale(int[] weight, OdMLData metaData) {
 
 		this.weight = weight;
@@ -24,6 +34,10 @@ public class AntWeightScale {
 
 	}
 
+	/**
+	 * Metoda pro vytvoreni HDF5 souboru i s celou jeho strukturou vcetne dat a metadat.
+	 * @param fileName Nazev souboru
+	 */
 	public void createNixFile(String fileName) {
 		file = File.open(fileName, FileMode.Overwrite);
 

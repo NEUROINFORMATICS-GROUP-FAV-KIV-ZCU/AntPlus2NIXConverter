@@ -1,5 +1,10 @@
 package cz.zcu.AntPlus2NIXConverter.Data;
 
+/**
+ * Trida pro reprezentaci metadat ve formátu odML.
+ * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
+ * @version 1.0
+ */
 public class OdMLData {
 
 	private int deviceName;
@@ -12,6 +17,18 @@ public class OdMLData {
 	private int manSpecData;
 	private int prodInfo;
 
+	/**
+	 * Konstruktor tridy.
+	 * @param deviceName Jmeno zarizeni
+	 * @param deviceType Typ zarizeni
+	 * @param deviceState Status zarizeni
+	 * @param deviceNumber Cislo zarizeni
+	 * @param batteryStatus Status baterie
+	 * @param signalStenght Sila signalu
+	 * @param manIdentifacation Identifikace vyrobce
+	 * @param manSpecData Specificka
+	 * @param prodInfo Info
+	 */
 	public OdMLData(int deviceName, int deviceType, int deviceState, int deviceNumber, int batteryStatus,
 			int signalStenght, int manIdentifacation, int manSpecData, int prodInfo) {
 

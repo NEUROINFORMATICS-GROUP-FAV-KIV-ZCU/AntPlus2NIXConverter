@@ -5,6 +5,11 @@ import org.g_node.nix.*;
 import cz.zcu.AntPlus2NIXConverter.Convert.ID;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 
+/**
+ * Profil pro vytvorení HDF5 souboru ze zarizeni Bike Power.
+ * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
+ * @version 1.0
+ */
 public class AntBikePower {
 
 	private static int index = 0;
@@ -19,6 +24,11 @@ public class AntBikePower {
 
 	private OdMLData metaData;
 
+	/**
+	 * Konstruktor tridy.
+	 * @param power Vykon
+	 * @param metaData MetaData
+	 */
 	public AntBikePower(double[] power, OdMLData metaData) {
 
 		this.power = power;
@@ -26,6 +36,10 @@ public class AntBikePower {
 
 	}
 
+	/**
+	 * Metoda pro vytvoreni HDF5 souboru i s celou jeho strukturou vcetne dat a metadat.
+	 * @param fileName Nazev souboru
+	 */
 	public void createNixFile(String fileName) {
 		file = File.open(fileName, FileMode.Overwrite);
 
