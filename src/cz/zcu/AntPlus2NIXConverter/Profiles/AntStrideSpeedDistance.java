@@ -6,14 +6,18 @@ import cz.zcu.AntPlus2NIXConverter.Convert.ID;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 
 /**
- * Profil pro vytvoren√≠ HDF5 souboru ze zarizeni Stride Speed & Distance.
+ * Trida pro zpracovani informaci o ANT plus profilu Stride Speed & Distance.
+ * Profil pro vytvoreni ≠ HDF5 souboru ze zarizeni Stride Speed & Distance.
+ * 
  * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
 public class AntStrideSpeedDistance {
 
+	/** Staticky atribut tridy pro identifikaci casti souboru */
 	private static int index = 0;
 
+	/** Aributy tridy **/
 	private File file;
 	private Block block;
 	private Source source;
@@ -21,40 +25,50 @@ public class AntStrideSpeedDistance {
 	private DataArray dataStrideCount;
 	private DataArray dataDistance;
 	private DataArray dataSpeed;
-	
+
 	private long[] strideCount;
 	private double[] distance;
 	private double[] speed;
-	private OdMLData metaData ;
+	private OdMLData metaData;
 
 	/**
-	 * Konstruktor tridy.
-	 * @param strideCount Pocet kroku
-	 * @param distance Vzdalenost
-	 * @param speed Rychlost
-	 * @param metaData MetaData
+	 * Konstruktor tridy. Naplni atributy tridy informacemi z ANT plus profilu s
+	 * polecne s metadaty
+	 * 
+	 * @param strideCount
+	 *            Pocet kroku
+	 * @param distance
+	 *            Vzdalenost
+	 * @param speed
+	 *            Rychlost
+	 * @param metaData
+	 *            MetaData
 	 */
-	public AntStrideSpeedDistance(long[] strideCount, double[] distance, double[] speed,OdMLData metaData ) {
-	
+	public AntStrideSpeedDistance(long[] strideCount, double[] distance, double[] speed, OdMLData metaData) {
+
 		this.strideCount = strideCount;
 		this.distance = distance;
 		this.speed = speed;
 		this.metaData = metaData;
-		
+
 		index++;
 	}
-	
+
 	/**
-	 * Metoda pro vytvoreni HDF5 souboru i s celou jeho strukturou vcetne dat a metadat.
-	 * @param fileName Nazev souboru
+	 * Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat
+	 * 
+	 * @param fileName
+	 *            Nazev souboru
 	 */
 	public void createNixFile(String fileName) {
 		file = File.open(fileName, FileMode.Overwrite);
-		
+
 		block = file.createBlock("recording" + index, "recording");
-		
+
 		source = block.createSource("strideSpeedDistance" + index, "antMessage");
-		
+
+		/* Pridani metadat do bloku */
+
 		section = file.createSection("AntMetaData", "metadata");
 		section.createProperty("deviceName", metaData.getDeviceName());
 		section.createProperty("deviceType", metaData.getDeviceType());
@@ -66,22 +80,30 @@ public class AntStrideSpeedDistance {
 		section.createProperty("manufacturerSpecificData", metaData.getManSpecData());
 		section.createProperty("productInfo", metaData.getProdInfo());
 
+		/* Naplneni dataArray daty chuzi */
+
 		dataStrideCount = block.createDataArray("StrideCount" + index, "antMessage", DataType.Int64,
-				new NDSize(new int[] {1,strideCount.length}));
-		dataStrideCount.setData(strideCount, new NDSize(new int [] {1,strideCount.length}), new NDSize(2,0));
-			
+				new NDSize(new int[] { 1, strideCount.length }));
+		dataStrideCount.setData(strideCount, new NDSize(new int[] { 1, strideCount.length }), new NDSize(2, 0));
+
+		dataStrideCount.setUnit("stride");
+		/* Naplneni dataArray daty o vzdalenosti */
+
 		dataDistance = block.createDataArray("distance" + index, "antMessage", DataType.Double,
-				new NDSize(new int[] {1,distance.length}));
-			dataDistance.setData(distance, new NDSize(new int[] {1,distance.length}), new NDSize(2,0));
+				new NDSize(new int[] { 1, distance.length }));
+		dataDistance.setData(distance, new NDSize(new int[] { 1, distance.length }), new NDSize(2, 0));
+		dataDistance.setUnit("meters");
+		/* Naplneni dataArray daty o rychlosti */
 
-		dataSpeed = block.createDataArray("speed" + index, "antMessage", DataType.Double, 
-				new NDSize(new int[] {1,speed.length}));
-			dataSpeed.setData(speed, new NDSize(new int[] {1,speed.length}), new NDSize(2,0));
-
+		dataSpeed = block.createDataArray("speed" + index, "antMessage", DataType.Double,
+				new NDSize(new int[] { 1, speed.length }));
+		dataSpeed.setData(speed, new NDSize(new int[] { 1, speed.length }), new NDSize(2, 0));
+		dataSpeed.setUnit("meters/second");
 		file.close();
 
 	}
 
+	/**** Getry a Setry ****/
 	public File getFile() {
 		return file;
 	}
@@ -170,6 +192,4 @@ public class AntStrideSpeedDistance {
 		this.section = section;
 	}
 
-	
-	
 }

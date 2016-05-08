@@ -6,14 +6,18 @@ import cz.zcu.AntPlus2NIXConverter.Convert.ID;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 
 /**
- * Profil pro vytvoren√≠ HDF5 souboru ze zarizeni Bike Power.
+ * Trida pro zpracovani informaci o ANT plus profilu Bike Power Profil pro
+ * vytvoreni≠ HDF5 souboru ze zarizeni Bike Power.
+ * 
  * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
 public class AntBikePower {
 
+	/** Staticky atribut tridy pro identifikaci souboru */
 	private static int index = 0;
 
+	/** Aributy tridy **/
 	private File file;
 	private Block block;
 	private Source source;
@@ -25,9 +29,13 @@ public class AntBikePower {
 	private OdMLData metaData;
 
 	/**
-	 * Konstruktor tridy.
-	 * @param power Vykon
-	 * @param metaData MetaData
+	 * Konstruktor tridy. Naplni atributy tridy informacemi o vykonu a
+	 * metadatech vysilanych Ant plus profilem.
+	 * 
+	 * @param power
+	 *            Vykon
+	 * @param metaData
+	 *            MetaData
 	 */
 	public AntBikePower(double[] power, OdMLData metaData) {
 
@@ -37,15 +45,20 @@ public class AntBikePower {
 	}
 
 	/**
-	 * Metoda pro vytvoreni HDF5 souboru i s celou jeho strukturou vcetne dat a metadat.
-	 * @param fileName Nazev souboru
+	 * Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat.
+	 * 
+	 * @param fileName
+	 *            Nazev souboru
 	 */
 	public void createNixFile(String fileName) {
+
 		file = File.open(fileName, FileMode.Overwrite);
 
 		block = file.createBlock("recording" + index, "recording");
 
 		source = block.createSource("bikePower" + index, "antMessage");
+
+		/* Pridani metadat do bloku */
 
 		section = file.createSection("AntMetaData", "metadata");
 		section.createProperty("deviceName", metaData.getDeviceName());
@@ -58,14 +71,17 @@ public class AntBikePower {
 		section.createProperty("manufacturerSpecificData", metaData.getManSpecData());
 		section.createProperty("productInfo", metaData.getProdInfo());
 
+		/* Naplneni dataArray daty o vykonu */
+
 		dataArrayBikePower = block.createDataArray("powerOnly" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, power.length }));
+
 		dataArrayBikePower.setData(power, new NDSize(new int[] { 1, power.length }), new NDSize(2, 0));
 
 		file.close();
 	}
 
-	
+	/**** Getry a Setry ***/
 	public Section getSection() {
 		return section;
 	}

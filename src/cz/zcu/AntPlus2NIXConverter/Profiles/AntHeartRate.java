@@ -6,15 +6,18 @@ import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 import org.g_node.nix.*;
 
 /**
- * Profil pro vytvoren√≠ HDF5 souboru ze zarizeni Heart Rate.
+ * Trida pro zpracovani informaci o ANT plus profilu HeartRate
+ * Profil pro vytvoreni≠ HDF5 souboru ze zarizeni Heart Rate.
  * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
 
 public class AntHeartRate {
 
+	/** Staticky atribut tridy pro identifikaci souboru */
 	private static int index = 0;
 
+	/** Aributy tridy **/
 	private File file;
 	private Block block;
 	private Source source;
@@ -31,7 +34,9 @@ public class AntHeartRate {
 	
 	
 	/**
-	 * Konstruktor tridy.
+	 * Konstruktor tridy. Naplni atributy tridy informacemi z ANT plus profilu s
+	 * polecne s metadaty
+	 * 
 	 * @param heartBeatCounter Pocet srdecnich tepu
 	 * @param computedHeartRate Vypocitany tep
 	 * @param timeOfPreviousHeartBeat Cas predchoziho uderu srdce
@@ -49,7 +54,7 @@ public class AntHeartRate {
 	}
 
 	/**
-	 * Metoda pro vytvoreni HDF5 souboru i s celou jeho strukturou vcetne dat a metadat.
+	 * Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat
 	 * @param fileName Nazev souboru
 	 */
 	public void createNixFile(String fileName) {
@@ -58,7 +63,8 @@ public class AntHeartRate {
 		block = file.createBlock("recording" + index, "recording");
 
 		source = block.createSource("HeartRate" + index, "antMessage");
-				
+		/* Pridani metadat do bloku */
+
 		section = file.createSection("metadata", "metadata");
 		section.createProperty("deviceName", metaData.getDeviceName());
 		section.createProperty("deviceType", metaData.getDeviceType());
@@ -70,24 +76,29 @@ public class AntHeartRate {
 		section.createProperty("manufacturerSpecificData", metaData.getManSpecData());
 		section.createProperty("productInfo", metaData.getProdInfo());
 
+		/* Naplneni dataArray daty o tlukotu srdce */
 		dataHeartBeatCounter = block.createDataArray("heartBeatCount" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, heartBeatCounter.length }));
 		dataHeartBeatCounter.setData(heartBeatCounter, new NDSize(new int[] { 1, heartBeatCounter.length }),
 				new NDSize(2, 0));
-
+		dataHeartBeatCounter.setUnit("N/A");
+		/* Naplneni dataArray daty o vypoctech */
 		dataComputedHeartRate = block.createDataArray("comluptedHeartRate" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, computedHeartRate.length }));
 		dataComputedHeartRate.setData(computedHeartRate, new NDSize(new int[] { 1, computedHeartRate.length }),
 				new NDSize(2, 0));
-
+		dataComputedHeartRate.setUnit("bpm");
+		/* Naplneni dataArray daty o case prechoziho tepu */
 		dataTimeOfPreviousHeartBeat = block.createDataArray("timeOfPreviousHeartBeat" + index, "antMessage",
 				DataType.Double, new NDSize(new int[] { 1, timeOfPreviousHeartBeat.length }));
 		dataTimeOfPreviousHeartBeat.setData(timeOfPreviousHeartBeat,
 				new NDSize(new int[] { 1, timeOfPreviousHeartBeat.length }), new NDSize(2, 0));
-
+		dataTimeOfPreviousHeartBeat.setUnit("seconds");
 		file.close();
 	}
 
+	
+	/**** Getry a Setry *****/
 	public Block getBlock() {
 		return block;
 	}

@@ -6,14 +6,18 @@ import cz.zcu.AntPlus2NIXConverter.Convert.ID;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 
 /**
- * Profil pro vytvorení HDF5 souboru ze zarizeni Multi Sport Speed & Distance.
+ * Trida pro zpracovani informaci o ANT plus profilu Bike Speed Profil pro
+ * vytvorení HDF5 souboru ze zarizeni Multi Sport Speed & Distance.
+ * 
  * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
 public class AntMultiSportSpeedDist {
 
+	/** Staticky atribut tridy pro identifikaci casti souboru */
 	private static int index = 0;
 
+	/** Aributy tridy **/
 	private File file;
 	private Block block;
 	private Source source;
@@ -26,31 +30,40 @@ public class AntMultiSportSpeedDist {
 	private OdMLData metaData;
 
 	/**
-	 * Konstruktor tridy.
-	 * @param timeStamp Casova znamka
-	 * @param distance Vzdalenost
-	 * @param metaData MetaData
+	 * Konstruktor tridy. Naplni atributy tridy informacemi z ANT plus profilu s
+	 * polecne s metadaty
+	 * 
+	 * @param timeStamp
+	 *            Casova znamka
+	 * @param distance
+	 *            Vzdalenost
+	 * @param metaData
+	 *            MetaData
 	 */
 	public AntMultiSportSpeedDist(double[] timeStamp, double[] distance, OdMLData metaData) {
 
 		this.timeStamp = timeStamp;
 		this.distance = distance;
 		this.metaData = metaData;
-		
+
 		index++;
 	}
 
 	/**
-	 * Metoda pro vytvoreni HDF5 souboru i s celou jeho strukturou vcetne dat a metadat.
-	 * @param fileName Nazev souboru
+	 * Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat
+	 * 
+	 * @param fileName
+	 *            Nazev souboru
 	 */
 	public void createNixFile(String fileName) {
-		
+
 		file = File.open(fileName, FileMode.Overwrite);
 
 		block = file.createBlock("recording" + index, "recording");
 
 		source = block.createSource("multiSportSpeedDist" + index, "antMessage");
+
+		/* Pridani metadat do bloku */
 
 		section = file.createSection("AntMetaData", "metadata");
 		section.createProperty("deviceName", metaData.getDeviceName());
@@ -63,20 +76,23 @@ public class AntMultiSportSpeedDist {
 		section.createProperty("manufacturerSpecificData", metaData.getManSpecData());
 		section.createProperty("productInfo", metaData.getProdInfo());
 
-		
-		dataTime = block.createDataArray("DataTime" + index, "antMessage", DataType.Double,
-				new NDSize(new int[] {1,timeStamp.length}));
-			dataTime.setData(timeStamp, new NDSize(new int [] {1,timeStamp.length}), new NDSize(2,0));
-			
-		dataDistance= block.createDataArray("DataDistance" + index, "antMessage", DataType.Double,
-				new NDSize(new int[] {1,distance.length}));
-			dataDistance.setData(distance, new NDSize(new int[] {1,distance.length}), new NDSize(2,0));
+		/* Naplneni dataArray daty o case */
 
-		
+		dataTime = block.createDataArray("DataTime" + index, "antMessage", DataType.Double,
+				new NDSize(new int[] { 1, timeStamp.length }));
+		dataTime.setData(timeStamp, new NDSize(new int[] { 1, timeStamp.length }), new NDSize(2, 0));
+		dataTime.setUnit("seconds");
+		/* Naplneni dataArray daty o vzdalenosti */
+
+		dataDistance = block.createDataArray("DataDistance" + index, "antMessage", DataType.Double,
+				new NDSize(new int[] { 1, distance.length }));
+		dataDistance.setData(distance, new NDSize(new int[] { 1, distance.length }), new NDSize(2, 0));
+		dataDistance.setUnit("meters");
 		file.close();
 
 	}
 
+	/*** Getry a Setry ***/
 	public File getFile() {
 		return file;
 	}
@@ -149,5 +165,4 @@ public class AntMultiSportSpeedDist {
 		this.metaData = metaData;
 	}
 
-	
 }

@@ -2,10 +2,13 @@ package cz.zcu.AntPlus2NIXConverter.Data;
 
 /**
  * Trida pro reprezentaci metadat ve formátu odML.
+ * 
  * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
 public class OdMLData {
+
+	/** Atributy tridy **/
 
 	private int deviceName;
 	private int deviceType;
@@ -18,16 +21,27 @@ public class OdMLData {
 	private int prodInfo;
 
 	/**
-	 * Konstruktor tridy.
-	 * @param deviceName Jmeno zarizeni
-	 * @param deviceType Typ zarizeni
-	 * @param deviceState Status zarizeni
-	 * @param deviceNumber Cislo zarizeni
-	 * @param batteryStatus Status baterie
-	 * @param signalStenght Sila signalu
-	 * @param manIdentifacation Identifikace vyrobce
-	 * @param manSpecData Specificka
-	 * @param prodInfo Info
+	 * Konstruktor tridy. Naplni jednotlive atributy tridy, pro uchovani
+	 * informaci o metadatech z profilu ANT plus
+	 * 
+	 * @param deviceName
+	 *            Jmeno zarizeni
+	 * @param deviceType
+	 *            Typ zarizeni
+	 * @param deviceState
+	 *            Status zarizeni
+	 * @param deviceNumber
+	 *            Cislo zarizeni
+	 * @param batteryStatus
+	 *            Status baterie
+	 * @param signalStenght
+	 *            Sila signalu
+	 * @param manIdentifacation
+	 *            Identifikace vyrobce
+	 * @param manSpecData
+	 *            Specificka
+	 * @param prodInfo
+	 *            Info
 	 */
 	public OdMLData(int deviceName, int deviceType, int deviceState, int deviceNumber, int batteryStatus,
 			int signalStenght, int manIdentifacation, int manSpecData, int prodInfo) {
@@ -41,9 +55,12 @@ public class OdMLData {
 		setManIdentification(manIdentifacation);
 		setManSpecData(manSpecData);
 		setProdInfo(prodInfo);
-		
+
 	}
 
+	
+	/******* Getry a Setry *********/ 
+	
 	public int getDeviceName() {
 		return deviceName;
 	}

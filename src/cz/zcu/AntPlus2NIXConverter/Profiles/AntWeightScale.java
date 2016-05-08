@@ -5,14 +5,19 @@ import org.g_node.nix.*;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 
 /**
- * Profil pro vytvoren√≠ HDF5 souboru ze zarizeni Weight Scale.
+ * Trida pro zpracovani informaci o ANT plus profilu Bike Speed Profil pro
+ * vytvoreni≠ HDF5 souboru ze zarizeni Weight Scale.
  * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
 public class AntWeightScale {
 
+	/** Staticky atribut tridy pro identifikaci casti souboru */
+	
 	private static int index = 0;
 
+	/** Aributy tridy **/
+	
 	private int[] weight;
 	private OdMLData metaData;
 	private File file;
@@ -22,7 +27,10 @@ public class AntWeightScale {
 	private DataArray dataWeight;
 
 	/**
-	 * Konstruktor tridy.
+	 * Konstruktor tridy. 
+	 * Naplni atributy tridy informacemi z ANT plus profilu s
+	 * polecne s metadaty
+	 * 
 	 * @param weight Vaha
 	 * @param metaData MetaData
 	 */
@@ -35,7 +43,7 @@ public class AntWeightScale {
 	}
 
 	/**
-	 * Metoda pro vytvoreni HDF5 souboru i s celou jeho strukturou vcetne dat a metadat.
+	 * Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat.
 	 * @param fileName Nazev souboru
 	 */
 	public void createNixFile(String fileName) {
@@ -44,6 +52,8 @@ public class AntWeightScale {
 		block = file.createBlock("recording" + index, "recording");
 
 		source = block.createSource("weightScale" + index, "antMessage");
+
+		/* Pridani metadat do bloku */
 
 		section = file.createSection("AntMetaData", "metadata");
 		section.createProperty("deviceName", metaData.getDeviceName());
@@ -56,10 +66,12 @@ public class AntWeightScale {
 		section.createProperty("manufacturerSpecificData", metaData.getManSpecData());
 		section.createProperty("productInfo", metaData.getProdInfo());
 
+		/* Naplneni dataArray daty o vaze */
+		
 		dataWeight = block.createDataArray("weight" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, weight.length }));
 		dataWeight.setData(weight, new NDSize(new int[] { 1, weight.length }), new NDSize(2, 0));
-
+		dataWeight.setUnit("kg");
 		file.close();
 
 	}
