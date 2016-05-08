@@ -63,6 +63,11 @@ public class AntWeightScaleTest {
     public void testId() {
         assertEquals(scale.getDataWeight().getId().length(), 36);
     }
+	
+	@Test
+    public void testUnitArray() {
+        assertEquals(scale.getDataWeight().getUnit(), "kg");
+    }
 
     @Test
     public void testNameArray() {

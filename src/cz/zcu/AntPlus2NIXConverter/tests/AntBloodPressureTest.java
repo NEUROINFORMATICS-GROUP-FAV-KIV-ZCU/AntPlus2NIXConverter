@@ -69,6 +69,10 @@ public class AntBloodPressureTest {
     }
 
     @Test
+    public void testUnitArray() {
+        assertEquals(blPres.getDataDistolic().getUnit(), "mmHg");
+    }
+    @Test
     public void testTypeArray() {
         assertEquals(blPres.getDataDistolic().getType(), "antMessage");
     }
@@ -91,6 +95,9 @@ public class AntBloodPressureTest {
         assertEquals(blPres.getDataSystolic().getId().length(), 36);
     }
 
+    public void testUnitArraySystolic() {
+        assertEquals(blPres.getDataSystolic().getUnit(), "mmHg");
+    }
     @Test
     public void testNameArraySystolic() {
         assertEquals(blPres.getDataSystolic().getName(), "systolicBloodPress1");
@@ -113,6 +120,10 @@ public class AntBloodPressureTest {
 	@Test
     public void testIdHeart() {
         assertEquals(blPres.getDataHeartRate().getId().length(), 36);
+    }
+	
+    public void testUnitArrayHeart() {
+        assertEquals(blPres.getDataHeartRate().getUnit(), "bpm");
     }
 
     @Test
@@ -137,6 +148,10 @@ public class AntBloodPressureTest {
         assertEquals(blPres.getDataTime().getId().length(), 36);
     }
 
+    public void testUnitArrayStamp() {
+        assertEquals(blPres.getDataTime().getUnit(), "N/A");
+    }
+    
     @Test
     public void testNameArrayStamp() {
         assertEquals(blPres.getDataTime().getName(), "timestamp1");

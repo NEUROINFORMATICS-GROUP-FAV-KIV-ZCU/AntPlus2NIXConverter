@@ -62,6 +62,11 @@ public class AntMuscleOxygenMonitorTest {
     public void testIdHemoglobin() {
         assertEquals(msOM.getDataHemoglobinConcentrate().getId().length(), 36);
     }
+	
+	@Test
+    public void testUnitHemoglobin() {
+        assertEquals(msOM.getDataHemoglobinConcentrate().getUnit(), "g/dl");
+    }
 
     @Test
     public void testNameArrayHemoglobin() {
@@ -83,6 +88,11 @@ public class AntMuscleOxygenMonitorTest {
 	@Test
     public void testIdHemoglobinPer() {
         assertEquals(msOM.getDataSaturatedHemoglPerc().getId().length(), 36);
+    }
+
+	@Test
+    public void testValueHemoglobinPer() {
+        assertEquals(msOM.getDataSaturatedHemoglPerc().getUnit(), "%");
     }
 
     @Test

@@ -67,6 +67,11 @@ public class AntStrideSpeedDistanceTest {
     public void testNameArrayDistance() {
         assertEquals(stridSpeedD.getDataDistance().getName(), "distance1");
     }
+    
+    @Test
+    public void testUnitArrayDistance() {
+        assertEquals(stridSpeedD.getDataDistance().getUnit(), "meters");
+    }
 
     @Test
     public void testTypeArrayDistance() {
@@ -90,6 +95,11 @@ public class AntStrideSpeedDistanceTest {
     @Test
     public void testNameArraySpeed() {
         assertEquals(stridSpeedD.getDataSpeed().getName(), "speed1");
+    }
+    
+    @Test
+    public void testUnitArraySpeed() {
+        assertEquals(stridSpeedD.getDataSpeed().getUnit(), "meters/seconds");
     }
 
     @Test
@@ -115,6 +125,11 @@ public class AntStrideSpeedDistanceTest {
         assertEquals(stridSpeedD.getDataStrideCount().getName(), "strideCount1");
     }
 
+    @Test
+    public void testUnitArrayStride() {
+        assertEquals(stridSpeedD.getDataStrideCount().getUnit(), "stride");
+    }
+    
     @Test
     public void testTypeArrayStride() {
         assertEquals(stridSpeedD.getDataStrideCount().getType(), "antMessage");

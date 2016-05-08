@@ -62,6 +62,11 @@ public class AntHeartRateTest {
     public void testNameArrayCounter() {
         assertEquals(heartRate.getDataHeartBeatCounter().getName(), "heartBeatCount1");
     }
+    
+    @Test
+    public void testUnitArrayCounter() {
+        assertEquals(heartRate.getDataHeartBeatCounter().getUnit(), "N/A");
+    }
 
     @Test
     public void testTypeArrayCounter() {
@@ -86,6 +91,11 @@ public class AntHeartRateTest {
         assertEquals(heartRate.getDataComputedHeartRate().getId().length(), 36);
     }
 
+	@Test
+    public void testUnitArrayComputed() {
+        assertEquals(heartRate.getDataComputedHeartRate().getUnit(), "bpm");
+    }
+	
     @Test
     public void testNameArrayComputed() {
         assertEquals(heartRate.getDataComputedHeartRate().getName(), "comluptedHeartRate1");
@@ -113,6 +123,11 @@ public class AntHeartRateTest {
     @Test
     public void testNameArrayTime() {
         assertEquals(heartRate.getDataTimeOfPreviousHeartBeat().getName(), "timeOfPreviousHeartBeat1");
+    }
+    
+    @Test
+    public void testUnitArrayTime() {
+        assertEquals(heartRate.getDataTimeOfPreviousHeartBeat().getUnit(), "seconds");
     }
 
     @Test

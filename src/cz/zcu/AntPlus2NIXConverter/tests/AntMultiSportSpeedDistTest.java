@@ -38,6 +38,8 @@ public class AntMultiSportSpeedDistTest {
 	public void testType() {
 		assertEquals(sportDist.getBlock().getType(), "recording");
 	}
+	
+	
 
 	@Test
 	public void testMetadataAccess() {
@@ -64,9 +66,15 @@ public class AntMultiSportSpeedDistTest {
         assertEquals(sportDist.getDataDistance().getId().length(), 36);
     }
 
+	
     @Test
     public void testNameArrayTime() {
         assertEquals(sportDist.getDataDistance().getName(), "distance1");
+    }
+    
+    @Test
+    public void testUnitArrayTime() {
+        assertEquals(sportDist.getDataDistance().getUnit(), "seconds");
     }
 
     @Test
@@ -94,6 +102,11 @@ public class AntMultiSportSpeedDistTest {
     @Test
     public void testTypeArrayDistance() {
         assertEquals(sportDist.getDataTime().getType(), "antMessage");
+    }
+    
+    @Test
+    public void testUnitArrayDistance() {
+        assertEquals(sportDist.getDataTime().getUnit(), "meters");
     }
     
     @Test
