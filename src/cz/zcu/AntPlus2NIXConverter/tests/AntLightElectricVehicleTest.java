@@ -21,6 +21,7 @@ public class AntLightElectricVehicleTest {
 		vehicle = new AntLightElectricVehicle(new double[]{}, new boolean[] {}, new int[] {}, new int[]{},
 				new OdMLData(33, 23, 4, 5, 2, 4, 4, 2, 5));
 		vehicle.createNixFile("testovaci.h5");
+		
 	}
 
 	@After

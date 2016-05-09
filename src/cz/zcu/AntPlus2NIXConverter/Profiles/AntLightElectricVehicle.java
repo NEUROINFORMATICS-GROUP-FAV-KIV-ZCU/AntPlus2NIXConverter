@@ -90,22 +90,22 @@ private int index = 0 ;
 		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
 
 		
-		dataBatStatus = block.createDataArray("BatStatus" + index, "antMessage", DataType.Int32,
+		dataBatStatus = block.createDataArray("batStatus" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] {1,batStatus.length}));
 			dataBatStatus.setData(batStatus, new NDSize(new int [] {1,batStatus.length}), new NDSize(2,0));
 		
 			
-		dataMode = block.createDataArray("Mode" + index, "antMessage", DataType.Int32,
+		dataMode = block.createDataArray("mode" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] {1,mode.length}));
 			dataMode.setData(mode, new NDSize(new int[] {1,mode.length}), new NDSize(2,0));
 
 			
-		dataSpeedDistance = block.createDataArray("SpeedDistance" + index, "antMessage", DataType.Double, 
+		dataSpeedDistance = block.createDataArray("speedDistance" + index, "antMessage", DataType.Double, 
 				new NDSize(new int[] {1,speedDistance.length}));
 			dataSpeedDistance.setData(speedDistance, new NDSize(new int[] {1,speedDistance.length}), new NDSize(2,0));
 
 			
-			dataSysGearState = block.createDataArray("SysGearState" + index, "antMessage", DataType.Int16, 
+			dataSysGearState = block.createDataArray("sysGearState" + index, "antMessage", DataType.Int16, 
 					new NDSize(new int[] {1,speedDistance.length}));
 				dataSysGearState.setData(sysGearStateB, new NDSize(new int[] {1,sysGearState.length}), new NDSize(2,0));
 

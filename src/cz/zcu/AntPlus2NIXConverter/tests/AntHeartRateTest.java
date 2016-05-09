@@ -145,7 +145,7 @@ public class AntHeartRateTest {
 
     @Test
     public void testNameSource() {
-        assertEquals(heartRate.getSource(), "HeartRate");
+        assertEquals(heartRate.getSource(), "HeartRate1");
     }
 
     @Test

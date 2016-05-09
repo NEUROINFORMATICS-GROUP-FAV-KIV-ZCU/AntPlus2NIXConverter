@@ -58,7 +58,7 @@ public class AntStrideSpeedDistanceTest {
 	@Test
 	public void testDataArrayAccess() {
 
-		assertEquals(stridSpeedD.getBlock().getDataArrayCount(), 1);
+		assertEquals(stridSpeedD.getBlock().getDataArrayCount(), 3);
 	}
 	
 	@Test

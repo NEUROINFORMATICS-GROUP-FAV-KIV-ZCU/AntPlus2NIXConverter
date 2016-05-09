@@ -86,7 +86,7 @@ public class AntBloodPressure {
 		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
 		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
 
-		dataSystolic = block.createDataArray("Systolic" + index, "antMessage", DataType.Int32,
+		dataSystolic = block.createDataArray("systolicBloodPress" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, systolic.length }));
 		dataSystolic.setData(systolic, new NDSize(new int[] { 1, systolic.length }), new NDSize(2, 0));
 
@@ -94,22 +94,18 @@ public class AntBloodPressure {
 				new NDSize(new int[] { 1, distolic.length }));
 		dataDistolic.setData(distolic, new NDSize(new int[] { 1, systolic.length }), new NDSize(2, 0));
 
-		dataHeartRate = block.createDataArray("HeartRate" + index, "antMessage", DataType.Int32,
+		dataHeartRate = block.createDataArray("heartRate" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, heartRate.length }));
 		dataHeartRate.setData(heartRate, new NDSize(new int[] { 1, heartRate.length }), new NDSize(2, 0));
 
-		dataTime = block.createDataArray("TimeStamp" + index, "antMessage", DataType.Int16,
+		dataTime = block.createDataArray("timeStamp" + index, "antMessage", DataType.Int16,
 				new NDSize(new int[] { 1, timeStampSt.length }));
 		dataTime.setData(timeStampSt, new NDSize(new int[] { 1, timeStampSt.length }), new NDSize(2, 0));
 
 		//file.close();
 	}
 
-	public static void main(String[] args) {
-	AntBloodPressure b =	new AntBloodPressure(new int[] { 43 }, new int[] { 3, 5, 67, 3 }, new int[] { 4, 5, 6, 4 },
-				new GregorianCalendar[] {}, new OdMLData(33, 23, 4, 5, 2, 4, 4, 2, 5));
-		b.createNixFile("testovaci.h5");
-		}
+	/** Getry a Setry **/
 	public Block getBlock() {
 		return block;
 	}

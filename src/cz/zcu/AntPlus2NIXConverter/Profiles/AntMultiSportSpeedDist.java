@@ -64,11 +64,11 @@ public class AntMultiSportSpeedDist {
 		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
 
 		
-		dataTime = block.createDataArray("DataTime" + index, "antMessage", DataType.Double,
+		dataTime = block.createDataArray("dataTime" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] {1,timeStamp.length}));
 			dataTime.setData(timeStamp, new NDSize(new int [] {1,timeStamp.length}), new NDSize(2,0));
 			
-		dataDistance= block.createDataArray("DataDistance" + index, "antMessage", DataType.Double,
+		dataDistance= block.createDataArray("dataDistance" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] {1,distance.length}));
 			dataDistance.setData(distance, new NDSize(new int[] {1,distance.length}), new NDSize(2,0));
 

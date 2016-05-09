@@ -150,7 +150,7 @@ public class AntBloodPressureTest {
 
     @Test
     public void testNameArrayStamp() {
-        assertEquals(blPres.getDataTime().getName(), "timestamp1");
+        assertEquals(blPres.getDataTime().getName(), "timeStamp1");
     }
 
     @Test

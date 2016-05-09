@@ -76,7 +76,7 @@ public class AntWeightScaleTest {
 
     @Test
     public void testNameArray() {
-        assertEquals(scale.getDataWeight().getName(), "weight	1");
+        assertEquals(scale.getDataWeight().getName(), "weight1");
     }
 
     @Test
@@ -98,7 +98,7 @@ public class AntWeightScaleTest {
 
     @Test
     public void testNameSource() {
-        assertEquals(scale.getSource(), "weightScale");
+        assertEquals(scale.getSource(), "weightScale1");
     }
 
     @Test

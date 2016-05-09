@@ -66,7 +66,7 @@ public class AntStrideSpeedDistance {
 		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
 		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
 
-		dataStrideCount = block.createDataArray("StrideCount" + index, "antMessage", DataType.Int64,
+		dataStrideCount = block.createDataArray("strideCount" + index, "antMessage", DataType.Int64,
 				new NDSize(new int[] {1,strideCount.length}));
 		dataStrideCount.setData(strideCount, new NDSize(new int [] {1,strideCount.length}), new NDSize(2,0));
 			

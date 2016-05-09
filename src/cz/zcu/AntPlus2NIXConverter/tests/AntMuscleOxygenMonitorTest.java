@@ -120,7 +120,7 @@ public class AntMuscleOxygenMonitorTest {
 
     @Test
     public void testNameSource() {
-        assertEquals(msOM.getSource(), " strideSpeedDistance1");
+        assertEquals(msOM.getSource(), "muscleOxygenMonitor1");
     }
 
     @Test

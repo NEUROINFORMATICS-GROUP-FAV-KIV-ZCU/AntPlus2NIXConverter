@@ -57,7 +57,7 @@ public class AntHeartRate {
 
 		block = file.createBlock("recording" + index, "recording");
 
-		source = block.createSource("HeartRate" + index, "antMessage");
+		source = block.createSource("heartRate" + index, "antMessage");
 				
 		section = file.createSection("AntMetaData", "metadata");
 		section.createProperty("deviceName", new Value(metaData.getDeviceName()));
