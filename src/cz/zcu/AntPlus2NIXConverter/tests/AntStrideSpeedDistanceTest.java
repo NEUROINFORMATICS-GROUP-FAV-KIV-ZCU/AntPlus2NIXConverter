@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.g_node.nix.valid.Result;
 import org.g_node.nix.valid.Validator;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,6 +19,15 @@ public class AntStrideSpeedDistanceTest {
 	public void setUp() {
 		stridSpeedD = new AntStrideSpeedDistance(new long[]{2,3,5},new double[] { 1, 3, 5, 6 },new double[] { 1, 3, 5, 6 }, new OdMLData(33, 23, 4, 5, 2, 4, 4, 2, 5));
 		stridSpeedD.createNixFile("testovaci.h5");
+	}
+	@After
+	public void tearDown(){
+		String location =stridSpeedD.getFile().getLocation();
+		
+		stridSpeedD.getFile().close();
+		
+		java.io.File f = new java.io.File(location);
+		f.delete();
 	}
 
 	@Test

@@ -12,7 +12,7 @@ import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
  */
 public class AntBikePower {
 
-	private static int index = 0;
+	private int index = 0;
 
 	private File file;
 	private Block block;
@@ -32,6 +32,7 @@ public class AntBikePower {
 	public AntBikePower(double[] power, OdMLData metaData) {
 
 		this.power = power;
+		this.metaData = metaData;
 		index++;
 
 	}
@@ -44,27 +45,31 @@ public class AntBikePower {
 		file = File.open(fileName, FileMode.Overwrite);
 
 		block = file.createBlock("recording" + index, "recording");
-
+		
 		source = block.createSource("bikePower" + index, "antMessage");
-
+		
 		section = file.createSection("AntMetaData", "metadata");
-		section.createProperty("deviceName", metaData.getDeviceName());
-		section.createProperty("deviceType", metaData.getDeviceType());
-		section.createProperty("deviceState", metaData.getDeviceState());
-		section.createProperty("deviceNumber", metaData.getDeviceNumber());
-		section.createProperty("batteryStatus", metaData.getBatteryStatus());
-		section.createProperty("signalStrength", metaData.getSignalStrength());
-		section.createProperty("manufacturerIdentification", metaData.getManIdentification());
-		section.createProperty("manufacturerSpecificData", metaData.getManSpecData());
-		section.createProperty("productInfo", metaData.getProdInfo());
+		section.createProperty("deviceName", new Value(metaData.getDeviceName()));
+		section.createProperty("deviceType", new Value(metaData.getDeviceType()));
+		section.createProperty("deviceState", new Value(metaData.getDeviceState()));
+		section.createProperty("deviceNumber", new Value(metaData.getDeviceNumber()));
+		section.createProperty("batteryStatus", new Value(metaData.getBatteryStatus()));
+		section.createProperty("signalStrength", new Value(metaData.getSignalStrength()));
+		section.createProperty("manufacturerIdentification", new Value(metaData.getManIdentification()));
+		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
+		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
 
 		dataArrayBikePower = block.createDataArray("powerOnly" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, power.length }));
 		dataArrayBikePower.setData(power, new NDSize(new int[] { 1, power.length }), new NDSize(2, 0));
 
-		file.close();
+		//file.close();
 	}
 
+	public static void main(String[] args) {
+		AntBikePower b = new AntBikePower(new double[]{4,4,},new OdMLData(0, 0, 0, 0, 0, 0, 0, 0, 0));
+		b.createNixFile("testovaci.h5");
+	}
 	
 	public Section getSection() {
 		return section;
@@ -120,6 +125,14 @@ public class AntBikePower {
 
 	public void setMetaData(OdMLData metaData) {
 		this.metaData = metaData;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 }

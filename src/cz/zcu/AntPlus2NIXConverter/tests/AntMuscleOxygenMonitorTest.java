@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.g_node.nix.valid.Result;
 import org.g_node.nix.valid.Validator;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,6 +19,16 @@ public class AntMuscleOxygenMonitorTest {
 	public void setUp() {
 		msOM = new AntMuscleOxygenMonitor(new double[] { 1, 3, 5, 6 },new double[] { 1, 3, 5, 6 }, new OdMLData(33, 23, 4, 5, 2, 4, 4, 2, 5));
 		msOM.createNixFile("testovaci.h5");
+	}
+	
+	@After
+	public void tearDown(){
+		String location =msOM.getFile().getLocation();
+		
+		msOM.getFile().close();
+		
+		java.io.File f = new java.io.File(location);
+		f.delete();
 	}
 
 	@Test

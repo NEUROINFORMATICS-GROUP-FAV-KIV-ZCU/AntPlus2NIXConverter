@@ -11,7 +11,7 @@ import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
  */
 public class AntMuscleOxygenMonitor {
 
-	private static int index = 0;
+	private int index = 0;
 
 	private File file;
 	private Block block;
@@ -51,15 +51,15 @@ public class AntMuscleOxygenMonitor {
 		source = block.createSource("muscleOxygenMonitor" + index, "antMessage");
 
 		section = file.createSection("AntMetaData", "metadata");
-		section.createProperty("deviceName", metaData.getDeviceName());
-		section.createProperty("deviceType", metaData.getDeviceType());
-		section.createProperty("deviceState", metaData.getDeviceState());
-		section.createProperty("deviceNumber", metaData.getDeviceNumber());
-		section.createProperty("batteryStatus", metaData.getBatteryStatus());
-		section.createProperty("signalStrength", metaData.getSignalStrength());
-		section.createProperty("manufacturerIdentification", metaData.getManIdentification());
-		section.createProperty("manufacturerSpecificData", metaData.getManSpecData());
-		section.createProperty("productInfo", metaData.getProdInfo());
+		section.createProperty("deviceName", new Value(metaData.getDeviceName()));
+		section.createProperty("deviceType", new Value(metaData.getDeviceType()));
+		section.createProperty("deviceState", new Value(metaData.getDeviceState()));
+		section.createProperty("deviceNumber", new Value(metaData.getDeviceNumber()));
+		section.createProperty("batteryStatus", new Value(metaData.getBatteryStatus()));
+		section.createProperty("signalStrength", new Value(metaData.getSignalStrength()));
+		section.createProperty("manufacturerIdentification", new Value(metaData.getManIdentification()));
+		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
+		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
 
 		dataSaturatedHemoglPerc = block.createDataArray("saturatedHemoglPerc" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, saturatedHemoglPerc.length }));
@@ -71,7 +71,7 @@ public class AntMuscleOxygenMonitor {
 		dataHemoglobinConcentrate.setData(hemoglobinConcentrate,
 				new NDSize(new int[] { 1, hemoglobinConcentrate.length }), new NDSize(2, 0));
 
-		file.close();
+		//file.close();
 
 	}
 
@@ -140,6 +140,23 @@ public class AntMuscleOxygenMonitor {
 	public void setMetaData(OdMLData metaData) {
 		this.metaData = metaData;
 	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+	
 
 	
 

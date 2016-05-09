@@ -14,7 +14,7 @@ import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
  */
 public class AntLightElectricVehicle {
 
-private static int index = 0 ;
+private int index = 0 ;
 	
 	  
 	private File file;
@@ -79,15 +79,15 @@ private static int index = 0 ;
 		source = block.createSource("lightElVeh" + index, "antMessage");
 		
 		section = file.createSection("AntMetaData", "metadata");
-		section.createProperty("deviceName", metaData.getDeviceName());
-		section.createProperty("deviceType", metaData.getDeviceType());
-		section.createProperty("deviceState", metaData.getDeviceState());
-		section.createProperty("deviceNumber", metaData.getDeviceNumber());
-		section.createProperty("batteryStatus", metaData.getBatteryStatus());
-		section.createProperty("signalStrength", metaData.getSignalStrength());
-		section.createProperty("manufacturerIdentification", metaData.getManIdentification());
-		section.createProperty("manufacturerSpecificData", metaData.getManSpecData());
-		section.createProperty("productInfo", metaData.getProdInfo());
+		section.createProperty("deviceName", new Value(metaData.getDeviceName()));
+		section.createProperty("deviceType", new Value(metaData.getDeviceType()));
+		section.createProperty("deviceState", new Value(metaData.getDeviceState()));
+		section.createProperty("deviceNumber", new Value(metaData.getDeviceNumber()));
+		section.createProperty("batteryStatus", new Value(metaData.getBatteryStatus()));
+		section.createProperty("signalStrength", new Value(metaData.getSignalStrength()));
+		section.createProperty("manufacturerIdentification", new Value(metaData.getManIdentification()));
+		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
+		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
 
 		
 		dataBatStatus = block.createDataArray("BatStatus" + index, "antMessage", DataType.Int32,
@@ -105,33 +105,46 @@ private static int index = 0 ;
 			dataSpeedDistance.setData(speedDistance, new NDSize(new int[] {1,speedDistance.length}), new NDSize(2,0));
 
 			
-			dataSysGearState = block.createDataArray("SysGearState" + index, "antMessage", DataType.Bool, 
+			dataSysGearState = block.createDataArray("SysGearState" + index, "antMessage", DataType.Int16, 
 					new NDSize(new int[] {1,speedDistance.length}));
 				dataSysGearState.setData(sysGearStateB, new NDSize(new int[] {1,sysGearState.length}), new NDSize(2,0));
 
 		
 		
-		file.close();
+		//file.close();
 
 	  }
 
 	
-	
+	/*public static void main(String[] args) {
+	AntLightElectricVehicle	vehicle = new AntLightElectricVehicle(new double[]{5.0,3.0,12.0,32.0,66.0}, new boolean[] {}, new int[] {}, new int[]{},
+				new OdMLData(33, 23, 4, 5, 2, 4, 4, 2, 5));
+		vehicle.createNixFile("testovaci.h5");
+
+	}*/
 	
 	public Section getSection() {
 		return section;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
 	}
 
 	public void setSection(Section section) {
 		this.section = section;
 	}
 
-	public static int getIndex() {
+	public int getIndex() {
 		return index;
 	}
 
-	public static void setIndex(int index) {
-		AntLightElectricVehicle.index = index;
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public Block getBlock() {

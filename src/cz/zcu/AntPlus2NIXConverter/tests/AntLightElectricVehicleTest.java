@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.g_node.nix.valid.Result;
 import org.g_node.nix.valid.Validator;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,6 +23,15 @@ public class AntLightElectricVehicleTest {
 		vehicle.createNixFile("testovaci.h5");
 	}
 
+	@After
+	public void tearDown(){
+		String location =vehicle.getFile().getLocation();
+		
+		vehicle.getFile().close();
+		
+		java.io.File f = new java.io.File(location);
+		f.delete();
+	}
 	@Test
 	public void testValidate() {
 		Result result = Validator.validate(vehicle.getBlock());

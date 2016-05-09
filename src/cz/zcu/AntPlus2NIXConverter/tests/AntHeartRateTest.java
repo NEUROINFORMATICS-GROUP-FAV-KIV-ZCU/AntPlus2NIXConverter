@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.g_node.nix.valid.Result;
 import org.g_node.nix.valid.Validator;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,6 +21,16 @@ public class AntHeartRateTest {
 		heartRate.createNixFile("testovaci.h5");
 	}
 
+	@After
+	public void tearDown(){
+		String location = heartRate.getFile().getLocation();
+		
+		heartRate.getFile().close();
+		
+		java.io.File f = new java.io.File(location);
+		f.delete();
+	}
+	
 	@Test
 	public void testValidate() {
 		Result result = Validator.validate(heartRate.getBlock());

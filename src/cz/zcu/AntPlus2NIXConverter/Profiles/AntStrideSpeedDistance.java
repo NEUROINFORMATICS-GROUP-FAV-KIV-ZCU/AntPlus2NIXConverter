@@ -12,7 +12,7 @@ import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
  */
 public class AntStrideSpeedDistance {
 
-	private static int index = 0;
+	private int index = 0;
 
 	private File file;
 	private Block block;
@@ -56,15 +56,15 @@ public class AntStrideSpeedDistance {
 		source = block.createSource("strideSpeedDistance" + index, "antMessage");
 		
 		section = file.createSection("AntMetaData", "metadata");
-		section.createProperty("deviceName", metaData.getDeviceName());
-		section.createProperty("deviceType", metaData.getDeviceType());
-		section.createProperty("deviceState", metaData.getDeviceState());
-		section.createProperty("deviceNumber", metaData.getDeviceNumber());
-		section.createProperty("batteryStatus", metaData.getBatteryStatus());
-		section.createProperty("signalStrength", metaData.getSignalStrength());
-		section.createProperty("manufacturerIdentification", metaData.getManIdentification());
-		section.createProperty("manufacturerSpecificData", metaData.getManSpecData());
-		section.createProperty("productInfo", metaData.getProdInfo());
+		section.createProperty("deviceName", new Value(metaData.getDeviceName()));
+		section.createProperty("deviceType", new Value(metaData.getDeviceType()));
+		section.createProperty("deviceState", new Value(metaData.getDeviceState()));
+		section.createProperty("deviceNumber", new Value(metaData.getDeviceNumber()));
+		section.createProperty("batteryStatus", new Value(metaData.getBatteryStatus()));
+		section.createProperty("signalStrength", new Value(metaData.getSignalStrength()));
+		section.createProperty("manufacturerIdentification", new Value(metaData.getManIdentification()));
+		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
+		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
 
 		dataStrideCount = block.createDataArray("StrideCount" + index, "antMessage", DataType.Int64,
 				new NDSize(new int[] {1,strideCount.length}));
@@ -78,7 +78,7 @@ public class AntStrideSpeedDistance {
 				new NDSize(new int[] {1,speed.length}));
 			dataSpeed.setData(speed, new NDSize(new int[] {1,speed.length}), new NDSize(2,0));
 
-		file.close();
+		//file.close();
 
 	}
 
@@ -169,6 +169,15 @@ public class AntStrideSpeedDistance {
 	public void setSection(Section section) {
 		this.section = section;
 	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+	
 
 	
 	

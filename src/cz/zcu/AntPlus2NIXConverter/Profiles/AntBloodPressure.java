@@ -14,7 +14,7 @@ import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
  */
 public class AntBloodPressure {
 
-	private static int index = 0;
+	private int index = 0;
 
 	private File file;
 	private Block block;
@@ -76,15 +76,15 @@ public class AntBloodPressure {
 		source = block.createSource("bloodPressure" + index, "antMessage");
 
 		section = file.createSection("AntMetaData", "metadata");
-		section.createProperty("deviceName", metaData.getDeviceName());
-		section.createProperty("deviceType", metaData.getDeviceType());
-		section.createProperty("deviceState", metaData.getDeviceState());
-		section.createProperty("deviceNumber", metaData.getDeviceNumber());
-		section.createProperty("batteryStatus", metaData.getBatteryStatus());
-		section.createProperty("signalStrength", metaData.getSignalStrength());
-		section.createProperty("manufacturerIdentification", metaData.getManIdentification());
-		section.createProperty("manufacturerSpecificData", metaData.getManSpecData());
-		section.createProperty("productInfo", metaData.getProdInfo());
+		section.createProperty("deviceName", new Value(metaData.getDeviceName()));
+		section.createProperty("deviceType", new Value(metaData.getDeviceType()));
+		section.createProperty("deviceState", new Value(metaData.getDeviceState()));
+		section.createProperty("deviceNumber", new Value(metaData.getDeviceNumber()));
+		section.createProperty("batteryStatus", new Value(metaData.getBatteryStatus()));
+		section.createProperty("signalStrength", new Value(metaData.getSignalStrength()));
+		section.createProperty("manufacturerIdentification", new Value(metaData.getManIdentification()));
+		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
+		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
 
 		dataSystolic = block.createDataArray("Systolic" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, systolic.length }));
@@ -98,13 +98,18 @@ public class AntBloodPressure {
 				new NDSize(new int[] { 1, heartRate.length }));
 		dataHeartRate.setData(heartRate, new NDSize(new int[] { 1, heartRate.length }), new NDSize(2, 0));
 
-		dataTime = block.createDataArray("TimeStamp" + index, "antMessage", DataType.String,
+		dataTime = block.createDataArray("TimeStamp" + index, "antMessage", DataType.Int16,
 				new NDSize(new int[] { 1, timeStampSt.length }));
 		dataTime.setData(timeStampSt, new NDSize(new int[] { 1, timeStampSt.length }), new NDSize(2, 0));
 
-		file.close();
+		//file.close();
 	}
 
+	public static void main(String[] args) {
+	AntBloodPressure b =	new AntBloodPressure(new int[] { 43 }, new int[] { 3, 5, 67, 3 }, new int[] { 4, 5, 6, 4 },
+				new GregorianCalendar[] {}, new OdMLData(33, 23, 4, 5, 2, 4, 4, 2, 5));
+		b.createNixFile("testovaci.h5");
+		}
 	public Block getBlock() {
 		return block;
 	}
@@ -208,5 +213,22 @@ public class AntBloodPressure {
 	public void setSection(Section section) {
 		this.section = section;
 	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+	
 
 }

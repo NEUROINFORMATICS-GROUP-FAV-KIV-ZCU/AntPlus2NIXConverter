@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.g_node.nix.valid.Result;
 import org.g_node.nix.valid.Validator;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,10 +17,21 @@ public class AntBikePowerTest {
 
 	@Before
 	public void setUp() {
-		bikePower = new AntBikePower(new double[] { 1, 3, 5, 6 }, new OdMLData(33, 23, 4, 5, 2, 4, 4, 2, 5));
+		bikePower = new AntBikePower(new double[] { 1.0, 3.2, 5.6, 6.8 }, new OdMLData(33, 23, 4, 5, 2, 4, 4, 2, 5));
 		bikePower.createNixFile("testovaci.h5");
+		
 	}
 
+	@After
+	public void tearDown(){
+		String location = bikePower.getFile().getLocation();
+		
+		bikePower.getFile().close();
+		
+		java.io.File f = new java.io.File(location);
+		f.delete();
+	}
+	
 	@Test
 	public void testValidate() {
 		Result result = Validator.validate(bikePower.getBlock());
@@ -30,7 +42,7 @@ public class AntBikePowerTest {
 
 	@Test
 	public void testName() {
-		assertEquals(bikePower.getBlock().getName(), "recording1");
+		assertEquals(bikePower.getBlock().getName(), "recording" + bikePower.getIndex());
 	}
 
 	@Test
@@ -87,7 +99,7 @@ public class AntBikePowerTest {
 
     @Test
     public void testNameSource() {
-        assertEquals(bikePower.getSource(), "bikePower1");
+        assertEquals(bikePower.getSource().getName(), "bikePower" + bikePower.getIndex());
     }
 
     @Test

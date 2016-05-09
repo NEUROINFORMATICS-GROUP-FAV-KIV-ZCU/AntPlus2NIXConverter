@@ -6,6 +6,7 @@ import java.util.GregorianCalendar;
 
 import org.g_node.nix.valid.Result;
 import org.g_node.nix.valid.Validator;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,6 +25,16 @@ public class AntBloodPressureTest {
 		blPres.createNixFile("testovaci.h5");
 	}
 	
+	@After
+	public void tearDown(){
+		String location = blPres.getFile().getLocation();
+		
+		blPres.getFile().close();
+		
+		java.io.File f = new java.io.File(location);
+		f.delete();
+	}
+	
 	
 	@Test
 	public void testValidate() {
@@ -35,7 +46,7 @@ public class AntBloodPressureTest {
 
 	@Test
 	public void testName() {
-		assertEquals(blPres.getBlock().getName(), "recording1");
+		assertEquals(blPres.getBlock().getName(), "recording" + blPres.getIndex());
 	}
 
 	@Test

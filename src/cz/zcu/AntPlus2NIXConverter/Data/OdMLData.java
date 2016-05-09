@@ -31,7 +31,6 @@ public class OdMLData {
 	 */
 	public OdMLData(int deviceName, int deviceType, int deviceState, int deviceNumber, int batteryStatus,
 			int signalStenght, int manIdentifacation, int manSpecData, int prodInfo) {
-
 		setDeviceName(deviceName);
 		setDeviceNumber(deviceNumber);
 		setDeviceState(deviceState);
