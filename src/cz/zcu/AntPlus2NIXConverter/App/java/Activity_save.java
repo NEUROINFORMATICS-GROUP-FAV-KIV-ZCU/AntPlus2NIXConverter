@@ -16,23 +16,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
-import cz.zcu.AntPlus2NIXConverter.Profiles.AntBikeSpeed;
-import cz.zcu.AntPlus2NIXConverter.Profiles.AntHeartRate;
 
 /***
  * Vyctovy typ modu ulozeni. Do externi pameti telefonu nebo do interni pameti telefonu.
  */
-enum ModUlozeni{
-    INTERNI, EXTERNI;
+enum SaveMode {
+    INTERNAL, EXTERNAL;
 }
 
 /**
@@ -41,12 +36,12 @@ enum ModUlozeni{
 public class Activity_save extends AppCompatActivity {
 
     private Spinner spinner;
-    private ModUlozeni mode;
+    private SaveMode mode;
     private Context context;
-    int[] vyslednePole;
-    TextView pole;
-    AntBikeSpeed profil;
-    OdMLData odml;
+    int[] computedHeartRate;
+    ArrayList<Integer> computedHeartRateList, heartBeatCounterList;
+    ArrayList<Double> beatTimeList;
+    TextView computedHeartRateTV, heartBeatCounterTV, beatTimeTV;
     int[] heartBeatCounter;
     double[] timeOfPreviousHeartBeat;
 
@@ -83,28 +78,42 @@ public class Activity_save extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pole);
         context = getApplicationContext();
-        pole = (TextView) findViewById(R.id.textView);
-
+        computedHeartRateTV = (TextView) findViewById(R.id.textView);
+        heartBeatCounterTV = (TextView) findViewById(R.id.textView7);
+        beatTimeTV = (TextView) findViewById(R.id.textView8);
         Intent i = getIntent();
-        vyslednePole = upravSeznam(i.getIntegerArrayListExtra("text"));
-        vytvorSpinner();
 
+        computedHeartRateList = i.getIntegerArrayListExtra("heartRate");
+        computedHeartRateList = modifyListInt(computedHeartRateList);
+        computedHeartRateTV.setText(computedHeartRateList.toString());
+
+        heartBeatCounterList = i.getIntegerArrayListExtra("beatCounter");
+        heartBeatCounterList = modifyListInt(heartBeatCounterList);
+        heartBeatCounterTV.setText(heartBeatCounterList.toString());
+
+        beatTimeList = (ArrayList<Double>) i.getSerializableExtra("beatTime");
+        beatTimeList = modifyListDouble(beatTimeList);
+        beatTimeTV.setText(beatTimeList.toString());
+        createSpinner();
+
+        computedHeartRate = convertToArrayInt(computedHeartRateList);
+        heartBeatCounter = convertToArrayInt(heartBeatCounterList);
+        timeOfPreviousHeartBeat = convertToArrayDouble(beatTimeList);
     }
 
     /**
      * Vytvori spinner, ve kterem uzivatel vybira, kam chce soubor ulozit, zda do externi pameti
      * telefonu nebo do interni.
      */
-    public void vytvorSpinner(){
+    public void createSpinner(){
         spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (parent.getItemAtPosition(position).equals("Do vnitrni pameti telefonu")) {
-                    mode = ModUlozeni.INTERNI;
-                    Toast.makeText(context, "Vybrano interni", Toast.LENGTH_LONG).show();
+                    mode = SaveMode.INTERNAL;
                 } else {
-                    mode = ModUlozeni.EXTERNI;
+                    mode = SaveMode.EXTERNAL;
                 }
             }
 
@@ -116,51 +125,61 @@ public class Activity_save extends AppCompatActivity {
     }
 
     /**
-     * Odstrani ze seznamu po sobe jdouci duplicity a ze seznamu vytvori pole.
+     * Odstrani ze seznamu po sobe jdouci duplicity.
      * @param list seznam hodnot ze snimace
-     * @return pole hodnot ze snimace
+     * @return list hodnot ze snimace
      */
-    public int[] upravSeznam(ArrayList<Integer> list){
-        ArrayList<Integer> nove = new ArrayList<Integer>();
-        nove.add(list.get(0));
-        for(int i = 1; i < list.size(); i++){
-            if(list.get(i-1) != list.get(i)){
-                nove.add(list.get(i));
+    public ArrayList<Integer> modifyListInt(ArrayList<Integer> list) {
+        ArrayList<Integer> modified = new ArrayList<Integer>();
+        modified.add(list.get(0));
+        for (int i = 1; i < list.size(); i++) {
+            if (list.get(i - 1) != list.get(i)) {
+                modified.add(list.get(i));
             }
         }
+        return modified;
+    }
 
-        pole.setText(nove.toString());
-        int[] pole = new int[nove.size()];
+    public ArrayList<Double> modifyListDouble(ArrayList<Double> list) {
+        ArrayList<Double> modified = new ArrayList<Double>();
+        modified.add(list.get(0));
+        for (int i = 1; i < list.size(); i++) {
+            if (list.get(i - 1).equals(list.get(i)) == false) {
+                modified.add(list.get(i));
+            }
+        }
+        return modified;
+    }
 
-        for(int i = 0; i < pole.length; i++){
-            pole[i] = nove.get(i);
+    public int[] convertToArrayInt(ArrayList<Integer> list){
+        int[] array = new int[list.size()];
+        for(int i = 0; i < array.length; i++){
+            array[i] = list.get(i);
         }
 
-        return pole;
+        return array;
     }
+
+    public double[] convertToArrayDouble(ArrayList<Double> list){
+        double[] array = new double[list.size()];
+        for(int i = 0; i < array.length; i++){
+            array[i] = list.get(i);
+        }
+
+        return array;
+    }
+
 
     /**
      * Ulozi soubor bud do externi nebo do interni pameti telefonu.
      * @param v
      */
-    public void uloz(View v){
+    public void save(View v){
         FileOutputStream output;
-        String filename = "Ahoj.txt";
-        String retez = "Zkouskaaa";
-        odml = new OdMLData();
-        heartBeatCounter = new int[5];
-        timeOfPreviousHeartBeat = new double[5];
 
-        if(mode == ModUlozeni.INTERNI) {
+        if(mode == SaveMode.INTERNAL) {
             try {
-                profil = new AntBikeSpeed(heartBeatCounter, vyslednePole, odml);
-                output = openFileOutput(filename, Context.MODE_PRIVATE);
-                output.write(retez.getBytes());
-
-                output.close();
-                profil.createFile(filename);
-
-                Toast.makeText(this, getFilesDir().getPath(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "ulozeno do: " + getFilesDir().getPath(), Toast.LENGTH_LONG).show();
             } catch (Exception e) {
 
             }
@@ -168,22 +187,9 @@ public class Activity_save extends AppCompatActivity {
             this.verifyStoragePermissions(this);
             String state= Environment.getExternalStorageState();
             if (Environment.MEDIA_MOUNTED.equals(state)) {
-                String filePath = Environment.getExternalStorageDirectory().getPath() + "AntHeartRate.h5";
-                File f = new File(Environment.getExternalStorageDirectory(), "file1.txt");
-
-                Toast.makeText(this, Environment.getExternalStorageDirectory().getPath(), Toast.LENGTH_LONG).show();
                 try {
-                    profil = new AntBikeSpeed(heartBeatCounter, vyslednePole, odml);
-                    profil.createFile(filePath);
-                    FileOutputStream fs = new FileOutputStream(f);
-                    PrintWriter pw = new PrintWriter(f);
-                    pw.println("Hi , How are you");
-                    pw.println("Hello");
-                    pw.flush();
-                    pw.close();
-                    fs.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    Toast.makeText(this, "ulozeno do: " + Environment.getExternalStorageDirectory().getPath(), Toast.LENGTH_LONG).show();
                 }
             }
         }

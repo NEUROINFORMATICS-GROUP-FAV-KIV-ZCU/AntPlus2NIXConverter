@@ -39,11 +39,12 @@ public class Activity_HeartRateDisplayBase extends AppCompatActivity {
 
     AntPlusHeartRatePcc hrPcc = null;
     PccReleaseHandle<AntPlusHeartRatePcc> releaseHandle = null;
-    TextView tv_computedHeartRate, tv_status;
-    Button start, stop, konec;
-    ArrayList<Integer> data, cisla;
-    boolean prijimej;
-    Chronometer cas;
+    TextView tv_computedHeartRate, tv_status, tv_heartBeatCounter, tv_beatTime;
+    Button startBT, stopBT, endBT;
+    ArrayList<Integer> heartRateList, beatCounterList;
+    ArrayList<Double> beatTimeList;
+    boolean isRecieving;
+    Chronometer time;
     Context context;
     private GoogleApiClient client;
 
@@ -83,18 +84,24 @@ public class Activity_HeartRateDisplayBase extends AppCompatActivity {
                                                final int computedHeartRate, final long heartBeatCount,
                                                final BigDecimal heartBeatEventTime, final AntPlusHeartRatePcc.DataState dataState) {
                     final String textHeartRate = String.valueOf(computedHeartRate);
-                    cisla = new ArrayList<Integer>();
+                    final String textHeartBeatCount = String.valueOf(heartBeatCount);
+                    final String textHeartBeatEventTime = String.valueOf(heartBeatEventTime);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(prijimej) {
+                            if (isRecieving) {
                                 tv_computedHeartRate.setText(textHeartRate);
-                                data.add(Integer.parseInt(textHeartRate));
+                                heartRateList.add(Integer.parseInt(textHeartRate));
+                                tv_heartBeatCounter.setText(textHeartBeatCount);
+                                beatCounterList.add(Integer.parseInt(textHeartBeatCount));
+                                tv_beatTime.setText(textHeartBeatEventTime);
+                                beatTimeList.add(Double.parseDouble(textHeartBeatEventTime));
                             }
                         }
                     });
                 }
             });
+
 
 
     }
@@ -104,11 +111,11 @@ public class Activity_HeartRateDisplayBase extends AppCompatActivity {
      * Zastavi prenos dat ze snimace a nabidne ukonceni treninku.
      * @param v
      */
-    public void vytiskniData(View v){
-        prijimej = false;
-        cas.stop();
-        start.setText("Novy start");
-        konec.setVisibility(View.VISIBLE);
+    public void stopRecieving(View v){
+        isRecieving = false;
+        time.stop();
+        startBT.setText("Novy start");
+        endBT.setVisibility(View.VISIBLE);
         tv_status.setText("Prenos zastaven");
         tv_computedHeartRate.setText("Trenink ukoncen");
 
@@ -118,10 +125,25 @@ public class Activity_HeartRateDisplayBase extends AppCompatActivity {
      * Po stisku tlacitka na ukonceni treninku spusti novou aktivitu a zistany seznam hodnot preda nove aktivite.
      * @param v
      */
-    public void ukonciTrenink(View v){
-        Intent intent = new Intent(this, Pole.class);
-        intent.putExtra("text", data);
+    public void endPractice(View v){
+        Intent intent = new Intent(this, Activity_save.class);
+        intent.putExtra("heartRate", heartRateList);
+        intent.putExtra("beatCounter", beatCounterList);
+        intent.putExtra("beatTime", beatTimeList);
         startActivity(intent);
+    }
+
+    public void initialize(){
+        startBT = (Button) findViewById(R.id.button);
+        stopBT = (Button) findViewById(R.id.button2);
+        endBT = (Button) findViewById(R.id.button4);
+        heartRateList = new ArrayList();
+        beatCounterList = new ArrayList();
+        beatTimeList = new ArrayList();
+        tv_status = (TextView) findViewById(R.id.textView4);
+        tv_computedHeartRate = (TextView) findViewById(R.id.textView2);
+        tv_heartBeatCounter = (TextView) findViewById(R.id.textView5);
+        tv_beatTime = (TextView) findViewById(R.id.textView6);
     }
 
     /**
@@ -137,21 +159,19 @@ public class Activity_HeartRateDisplayBase extends AppCompatActivity {
                         case SUCCESS:
                             final String stav = initialDeviceState.toString();
                             hrPcc = result;
-                            start = (Button) findViewById(R.id.button);
-                            stop = (Button) findViewById(R.id.button2);
-                            konec = (Button) findViewById(R.id.button4);
-                            data = new ArrayList();
-                            tv_status.setText("Cekam na start");
-                            start.setOnClickListener(new View.OnClickListener() {
+                            initialize();
+                            startBT.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    konec.setVisibility(View.INVISIBLE);
-                                    data.clear();
-                                    prijimej = true;
-                                    cas = (Chronometer) findViewById(R.id.chronometer);
-                                    cas.setBase(SystemClock.elapsedRealtime());
+                                    endBT.setVisibility(View.INVISIBLE);
+                                    heartRateList.clear();
+                                    beatTimeList.clear();
+                                    beatCounterList.clear();
+                                    isRecieving = true;
+                                    time = (Chronometer) findViewById(R.id.chronometer);
+                                    time.setBase(SystemClock.elapsedRealtime());
                                     tv_status.setText(stav);
-                                    cas.start();
+                                    time.start();
                                     subscribeToHrEvents();
                                 }
                             });

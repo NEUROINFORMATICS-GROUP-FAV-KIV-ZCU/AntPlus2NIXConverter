@@ -72,8 +72,8 @@ class ArrayAdapter1 extends ArrayAdapter<MultiDeviceSearchResult>{
 
         MultiDeviceSearchResult result = mData.get(position);
         if(result != null){
-            TextView jmeno = (TextView) convertView.findViewById(R.id.rowTextView);
-            jmeno.setText(result.getAntDeviceType().toString() + " " + result.getAntDeviceNumber());
+            TextView view = (TextView) convertView.findViewById(R.id.rowTextView);
+            view.setText(result.getAntDeviceType().toString() + " " + result.getAntDeviceNumber());
         }
 
         return convertView;
@@ -91,7 +91,7 @@ public class Activity_MultiDeviceSearch extends AppCompatActivity {
     public static final String BUNDLE_KEY = "com.example.filip.mojenahledani.bundle";
     public static final String FILTER_KEY = "com.example.filip.mojenahledani.filter";
     public static final int RESULT_SEARCH_STOPPED = RESULT_FIRST_USER;
-    public static final DeviceType srdce = DeviceType.HEARTRATE;
+    public static final DeviceType type = DeviceType.HEARTRATE;
 
     Context mContext;
 
@@ -139,7 +139,7 @@ public class Activity_MultiDeviceSearch extends AppCompatActivity {
 
         Intent i = getIntent();
         Bundle args = i.getBundleExtra(BUNDLE_KEY);
-        EnumSet<DeviceType> devices = EnumSet.of(srdce);
+        EnumSet<DeviceType> devices = EnumSet.of(type);
 
 
         /* Spusti hledani */
