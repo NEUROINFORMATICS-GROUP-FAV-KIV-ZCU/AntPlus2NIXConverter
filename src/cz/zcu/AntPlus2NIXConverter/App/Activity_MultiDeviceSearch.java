@@ -1,16 +1,20 @@
 package com.example.filip.mojenahledani;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -30,23 +34,58 @@ import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 
-/*class ArrayAdapter1 extends ArrayAdapter<MultiDeviceSearchResult>{
+/***
+ * Trida, ktera zajistuje, jake informace chceme zobrazit v ListView nalezenych ANT+ snimacu.
+ * Vlastne konvertuje objekty z ArrayListu do View, ktery se pote da zobrazit v ListView.
+ */
+class ArrayAdapter1 extends ArrayAdapter<MultiDeviceSearchResult>{
 
+    /* seznam nalezenych zarizeni */
+    private ArrayList<MultiDeviceSearchResult> mData;
 
-    public ArrayAdapter1(Context context,
-                         ArrayList<MultiDeviceSearchResult> data) {
-        super(context, R.layout.layout_multidevice_searchresult, data);
+    /**
+     * Konstruktor na vytvoreni adapteru.
+     * @param context aktualni obrazovka
+     * @param data seznam nalezenych zarizeni
+     */
+    public ArrayAdapter1(Context context, ArrayList<MultiDeviceSearchResult> data) {
+        super(context, R.layout.simple_row, data);
         mData = data;
-        mDeviceTypes = context.getResources().getStringArray(R.array.device_types);;
     }
-}*/
+
+    /**
+     * Metoda prevzata z rodicovske tridy.
+     * @param position pozice nalezeneho zarizeni v seznamu
+     * @param convertView upraveny View
+     * @param parent
+     * @return upraveny view, s formatem, jaky bude zobrazovat ListView
+     */
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent){
+
+        if (convertView == null)
+        {
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(
+                    Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.simple_row, null);
+        }
+
+        MultiDeviceSearchResult result = mData.get(position);
+        if(result != null){
+            TextView jmeno = (TextView) convertView.findViewById(R.id.rowTextView);
+            jmeno.setText(result.getAntDeviceType().toString() + " " + result.getAntDeviceNumber());
+        }
+
+        return convertView;
+
+    }
+}
+
+/**
+ * Obsluha hlavni aktivity, ktera se zobrazi po spusteni aplikace.
+ */
 
 public class Activity_MultiDeviceSearch extends AppCompatActivity {
-
-/*    public class MultiDeviceSearchResultWithRSSI
-    {*/
- /*       public int mRSSI = Integer.MIN_VALUE;
-    }*/
 
     public static final String EXTRA_KEY_MULTIDEVICE_SEARCH_RESULT = "com.example.filip.mojenahledani.results";
     public static final String BUNDLE_KEY = "com.example.filip.mojenahledani.bundle";
@@ -55,20 +94,19 @@ public class Activity_MultiDeviceSearch extends AppCompatActivity {
     public static final DeviceType srdce = DeviceType.HEARTRATE;
 
     Context mContext;
-    TextView mStatus;
-    Button dalsi;
 
     ListView mFoundDevicesList;
     ArrayList<MultiDeviceSearchResult> mFoundDevices = new ArrayList<MultiDeviceSearchResult>();
-    ArrayAdapter mFoundAdapter;
-
-    ListView mConnectedDevicesList;
-    ArrayList<MultiDeviceSearchResult> mConnectedDevices = new ArrayList<MultiDeviceSearchResult>();
-    ArrayAdapter mConnectedAdapter;
+    ArrayAdapter1 mFoundAdapter;
 
     public MultiDeviceSearchResult mDevice;
     MultiDeviceSearch mSearch;
 
+
+    /**
+     * Provadi akce po vytvoreni aktivity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,34 +124,32 @@ public class Activity_MultiDeviceSearch extends AppCompatActivity {
         });
 
         mContext = getApplicationContext();
-        mStatus = (TextView) findViewById(R.id.textView2);
+        mFoundDevicesList = (ListView) findViewById(R.id.list);
 
-        mFoundDevicesList = (ListView) findViewById(R.id.listView);
-
-        mFoundAdapter = new ArrayAdapter(this, R.layout.simple_row, mFoundDevices);
+        mFoundAdapter = new ArrayAdapter1(this, mFoundDevices);
         mFoundDevicesList.setAdapter(mFoundAdapter);
 
-        mFoundDevicesList.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        /* Po kliknuti na nalezene zarizeni se otevre nova aktivita */
+        mFoundDevicesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-      //          Toast.makeText(mContext, mFoundDevices.get(position), Toast.LENGTH_SHORT).show();
-            launchConnection(mFoundDevices.get(position));
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                launchConnection(mFoundDevices.get(position));
             }
         });
 
         Intent i = getIntent();
         Bundle args = i.getBundleExtra(BUNDLE_KEY);
-        @SuppressWarnings("unchecked")
         EnumSet<DeviceType> devices = EnumSet.of(srdce);
 
 
-        // start the multi-device search
+        /* Spusti hledani */
         mSearch = new MultiDeviceSearch(this, devices, mCallback);
-
     }
 
+    /**
+     * Spusti novou aktivitu.
+     * @param result vybrany snimac
+     */
     public void launchConnection(MultiDeviceSearchResult result){
         Intent intent = new Intent(this, Activity_HeartRateDisplayBase.class);
         intent.putExtra(EXTRA_KEY_MULTIDEVICE_SEARCH_RESULT, result);
@@ -143,22 +179,19 @@ public class Activity_MultiDeviceSearch extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     private MultiDeviceSearch.SearchCallbacks mCallback = new MultiDeviceSearch.SearchCallbacks()
     {
         /**
-         * Called when a device is found. Display found devices in connected and
-         * found lists
+         * Zavola se, kdyz je nalezen nejaky snimac.
          */
         public void onDeviceFound(final MultiDeviceSearchResult deviceFound)
         {
-          /*  final MultiDeviceSearchResultWithRSSI result = new MultiDeviceSearchResultWithRSSI();
-            result.*/mDevice = deviceFound;
+            mDevice = deviceFound;
 
-            runOnUiThread(new Runnable()
-            {
+            runOnUiThread(new Runnable() {
                 @Override
-                public void run()
-                {
+                public void run() {
                     mFoundAdapter.add(mDevice);
                     mFoundAdapter.notifyDataSetChanged();
                 }
@@ -168,7 +201,7 @@ public class Activity_MultiDeviceSearch extends AppCompatActivity {
 
 
         /**
-         * The search has been stopped unexpectedly
+         * Hledani se neocekavane zastavilo
          */
         public void onSearchStopped(RequestAccessResult reason)
         {
@@ -178,6 +211,10 @@ public class Activity_MultiDeviceSearch extends AppCompatActivity {
             finish();
         }
 
+        /**
+         * Spusti se pri zacatku hledani. Rssi udava vzdalenost snimacu od telefonu, my nevyuzivame.
+         * @param supportsRssi
+         */
         @Override
         public void onSearchStarted(RssiSupport supportsRssi) {
             if(supportsRssi == RssiSupport.UNAVAILABLE)
@@ -191,3 +228,4 @@ public class Activity_MultiDeviceSearch extends AppCompatActivity {
     };
 
 }
+
