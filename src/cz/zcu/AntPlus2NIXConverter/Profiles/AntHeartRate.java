@@ -6,13 +6,16 @@ import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 import org.g_node.nix.*;
 
 /**
- * Profil pro vytvoren√≠ HDF5 souboru ze zarizeni Heart Rate.
- * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
+ * Trida pro zpracovani informaci o ANT plus profilu HeartRate Profil pro
+ * vytvoreni≠ HDF5 souboru ze zarizeni Heart Rate.* @author Vaclav Janoch, Filip
+ * Kupilik, Petr Tobias
+ * 
  * @version 1.0
  */
 
 public class AntHeartRate {
 
+	/** Aributy tridy **/
 	private int index = 0;
 
 	private File file;
@@ -28,14 +31,19 @@ public class AntHeartRate {
 	private double[] timeOfPreviousHeartBeat = new double[3];
 
 	private OdMLData metaData;
-	
-	
+
 	/**
-	 * Konstruktor tridy.
-	 * @param heartBeatCounter Pocet srdecnich tepu
-	 * @param computedHeartRate Vypocitany tep
-	 * @param timeOfPreviousHeartBeat Cas predchoziho uderu srdce
-	 * @param metaData MetaData
+	 * Konstruktor tridy. Naplni atributy tridy informacemi z ANT plus profilu s
+	 * polecne s metadaty
+	 * 
+	 * @param heartBeatCounter
+	 *            Pocet srdecnich tepu
+	 * @param computedHeartRate
+	 *            Vypocitany tep
+	 * @param timeOfPreviousHeartBeat
+	 *            Cas predchoziho uderu srdce
+	 * @param metaData
+	 *            MetaData
 	 */
 	public AntHeartRate(int[] heartBeatCounter, int[] computedHeartRate, double[] timeOfPreviousHeartBeat,
 			OdMLData metaData) {
@@ -49,8 +57,11 @@ public class AntHeartRate {
 	}
 
 	/**
-	 * Metoda pro vytvoreni HDF5 souboru i s celou jeho strukturou vcetne dat a metadat.
-	 * @param fileName Nazev souboru
+	 * 
+	 * Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat
+	 * 
+	 * @param fileName
+	 *            Nazev souboru
 	 */
 	public void createNixFile(String fileName) {
 		file = File.open(fileName, FileMode.Overwrite);
@@ -58,7 +69,9 @@ public class AntHeartRate {
 		block = file.createBlock("recording" + index, "recording");
 
 		source = block.createSource("heartRate" + index, "antMessage");
-				
+		
+		/* Pridani metadat do bloku */
+		
 		section = file.createSection("AntMetaData", "metadata");
 		section.createProperty("deviceName", new Value(metaData.getDeviceName()));
 		section.createProperty("deviceType", new Value(metaData.getDeviceType()));
@@ -70,24 +83,28 @@ public class AntHeartRate {
 		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
 		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
 
+		/* Naplneni dataArray daty o tlukotu srdce */
 		dataHeartBeatCounter = block.createDataArray("heartBeatCount" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, heartBeatCounter.length }));
 		dataHeartBeatCounter.setData(heartBeatCounter, new NDSize(new int[] { 1, heartBeatCounter.length }),
 				new NDSize(2, 0));
-
+		dataHeartBeatCounter.setUnit("N/A");
+		/* Naplneni dataArray daty o vypoctech */
 		dataComputedHeartRate = block.createDataArray("comluptedHeartRate" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, computedHeartRate.length }));
 		dataComputedHeartRate.setData(computedHeartRate, new NDSize(new int[] { 1, computedHeartRate.length }),
 				new NDSize(2, 0));
-
+		dataComputedHeartRate.setUnit("bpm");
+		/* Naplneni dataArray daty o case prechoziho tepu */
 		dataTimeOfPreviousHeartBeat = block.createDataArray("timeOfPreviousHeartBeat" + index, "antMessage",
 				DataType.Double, new NDSize(new int[] { 1, timeOfPreviousHeartBeat.length }));
 		dataTimeOfPreviousHeartBeat.setData(timeOfPreviousHeartBeat,
 				new NDSize(new int[] { 1, timeOfPreviousHeartBeat.length }), new NDSize(2, 0));
-
-		//file.close();
+		dataTimeOfPreviousHeartBeat.setUnit("seconds");
+		file.close();
 	}
 
+	/**** Getry a Setry *****/
 	public Block getBlock() {
 		return block;
 	}
@@ -183,6 +200,5 @@ public class AntHeartRate {
 	public void setFile(File file) {
 		this.file = file;
 	}
-	
 
 }

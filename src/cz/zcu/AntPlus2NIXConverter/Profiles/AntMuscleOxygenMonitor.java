@@ -5,12 +5,15 @@ import org.g_node.nix.*;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 
 /**
- * Profil pro vytvoren√≠ HDF5 souboru ze zarizeni Muscle Oxygen Monitor.
- * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
+ *Trida pro zpracovani informaci o ANT plus profilu Muscle Oxygen Monitor
+ * Profil pro vytvoreni ≠ HDF5 souboru ze zarizeni Muscle Oxygen Monitor.
+ *@author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
 public class AntMuscleOxygenMonitor {
 
+	/** Aributy tridy **/
+	
 	private int index = 0;
 
 	private File file;
@@ -25,7 +28,8 @@ public class AntMuscleOxygenMonitor {
 	private OdMLData metaData;
 
 	/**
-	 * Konstruktor tridy.
+	 * Konstruktor tridy. Naplni atributy tridy informacemi z ANT plus profilu s
+	 * polecne s metadaty
 	 * @param saturatedHemoglPerc Predchozi a soucasny hemoglobin
 	 * @param hemoglobinConcentrate Koncentrace hemoglobinu
 	 * @param metaData MetaData
@@ -40,7 +44,7 @@ public class AntMuscleOxygenMonitor {
 	}
 
 	/**
-	 * Metoda pro vytvoreni HDF5 souboru i s celou jeho strukturou vcetne dat a metadat.
+	 * Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat
 	 * @param fileName Nazev souboru
 	 */
 	public void createNixFile(String fileName) {
@@ -50,6 +54,7 @@ public class AntMuscleOxygenMonitor {
 
 		source = block.createSource("muscleOxygenMonitor" + index, "antMessage");
 
+		/* Pridani metadat do bloku */
 		section = file.createSection("AntMetaData", "metadata");
 		section.createProperty("deviceName", new Value(metaData.getDeviceName()));
 		section.createProperty("deviceType", new Value(metaData.getDeviceType()));
@@ -61,22 +66,27 @@ public class AntMuscleOxygenMonitor {
 		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
 		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
 
+		/* Naplneni dataArray daty o hemoglobinu v procentech */
+
 		dataSaturatedHemoglPerc = block.createDataArray("saturatedHemoglPerc" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, saturatedHemoglPerc.length }));
 		dataSaturatedHemoglPerc.setData(saturatedHemoglPerc, new NDSize(new int[] { 1, saturatedHemoglPerc.length }),
 				new NDSize(2, 0));
 
+		dataSaturatedHemoglPerc.setUnit("%");
+		/* Naplneni dataArray daty o koncentraci hemoglobinu */
+
 		dataHemoglobinConcentrate = block.createDataArray("hemoglobinConcentr" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, hemoglobinConcentrate.length }));
 		dataHemoglobinConcentrate.setData(hemoglobinConcentrate,
 				new NDSize(new int[] { 1, hemoglobinConcentrate.length }), new NDSize(2, 0));
-
-		//file.close();
+		dataSaturatedHemoglPerc.setUnit("g/dl");
+		file.close();
 
 	}
 
 	
-
+	/** Getry a setry **/
 	public Section getSection() {
 		return section;
 	}

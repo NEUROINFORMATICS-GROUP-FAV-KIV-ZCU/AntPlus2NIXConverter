@@ -6,12 +6,14 @@ import cz.zcu.AntPlus2NIXConverter.Convert.ID;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 
 /**
- * Profil pro vytvoren√≠ HDF5 souboru ze zarizeni Bike Speed.
- * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
+ * Trida pro zpracovani informaci o ANT plus profilu Bike Speed Profil pro
+ * vytvoreni≠ HDF5 souboru ze zarizeni Bike Speed.@author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
 public class AntBikeSpeed {
 
+	/** Aributy tridy **/
+	
 	private int index = 0;
 
 	private File file;
@@ -27,10 +29,15 @@ public class AntBikeSpeed {
 	private OdMLData metaData;
 
 	/**
-	 * Konstruktor tridy.
-	 * @param cumWheelRew Otacky kola
-	 * @param latSpEvTime Cas
-	 * @param metaData MetaData
+	 * Konstruktor tridy. Naplni atributy tridy informacemi z ANT plus profilu s
+	 * polecne s metadaty
+	 * 
+	 * @param cumWheelRew
+	 *            Otacky kola
+	 * @param latSpEvTime
+	 *            Cas
+	 * @param metaData
+	 *            MetaData
 	 */
 	public AntBikeSpeed(int[] cumWheelRew, int[] latSpEvTime, OdMLData metaData) {
 
@@ -42,8 +49,10 @@ public class AntBikeSpeed {
 	}
 
 	/**
-	 * Metoda pro vytvoreni HDF5 souboru i s celou jeho strukturou vcetne dat a metadat.
-	 * @param fileName Nazev souboru
+	 * Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat
+	 * 
+	 * @param fileName
+	 *            Nazev souboru
 	 */
 	public void createNixFile(String fileName) {
 		file = File.open(fileName, FileMode.Overwrite);
@@ -52,6 +61,8 @@ public class AntBikeSpeed {
 
 		source = block.createSource("bikeSpeed" + index, "antMessage");
 
+		/* Pridani metadat do bloku */
+		
 		section = file.createSection("AntMetaData", "metadata");
 		section.createProperty("deviceName", new Value(metaData.getDeviceName()));
 		section.createProperty("deviceType", new Value(metaData.getDeviceType()));
@@ -63,16 +74,22 @@ public class AntBikeSpeed {
 		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
 		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
 
+		/* Naplneni dataArray daty o case */
+		
 		dataArrayLatSpEvTime = block.createDataArray("LatSpEvTime" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, latSpEvTime.length }));
 		dataArrayLatSpEvTime.setData(latSpEvTime, new NDSize(new int[] { 1, latSpEvTime.length }), new NDSize(2, 0));
 
+		/* Naplneni dataArray daty o otaceni kola */
+		
 		dataArrayCumWheelRew = block.createDataArray("CumWheelRew" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, cumWheelRew.length }));
 		dataArrayCumWheelRew.setData(cumWheelRew, new NDSize(new int[] { 1, cumWheelRew.length }), new NDSize(2, 0));
 
-		//file.close();
+		file.close();
 	}
+	
+	/***** Getry a Setry *******/
 
 	public Block getBlock() {
 		return block;

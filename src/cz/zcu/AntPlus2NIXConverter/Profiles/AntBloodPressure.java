@@ -8,12 +8,13 @@ import cz.zcu.AntPlus2NIXConverter.Convert.ID;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 
 /**
- * Profil pro vytvoren√≠ HDF5 souboru ze zarizeni Blood Pressure.
- * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
+ * Trida pro zpracovani informaci o ANT plus profilu BloodPressure Profil pro
+ * vytvoreni≠ HDF5 souboru ze zarizeni Blood Pressure.@author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
 public class AntBloodPressure {
 
+	/** Aributy tridy **/
 	private int index = 0;
 
 	private File file;
@@ -34,12 +35,19 @@ public class AntBloodPressure {
 	private OdMLData metaData;
 
 	/**
-	 * Konstruktor tridy.
-	 * @param systolic Systolicky tlak
-	 * @param distolic Distolicky tlak
-	 * @param heartRate Srdecni tep
-	 * @param timeStamp Casova znamka
-	 * @param metaData MetaData
+	  Konstruktor tridy. Naplni atributy tridy informacemi z ANT plus profilu
+	 * spolecne s metadaty
+	 * 
+	 * @param systolic
+	 *            Systolicky tlak
+	 * @param distolic
+	 *            Distolicky tlak
+	 * @param heartRate
+	 *            Srdecni tep
+	 * @param timeStamp
+	 *            Casova znamka
+	 * @param metaData
+	 *            MetaData
 	 */
 	public AntBloodPressure(int[] systolic, int[] distolic, int[] heartRate, GregorianCalendar[] timeStamp,
 			OdMLData metaData) {
@@ -54,6 +62,10 @@ public class AntBloodPressure {
 
 	}
 
+	/**
+	 * Pomocna metoda pro prevedeni dat ulozenych ve formatu GregorianCalendar
+	 * do datoveho typu Byte pro ulozeni do NIX
+	 */
 	public void prevedTimeStamp() {
 		timeStampSt = new byte[timeStamp.length];
 		for (int i = 0; i < timeStamp.length; i++) {
@@ -63,8 +75,9 @@ public class AntBloodPressure {
 	}
 
 	/**
-	 * Metoda pro vytvoreni HDF5 souboru i s celou jeho strukturou vcetne dat a metadat.
-	 * @param fileName Nazev souboru
+	 *Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat 
+	 * @param fileName
+	 *            Nazev souboru 
 	 */
 	public void createNixFile(String fileName) {
 
@@ -75,6 +88,8 @@ public class AntBloodPressure {
 
 		source = block.createSource("bloodPressure" + index, "antMessage");
 
+		/* Pridani metadat do bloku */
+		
 		section = file.createSection("AntMetaData", "metadata");
 		section.createProperty("deviceName", new Value(metaData.getDeviceName()));
 		section.createProperty("deviceType", new Value(metaData.getDeviceType()));
@@ -86,26 +101,33 @@ public class AntBloodPressure {
 		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
 		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
 
+		/* Naplneni dataArray daty o systolickem tlaku */
+ 		
 		dataSystolic = block.createDataArray("systolicBloodPress" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, systolic.length }));
 		dataSystolic.setData(systolic, new NDSize(new int[] { 1, systolic.length }), new NDSize(2, 0));
-
+		dataSystolic.setUnit("mmHg");
+		/* Naplneni dataArray daty o distolickem tlaku */		
 		dataDistolic = block.createDataArray("diastolicBloodPress" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, distolic.length }));
 		dataDistolic.setData(distolic, new NDSize(new int[] { 1, systolic.length }), new NDSize(2, 0));
+		dataDistolic.setUnit("mmHg");
+		/* Naplneni dataArray daty o srdecni cinnosti */
 
 		dataHeartRate = block.createDataArray("heartRate" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, heartRate.length }));
 		dataHeartRate.setData(heartRate, new NDSize(new int[] { 1, heartRate.length }), new NDSize(2, 0));
-
+		dataHeartRate.setUnit("bpm");
+		/* Naplneni dataArray daty o case */
 		dataTime = block.createDataArray("timeStamp" + index, "antMessage", DataType.Int16,
 				new NDSize(new int[] { 1, timeStampSt.length }));
 		dataTime.setData(timeStampSt, new NDSize(new int[] { 1, timeStampSt.length }), new NDSize(2, 0));
-
-		//file.close();
+		dataTime.setUnit("N/A");
+		file.close();
 	}
 
 	/** Getry a Setry **/
+	
 	public Block getBlock() {
 		return block;
 	}

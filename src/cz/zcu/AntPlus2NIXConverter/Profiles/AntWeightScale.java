@@ -5,12 +5,14 @@ import org.g_node.nix.*;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 
 /**
- * Profil pro vytvoren√≠ HDF5 souboru ze zarizeni Weight Scale.
- * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
+ *Trida pro zpracovani informaci o ANT plus profilu Bike Speed Profil pro
+ * vytvoreni≠ HDF5 souboru ze zarizeni Weight Scale.* @author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
 public class AntWeightScale {
 
+	/** Aributy tridy **/
+	
 	private int index = 0;
 
 	private int[] weight;
@@ -22,7 +24,9 @@ public class AntWeightScale {
 	private DataArray dataWeight;
 
 	/**
-	 * Konstruktor tridy.
+	 * Konstruktor tridy. 
+	 * Naplni atributy tridy informacemi z ANT plus profilu s
+	 * polecne s metadaty
 	 * @param weight Vaha
 	 * @param metaData MetaData
 	 */
@@ -35,8 +39,8 @@ public class AntWeightScale {
 	}
 
 	/**
-	 * Metoda pro vytvoreni HDF5 souboru i s celou jeho strukturou vcetne dat a metadat.
-	 * @param fileName Nazev souboru
+	 *Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat.
+ 	 @param fileName Nazev souboru
 	 */
 	public void createNixFile(String fileName) {
 		file = File.open(fileName, FileMode.Overwrite);
@@ -44,7 +48,7 @@ public class AntWeightScale {
 		block = file.createBlock("recording" + index, "recording");
 
 		source = block.createSource("weightScale" + index, "antMessage");
-
+		/* Pridani metadat do bloku */
 		section = file.createSection("AntMetaData", "metadata");
 		section.createProperty("deviceName", new Value(metaData.getDeviceName()));
 		section.createProperty("deviceType", new Value(metaData.getDeviceType()));
@@ -56,14 +60,16 @@ public class AntWeightScale {
 		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
 		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
 
+		/* Naplneni dataArray daty o vaze */
+		
 		dataWeight = block.createDataArray("weight" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, weight.length }));
 		dataWeight.setData(weight, new NDSize(new int[] { 1, weight.length }), new NDSize(2, 0));
-
-		//file.close();
+		dataWeight.setUnit("kg");
+		file.close();
 
 	}
-
+	/** Getry a Setry **/
 	public int getIndex() {
 		return index;
 	}

@@ -6,12 +6,15 @@ import cz.zcu.AntPlus2NIXConverter.Convert.ID;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 
 /**
- * Profil pro vytvorení HDF5 souboru ze zarizeni Bike Power.
+ * Trida pro zpracovani informaci o ANT plus profilu Bike Power Profil pro
+ * vytvoreni� HDF5 souboru ze zarizeni Bike Power.Profil pro vytvorení HDF5 souboru ze zarizeni Bike Power.
  * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
 public class AntBikePower {
 
+	/** Aributy tridy **/
+	
 	private int index = 0;
 
 	private File file;
@@ -24,11 +27,14 @@ public class AntBikePower {
 
 	private OdMLData metaData;
 
-	/**
-	 * Konstruktor tridy.
-	 * @param power Vykon
-	 * @param metaData MetaData
-	 */
+	 /** Konstruktor tridy. Naplni atributy tridy informacemi o vykonu a
+	  * metadatech vysilanych Ant plus profilem.
+	  * 
+	  * @param power
+	  *            Vykon
+	  * @param metaData
+	  *            MetaData
+	  */
 	public AntBikePower(double[] power, OdMLData metaData) {
 
 		this.power = power;
@@ -37,10 +43,11 @@ public class AntBikePower {
 
 	}
 
-	/**
-	 * Metoda pro vytvoreni HDF5 souboru i s celou jeho strukturou vcetne dat a metadat.
-	 * @param fileName Nazev souboru
-	 */
+	 /** Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat.
+	  * 
+	  * @param fileName
+	  *            Nazev souboru
+	  */
 	public void createNixFile(String fileName) {
 		file = File.open(fileName, FileMode.Overwrite);
 
@@ -48,6 +55,7 @@ public class AntBikePower {
 		
 		source = block.createSource("bikePower" + index, "antMessage");
 		
+		/* Pridani metadat do bloku */
 		section = file.createSection("AntMetaData", "metadata");
 		section.createProperty("deviceName", new Value(metaData.getDeviceName()));
 		section.createProperty("deviceType", new Value(metaData.getDeviceType()));
@@ -59,6 +67,7 @@ public class AntBikePower {
 		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
 		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
 
+		/* Naplneni dataArray daty o vykonu */
 		dataArrayBikePower = block.createDataArray("powerOnly" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, power.length }));
 		dataArrayBikePower.setData(power, new NDSize(new int[] { 1, power.length }), new NDSize(2, 0));
@@ -66,10 +75,7 @@ public class AntBikePower {
 		//file.close();
 	}
 
-	public static void main(String[] args) {
-		AntBikePower b = new AntBikePower(new double[]{4,4,},new OdMLData(0, 0, 0, 0, 0, 0, 0, 0, 0));
-		b.createNixFile("testovaci.h5");
-	}
+	/** Getry a Setry **/
 	
 	public Section getSection() {
 		return section;
