@@ -72,7 +72,7 @@ public class AntBikePower {
 				new NDSize(new int[] { 1, power.length }));
 		dataArrayBikePower.setData(power, new NDSize(new int[] { 1, power.length }), new NDSize(2, 0));
 
-		//file.close();
+		file.close();
 	}
 
 	/** Getry a Setry **/
