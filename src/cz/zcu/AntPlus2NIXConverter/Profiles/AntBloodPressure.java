@@ -68,7 +68,7 @@ public class AntBloodPressure {
 	 * Pomocna metoda pro prevedeni dat ulozenych ve formatu GregorianCalendar
 	 * do datoveho typu Byte pro ulozeni do NIX
 	 */
-	public void prevedTimeStamp() {
+	private void convertTimeStamp() {
 		timeStampSt = new byte[timeStamp.length];
 		for (int i = 0; i < timeStamp.length; i++) {
 			timeStampSt[i] = Byte.parseByte(timeStamp[i].toString());
@@ -84,7 +84,7 @@ public class AntBloodPressure {
 	 */
 	public void createNixFile(String fileName) {
 
-		prevedTimeStamp();
+		convertTimeStamp();
 		file = File.open(fileName, FileMode.Overwrite);
 
 		block = file.createBlock("recording" + index, "recording");

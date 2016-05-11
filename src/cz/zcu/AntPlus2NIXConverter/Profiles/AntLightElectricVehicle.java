@@ -66,7 +66,7 @@ public class AntLightElectricVehicle {
 	 * Byty pro ulozeni do formatu NIX
 	 **/
 
-	public void convertSysGearState() {
+	private void convertSysGearState() {
 
 		sysGearStateB = new byte[sysGearState.length];
 
