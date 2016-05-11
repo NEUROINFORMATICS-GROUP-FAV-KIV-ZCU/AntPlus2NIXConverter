@@ -8,7 +8,8 @@ import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 /**
  * Trida pro zpracovani informaci o ANT plus profilu Stride Speed & Distance.
  * Profil pro vytvoreni ­ HDF5 souboru ze zarizeni Stride Speed & Distance.
- *@author Vaclav Janoch, Filip Kupilik, Petr Tobias
+ * 
+ * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
 public class AntStrideSpeedDistance {
@@ -23,147 +24,106 @@ public class AntStrideSpeedDistance {
 	private DataArray dataStrideCount;
 	private DataArray dataDistance;
 	private DataArray dataSpeed;
-	
+
 	private long[] strideCount;
 	private double[] distance;
 	private double[] speed;
-	private OdMLData metaData ;
+	private OdMLData metaData;
 
 	/**
 	 * Konstruktor tridy. Naplni atributy tridy informacemi z ANT plus profilu s
 	 * polecne s metadaty
-	 * @param strideCount Pocet kroku
-	 * @param distance Vzdalenost
-	 * @param speed Rychlost
-	 * @param metaData MetaData
+	 * 
+	 * @param strideCount
+	 *            Pocet kroku
+	 * @param distance
+	 *            Vzdalenost
+	 * @param speed
+	 *            Rychlost
+	 * @param metaData
+	 *            MetaData
 	 */
-	public AntStrideSpeedDistance(long[] strideCount, double[] distance, double[] speed,OdMLData metaData ) {
-	
+	public AntStrideSpeedDistance(long[] strideCount, double[] distance, double[] speed, OdMLData metaData) {
+
 		this.strideCount = strideCount;
 		this.distance = distance;
 		this.speed = speed;
 		this.metaData = metaData;
-		
+
 		index++;
 	}
-	
+
 	/**
 	 * Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat
-	 * @param fileName Nazev souboru
+	 * 
+	 * @param fileName
+	 *            Nazev souboru
 	 */
 	public void createNixFile(String fileName) {
 		file = File.open(fileName, FileMode.Overwrite);
-		
+
 		block = file.createBlock("recording" + index, "recording");
-		
+
 		source = block.createSource("strideSpeedDistance" + index, "antMessage");
-		
+
 		/* Pridani metadat do bloku */
-		
-		section = file.createSection("AntMetaData", "metadata");
-		section.createProperty("deviceName", new Value(metaData.getDeviceName()));
-		section.createProperty("deviceType", new Value(metaData.getDeviceType()));
-		section.createProperty("deviceState", new Value(metaData.getDeviceState()));
-		section.createProperty("deviceNumber", new Value(metaData.getDeviceNumber()));
-		section.createProperty("batteryStatus", new Value(metaData.getBatteryStatus()));
-		section.createProperty("signalStrength", new Value(metaData.getSignalStrength()));
-		section.createProperty("manufacturerIdentification", new Value(metaData.getManIdentification()));
-		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
-		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
+
+		section = metaData.createSectionNix(file);
 
 		/* Naplneni dataArray daty chuzi */
-		
 		dataStrideCount = block.createDataArray("strideCount" + index, "antMessage", DataType.Int64,
-				new NDSize(new int[] {1,strideCount.length}));
-		dataStrideCount.setData(strideCount, new NDSize(new int [] {1,strideCount.length}), new NDSize(2,0));
-		dataStrideCount.setUnit("stride");
-		/* Naplneni dataArray daty o vzdalenosti */
-		 
-		dataDistance = block.createDataArray("distance" + index, "antMessage", DataType.Double,
-				new NDSize(new int[] {1,distance.length}));
-			dataDistance.setData(distance, new NDSize(new int[] {1,distance.length}), new NDSize(2,0));
-			dataDistance.setUnit("meters");
-		/* Naplneni dataArray daty o rychlosti */
+				new NDSize(new int[] { 1, strideCount.length }));
+		dataStrideCount.setData(strideCount, new NDSize(new int[] { 1, strideCount.length }), new NDSize(2, 0));
 
-		dataSpeed = block.createDataArray("speed" + index, "antMessage", DataType.Double, 
-				new NDSize(new int[] {1,speed.length}));
-			dataSpeed.setData(speed, new NDSize(new int[] {1,speed.length}), new NDSize(2,0));
-			dataSpeed.setUnit("meters/second");
+		/* Naplneni dataArray daty o vzdalenosti */
+		dataDistance = block.createDataArray("distance" + index, "antMessage", DataType.Double,
+				new NDSize(new int[] { 1, distance.length }));
+		dataDistance.setData(distance, new NDSize(new int[] { 1, distance.length }), new NDSize(2, 0));
+
+		/* Naplneni dataArray daty o rychlosti */
+		dataSpeed = block.createDataArray("speed" + index, "antMessage", DataType.Double,
+				new NDSize(new int[] { 1, speed.length }));
+		dataSpeed.setData(speed, new NDSize(new int[] { 1, speed.length }), new NDSize(2, 0));
+
 		file.close();
 
 	}
-	
+
 	/** Getry a Setry **/
 	public File getFile() {
 		return file;
-	}
-
-	public void setFile(File file) {
-		this.file = file;
 	}
 
 	public Block getBlock() {
 		return block;
 	}
 
-	public void setBlock(Block block) {
-		this.block = block;
-	}
-
 	public Source getSource() {
 		return source;
-	}
-
-	public void setSource(Source source) {
-		this.source = source;
 	}
 
 	public DataArray getDataStrideCount() {
 		return dataStrideCount;
 	}
 
-	public void setDataStrideCount(DataArray dataStrideCount) {
-		this.dataStrideCount = dataStrideCount;
-	}
-
 	public DataArray getDataDistance() {
 		return dataDistance;
-	}
-
-	public void setDataDistance(DataArray dataDistance) {
-		this.dataDistance = dataDistance;
 	}
 
 	public DataArray getDataSpeed() {
 		return dataSpeed;
 	}
 
-	public void setDataSpeed(DataArray dataSpeed) {
-		this.dataSpeed = dataSpeed;
-	}
-
 	public long[] getStrideCount() {
 		return strideCount;
-	}
-
-	public void setStrideCount(long[] strideCount) {
-		this.strideCount = strideCount;
 	}
 
 	public double[] getDistance() {
 		return distance;
 	}
 
-	public void setDistance(double[] distance) {
-		this.distance = distance;
-	}
-
 	public double[] getSpeed() {
 		return speed;
-	}
-
-	public void setSpeed(double[] speed) {
-		this.speed = speed;
 	}
 
 	public OdMLData getMetaData() {
@@ -178,19 +138,4 @@ public class AntStrideSpeedDistance {
 		return section;
 	}
 
-	public void setSection(Section section) {
-		this.section = section;
-	}
-
-	public int getIndex() {
-		return index;
-	}
-
-	public void setIndex(int index) {
-		this.index = index;
-	}
-	
-
-	
-	
 }

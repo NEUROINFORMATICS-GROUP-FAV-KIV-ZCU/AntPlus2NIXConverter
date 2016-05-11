@@ -17,7 +17,7 @@ import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 public class AntLightElectricVehicle {
 
 	/** Aributy tridy **/
-	
+
 	private int index = 0;
 
 	private File file;
@@ -37,7 +37,7 @@ public class AntLightElectricVehicle {
 	private OdMLData metaData;
 
 	/**
-	 *Naplni atributy tridy informacemi z ANT plus profilu s polecne s metadaty 
+	 * Naplni atributy tridy informacemi z ANT plus profilu s polecne s metadaty
 	 * 
 	 * @param speedDistance
 	 *            Vzdalenost
@@ -61,11 +61,12 @@ public class AntLightElectricVehicle {
 		index++;
 	}
 
-	 /** Pomocna metoda pro prevod statusu systemu a zarizeni z boolean hodnot na
+	/**
+	 * Pomocna metoda pro prevod statusu systemu a zarizeni z boolean hodnot na
 	 * Byty pro ulozeni do formatu NIX
-	 **/ 
-		
-	public void prevedSysGearState() {
+	 **/
+
+	public void convertSysGearState() {
 
 		sysGearStateB = new byte[sysGearState.length];
 
@@ -83,7 +84,7 @@ public class AntLightElectricVehicle {
 	 */
 	public void createNixFile(String fileName) {
 
-		prevedSysGearState();
+		convertSysGearState();
 
 		file = File.open(fileName, FileMode.Overwrite);
 
@@ -92,42 +93,36 @@ public class AntLightElectricVehicle {
 		source = block.createSource("lightElVeh" + index, "antMessage");
 
 		/* Pridani metadat do bloku */
-		
-		section = file.createSection("AntMetaData", "metadata");
-		section.createProperty("deviceName", new Value(metaData.getDeviceName()));
-		section.createProperty("deviceType", new Value(metaData.getDeviceType()));
-		section.createProperty("deviceState", new Value(metaData.getDeviceState()));
-		section.createProperty("deviceNumber", new Value(metaData.getDeviceNumber()));
-		section.createProperty("batteryStatus", new Value(metaData.getBatteryStatus()));
-		section.createProperty("signalStrength", new Value(metaData.getSignalStrength()));
-		section.createProperty("manufacturerIdentification", new Value(metaData.getManIdentification()));
-		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
-		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
+
+		section = metaData.createSectionNix(file);
 
 		/* Naplneni dataArray daty o baterii */
-		
+
 		dataBatStatus = block.createDataArray("batStatus" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, batStatus.length }));
 		dataBatStatus.setData(batStatus, new NDSize(new int[] { 1, batStatus.length }), new NDSize(2, 0));
+
 		/* Naplneni dataArray daty o modu */
 		dataMode = block.createDataArray("mode" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, mode.length }));
 		dataMode.setData(mode, new NDSize(new int[] { 1, mode.length }), new NDSize(2, 0));
+
 		/* Naplneni dataArray daty o rychlosti */
 		dataSpeedDistance = block.createDataArray("speedDistance" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, speedDistance.length }));
 		dataSpeedDistance.setData(speedDistance, new NDSize(new int[] { 1, speedDistance.length }), new NDSize(2, 0));
+
 		/* Naplneni dataArray daty systrmu a zarizeni */
 		dataSysGearState = block.createDataArray("sysGearState" + index, "antMessage", DataType.Int16,
 				new NDSize(new int[] { 1, speedDistance.length }));
 		dataSysGearState.setData(sysGearStateB, new NDSize(new int[] { 1, sysGearState.length }), new NDSize(2, 0));
 
-		 file.close();
+		file.close();
 
 	}
 
 	/** Getry a Setry ***/
-	
+
 	public Section getSection() {
 		return section;
 	}
@@ -136,116 +131,56 @@ public class AntLightElectricVehicle {
 		return file;
 	}
 
-	public void setFile(File file) {
-		this.file = file;
-	}
-
-	public void setSection(Section section) {
-		this.section = section;
-	}
-
 	public int getIndex() {
 		return index;
-	}
-
-	public void setIndex(int index) {
-		this.index = index;
 	}
 
 	public Block getBlock() {
 		return block;
 	}
 
-	public void setBlock(Block block) {
-		this.block = block;
-	}
-
 	public Source getSource() {
 		return source;
-	}
-
-	public void setSource(Source source) {
-		this.source = source;
 	}
 
 	public DataArray getDataSpeedDistance() {
 		return dataSpeedDistance;
 	}
 
-	public void setDataSpeedDistance(DataArray dataSpeedDistance) {
-		this.dataSpeedDistance = dataSpeedDistance;
-	}
-
 	public DataArray getDataSysGearState() {
 		return dataSysGearState;
-	}
-
-	public void setDataSysGearState(DataArray dataSysGearState) {
-		this.dataSysGearState = dataSysGearState;
 	}
 
 	public DataArray getDataMode() {
 		return dataMode;
 	}
 
-	public void setDataMode(DataArray dataMode) {
-		this.dataMode = dataMode;
-	}
-
 	public DataArray getDataBatStatus() {
 		return dataBatStatus;
-	}
-
-	public void setDataBatStatus(DataArray dataBatStatus) {
-		this.dataBatStatus = dataBatStatus;
 	}
 
 	public double[] getSpeedDistance() {
 		return speedDistance;
 	}
 
-	public void setSpeedDistance(double[] speedDistance) {
-		this.speedDistance = speedDistance;
-	}
-
 	public byte[] getSysGearStateB() {
 		return sysGearStateB;
-	}
-
-	public void setSysGearStateB(byte[] sysGearStateB) {
-		this.sysGearStateB = sysGearStateB;
 	}
 
 	public boolean[] getSysGearState() {
 		return sysGearState;
 	}
 
-	public void setSysGearState(boolean[] sysGearState) {
-		this.sysGearState = sysGearState;
-	}
-
 	public int[] getMode() {
 		return mode;
-	}
-
-	public void setMode(int[] mode) {
-		this.mode = mode;
 	}
 
 	public int[] getBatStatus() {
 		return batStatus;
 	}
 
-	public void setBatStatus(int[] batStatus) {
-		this.batStatus = batStatus;
-	}
-
 	public OdMLData getMetaData() {
 		return metaData;
-	}
-
-	public void setMetaData(OdMLData metaData) {
-		this.metaData = metaData;
 	}
 
 }

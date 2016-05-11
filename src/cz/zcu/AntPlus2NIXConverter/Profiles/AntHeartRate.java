@@ -69,38 +69,29 @@ public class AntHeartRate {
 		block = file.createBlock("recording" + index, "recording");
 
 		source = block.createSource("heartRate" + index, "antMessage");
-		
+
 		/* Pridani metadat do bloku */
-		
-		section = file.createSection("AntMetaData", "metadata");
-		section.createProperty("deviceName", new Value(metaData.getDeviceName()));
-		section.createProperty("deviceType", new Value(metaData.getDeviceType()));
-		section.createProperty("deviceState", new Value(metaData.getDeviceState()));
-		section.createProperty("deviceNumber", new Value(metaData.getDeviceNumber()));
-		section.createProperty("batteryStatus", new Value(metaData.getBatteryStatus()));
-		section.createProperty("signalStrength", new Value(metaData.getSignalStrength()));
-		section.createProperty("manufacturerIdentification", new Value(metaData.getManIdentification()));
-		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
-		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
+
+		section = metaData.createSectionNix(file);
 
 		/* Naplneni dataArray daty o tlukotu srdce */
 		dataHeartBeatCounter = block.createDataArray("heartBeatCount" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, heartBeatCounter.length }));
 		dataHeartBeatCounter.setData(heartBeatCounter, new NDSize(new int[] { 1, heartBeatCounter.length }),
 				new NDSize(2, 0));
-		dataHeartBeatCounter.setUnit("N/A");
+
 		/* Naplneni dataArray daty o vypoctech */
 		dataComputedHeartRate = block.createDataArray("comluptedHeartRate" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, computedHeartRate.length }));
 		dataComputedHeartRate.setData(computedHeartRate, new NDSize(new int[] { 1, computedHeartRate.length }),
 				new NDSize(2, 0));
-		dataComputedHeartRate.setUnit("bpm");
+
 		/* Naplneni dataArray daty o case prechoziho tepu */
 		dataTimeOfPreviousHeartBeat = block.createDataArray("timeOfPreviousHeartBeat" + index, "antMessage",
 				DataType.Double, new NDSize(new int[] { 1, timeOfPreviousHeartBeat.length }));
 		dataTimeOfPreviousHeartBeat.setData(timeOfPreviousHeartBeat,
 				new NDSize(new int[] { 1, timeOfPreviousHeartBeat.length }), new NDSize(2, 0));
-		dataTimeOfPreviousHeartBeat.setUnit("seconds");
+
 		file.close();
 	}
 
@@ -109,72 +100,36 @@ public class AntHeartRate {
 		return block;
 	}
 
-	public void setBlock(Block block) {
-		this.block = block;
-	}
-
 	public Section getSection() {
 		return section;
-	}
-
-	public void setSection(Section section) {
-		this.section = section;
 	}
 
 	public Source getSource() {
 		return source;
 	}
 
-	public void setSource(Source source) {
-		this.source = source;
-	}
-
 	public DataArray getDataHeartBeatCounter() {
 		return dataHeartBeatCounter;
-	}
-
-	public void setDataHeartBeatCounter(DataArray dataHeartBeatCounter) {
-		this.dataHeartBeatCounter = dataHeartBeatCounter;
 	}
 
 	public DataArray getDataComputedHeartRate() {
 		return dataComputedHeartRate;
 	}
 
-	public void setDataComputedHeartRate(DataArray dataComputedHeartRate) {
-		this.dataComputedHeartRate = dataComputedHeartRate;
-	}
-
 	public DataArray getDataTimeOfPreviousHeartBeat() {
 		return dataTimeOfPreviousHeartBeat;
-	}
-
-	public void setDataTimeOfPreviousHeartBeat(DataArray dataTimeOfPreviousHeartBeat) {
-		this.dataTimeOfPreviousHeartBeat = dataTimeOfPreviousHeartBeat;
 	}
 
 	public int[] getHeartBeatCounter() {
 		return heartBeatCounter;
 	}
 
-	public void setHeartBeatCounter(int[] heartBeatCounter) {
-		this.heartBeatCounter = heartBeatCounter;
-	}
-
 	public int[] getComputedHeartRate() {
 		return computedHeartRate;
 	}
 
-	public void setComputedHeartRate(int[] computedHeartRate) {
-		this.computedHeartRate = computedHeartRate;
-	}
-
 	public double[] getTimeOfPreviousHeartBeat() {
 		return timeOfPreviousHeartBeat;
-	}
-
-	public void setTimeOfPreviousHeartBeat(double[] timeOfPreviousHeartBeat) {
-		this.timeOfPreviousHeartBeat = timeOfPreviousHeartBeat;
 	}
 
 	public OdMLData getMetaData() {
@@ -185,20 +140,8 @@ public class AntHeartRate {
 		this.metaData = metaData;
 	}
 
-	public int getIndex() {
-		return index;
-	}
-
-	public void setIndex(int index) {
-		this.index = index;
-	}
-
 	public File getFile() {
 		return file;
-	}
-
-	public void setFile(File file) {
-		this.file = file;
 	}
 
 }
