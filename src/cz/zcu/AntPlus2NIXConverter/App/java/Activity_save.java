@@ -1,4 +1,4 @@
-package com.example.filip.mojenahledani;
+package cz.zcu.AntPlus2NIXConverter.App;
 
 import android.Manifest;
 import android.app.Activity;
