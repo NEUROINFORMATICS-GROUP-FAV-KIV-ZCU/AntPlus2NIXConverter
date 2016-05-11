@@ -1,20 +1,31 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.function.ToLongFunction;
+import java.util.stream.Stream;
+
+import javax.xml.crypto.Data;
+
 import org.g_node.nix.*;
 
-import cz.zcu.AntPlus2NIXConverter.Convert.ID;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
+import cz.zcu.AntPlus2NIXConverter.Interface.INixStream;
 
 /**
  * Trida pro zpracovani informaci o ANT plus profilu Bike Power Profil pro
- * vytvoreni≠ HDF5 souboru ze zarizeni Bike Power.Profil pro vytvoren√≠ HDF5 souboru ze zarizeni Bike Power.
+ * vytvoreni≠ HDF5 souboru ze zarizeni Bike Power.Profil pro vytvoren√≠ HDF5
+ * souboru ze zarizeni Bike Power.
+ * 
  * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
-public class AntBikePower {
+public class AntBikePower implements INixStream {
 
 	/** Aributy tridy **/
-	
+
 	private int index = 0;
 
 	private File file;
@@ -27,14 +38,15 @@ public class AntBikePower {
 
 	private OdMLData metaData;
 
-	 /** Konstruktor tridy. Naplni atributy tridy informacemi o vykonu a
-	  * metadatech vysilanych Ant plus profilem.
-	  * 
-	  * @param power
-	  *            Vykon
-	  * @param metaData
-	  *            MetaData
-	  */
+	/**
+	 * Konstruktor tridy. Naplni atributy tridy informacemi o vykonu a
+	 * metadatech vysilanych Ant plus profilem.
+	 * 
+	 * @param power
+	 *            Vykon
+	 * @param metaData
+	 *            MetaData
+	 */
 	public AntBikePower(double[] power, OdMLData metaData) {
 
 		this.power = power;
@@ -43,40 +55,41 @@ public class AntBikePower {
 
 	}
 
-	 /** Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat.
-	  * 
-	  * @param fileName
-	  *            Nazev souboru
-	  */
-	public void createNixFile(String fileName) {
-		file = File.open(fileName, FileMode.Overwrite);
+	/**
+	 * Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat.
+	 * 
+	 * @param fileName
+	 *            Nazev souboru
+	 */
+
+	@Override
+	public Stream<File> createNixFile(String fileName) {
+		Stream<File> stream = null;
+
+		//file = File.open(fileName, FileMode.Overwrite);
 
 		block = file.createBlock("recording" + index, "recording");
-		
+
 		source = block.createSource("bikePower" + index, "antMessage");
+
 		
 		/* Pridani metadat do bloku */
-		section = file.createSection("AntMetaData", "metadata");
-		section.createProperty("deviceName", new Value(metaData.getDeviceName()));
-		section.createProperty("deviceType", new Value(metaData.getDeviceType()));
-		section.createProperty("deviceState", new Value(metaData.getDeviceState()));
-		section.createProperty("deviceNumber", new Value(metaData.getDeviceNumber()));
-		section.createProperty("batteryStatus", new Value(metaData.getBatteryStatus()));
-		section.createProperty("signalStrength", new Value(metaData.getSignalStrength()));
-		section.createProperty("manufacturerIdentification", new Value(metaData.getManIdentification()));
-		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
-		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
-
+		section = metaData.createSectionNix(file);
+		
 		/* Naplneni dataArray daty o vykonu */
 		dataArrayBikePower = block.createDataArray("powerOnly" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, power.length }));
 		dataArrayBikePower.setData(power, new NDSize(new int[] { 1, power.length }), new NDSize(2, 0));
 
 		file.close();
+		
+		stream.mapToLong((ToLongFunction<? super File>) file);
+		return stream;
 	}
 
+
 	/** Getry a Setry **/
-	
+
 	public Section getSection() {
 		return section;
 	}
@@ -87,10 +100,6 @@ public class AntBikePower {
 
 	public File getFile() {
 		return file;
-	}
-
-	public void setFile(File file) {
-		this.file = file;
 	}
 
 	public Block getBlock() {

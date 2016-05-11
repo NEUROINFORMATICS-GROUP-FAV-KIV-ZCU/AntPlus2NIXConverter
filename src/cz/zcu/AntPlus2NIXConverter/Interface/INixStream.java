@@ -6,5 +6,5 @@ import org.g_node.nix.File;
 
 public interface INixStream {
 
-	Stream<File> createNixFile();
+	Stream<File> createNixFile(String fileName);
 }

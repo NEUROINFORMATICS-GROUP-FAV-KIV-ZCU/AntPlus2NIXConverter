@@ -1,5 +1,9 @@
 package cz.zcu.AntPlus2NIXConverter.Data;
 
+import org.g_node.nix.File;
+import org.g_node.nix.Section;
+import org.g_node.nix.Value;
+
 /**
  * Trida pro reprezentaci metadat ve formátu odML.
  * 
@@ -57,6 +61,22 @@ public class OdMLData {
 
 	}
 
+	public Section createSectionNix(File file){
+		
+		Section section = file.createSection("AntMetaData", "metadata");
+		section.createProperty("deviceName", new Value(getDeviceName()));
+		section.createProperty("deviceType", new Value(getDeviceType()));
+		section.createProperty("deviceState", new Value(getDeviceState()));
+		section.createProperty("deviceNumber", new Value(getDeviceNumber()));
+		section.createProperty("batteryStatus", new Value(getBatteryStatus()));
+		section.createProperty("signalStrength", new Value(getSignalStrength()));
+		section.createProperty("manufacturerIdentification", new Value(getManIdentification()));
+		section.createProperty("manufacturerSpecificData", new Value(getManSpecData()));
+		section.createProperty("productInfo", new Value(getProdInfo()));
+		
+		return section;
+
+	}
 	
 	/******* Getry a Setry *********/ 
 	
