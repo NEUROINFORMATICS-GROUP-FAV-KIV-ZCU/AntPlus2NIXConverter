@@ -4,6 +4,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.ToLongFunction;
 import java.util.stream.Stream;
 
@@ -63,9 +65,8 @@ public class AntBikePower implements INixStream {
 	 */
 
 	@Override
-	public Stream<File> createNixFile(String fileName) {
-		Stream<File> stream = null;
-
+	public Stream<Block> createNixFile(String fileName) {
+		
 		file = File.open(fileName, FileMode.Overwrite);
 
 		block = file.createBlock("recording" + index, "recording");
@@ -80,10 +81,11 @@ public class AntBikePower implements INixStream {
 				new NDSize(new int[] { 1, power.length }));
 		dataArrayBikePower.setData(power, new NDSize(new int[] { 1, power.length }), new NDSize(2, 0));
 
+		List<Block> blocks = Arrays.asList(block);
+		
 		file.close();
 
-		stream.mapToLong((ToLongFunction<File>) file);
-		return stream;
+		return blocks.stream();
 	}
 
 	/** Getry a Setry **/

@@ -1,7 +1,11 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
-import cz.zcu.AntPlus2NIXConverter.Convert.ID;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
 import org.g_node.nix.*;
 
@@ -62,12 +66,14 @@ public class AntHeartRate {
 	 * 
 	 * @param fileName
 	 *            Nazev souboru
+	 * @throws IOException 
 	 */
-	public void createNixFile(String fileName) {
+	public Stream<Block> createNixFile(String fileName){
 		file = File.open(fileName, FileMode.Overwrite);
-
+		
 		block = file.createBlock("recording" + index, "recording");
 
+		System.out.println(block.toString());
 		source = block.createSource("heartRate" + index, "antMessage");
 
 		/* Pridani metadat do bloku */
@@ -91,8 +97,12 @@ public class AntHeartRate {
 				DataType.Double, new NDSize(new int[] { 1, timeOfPreviousHeartBeat.length }));
 		dataTimeOfPreviousHeartBeat.setData(timeOfPreviousHeartBeat,
 				new NDSize(new int[] { 1, timeOfPreviousHeartBeat.length }), new NDSize(2, 0));
-
+		
+		List<Block> blocks = Arrays.asList(block);
+	
 		file.close();
+		
+		return blocks.stream();
 	}
 
 	/**** Getry a Setry *****/
@@ -143,5 +153,4 @@ public class AntHeartRate {
 	public File getFile() {
 		return file;
 	}
-
 }

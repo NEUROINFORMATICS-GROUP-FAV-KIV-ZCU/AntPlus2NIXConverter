@@ -1,9 +1,14 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
 import org.g_node.nix.*;
 
 import cz.zcu.AntPlus2NIXConverter.Convert.ID;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
+import cz.zcu.AntPlus2NIXConverter.Interface.INixStream;
 
 /**
  * Trida pro zpracovani informaci o ANT plus profilu Bike Speed Profil pro
@@ -12,7 +17,7 @@ import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
  * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
-public class AntMultiSportSpeedDist {
+public class AntMultiSportSpeedDist implements INixStream{
 
 	/** Aributy tridy **/
 
@@ -55,7 +60,7 @@ public class AntMultiSportSpeedDist {
 	 * @param fileName
 	 *            Nazev souboru
 	 */
-	public void createNixFile(String fileName) {
+	public Stream<Block> createNixFile(String fileName) {
 
 		file = File.open(fileName, FileMode.Overwrite);
 
@@ -76,8 +81,11 @@ public class AntMultiSportSpeedDist {
 				new NDSize(new int[] { 1, distance.length }));
 		dataDistance.setData(distance, new NDSize(new int[] { 1, distance.length }), new NDSize(2, 0));
 		
+		List<Block> blocks = Arrays.asList(block);
+		
 		file.close();
-
+		
+		return blocks.stream();
 	}
 
 	/*** Getry a Setry ***/

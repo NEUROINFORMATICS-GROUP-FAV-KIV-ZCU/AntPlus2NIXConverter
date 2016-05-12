@@ -1,11 +1,14 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
+import java.util.Arrays;
 import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.stream.Stream;
 
 import org.g_node.nix.*;
 
-import cz.zcu.AntPlus2NIXConverter.Convert.ID;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
+import cz.zcu.AntPlus2NIXConverter.Interface.INixStream;
 
 /**
  * @Trida pro zpracovani informaci o ANT plus profilu BloodPressure Profil pro
@@ -14,7 +17,7 @@ import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
  * 
  * @version 1.0
  */
-public class AntBloodPressure {
+public class AntBloodPressure implements INixStream{
 
 	/** Aributy tridy **/
 	private int index = 0;
@@ -82,7 +85,8 @@ public class AntBloodPressure {
 	 * @param fileName
 	 *            Nazev souboru
 	 */
-	public void createNixFile(String fileName) {
+	@Override
+	public Stream<Block> createNixFile(String fileName) {
 
 		convertTimeStamp();
 		file = File.open(fileName, FileMode.Overwrite);
@@ -115,7 +119,11 @@ public class AntBloodPressure {
 				new NDSize(new int[] { 1, timeStampSt.length }));
 		dataTime.setData(timeStampSt, new NDSize(new int[] { 1, timeStampSt.length }), new NDSize(2, 0));
 
+		List<Block> blocks = Arrays.asList(block);
+		
 		file.close();
+		
+		return blocks.stream();
 	}
 
 	/** Getry a Setry **/

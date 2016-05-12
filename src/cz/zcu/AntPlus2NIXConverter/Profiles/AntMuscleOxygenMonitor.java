@@ -1,8 +1,13 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
 import org.g_node.nix.*;
 
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
+import cz.zcu.AntPlus2NIXConverter.Interface.INixStream;
 
 /**
  * Trida pro zpracovani informaci o ANT plus profilu Muscle Oxygen Monitor
@@ -11,7 +16,7 @@ import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
  * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
-public class AntMuscleOxygenMonitor {
+public class AntMuscleOxygenMonitor implements INixStream{
 
 	/** Aributy tridy **/
 
@@ -54,7 +59,7 @@ public class AntMuscleOxygenMonitor {
 	 * @param fileName
 	 *            Nazev souboru
 	 */
-	public void createNixFile(String fileName) {
+	public Stream<Block> createNixFile(String fileName) {
 		file = File.open(fileName, FileMode.Overwrite);
 
 		block = file.createBlock("recording" + index, "recording");
@@ -77,8 +82,11 @@ public class AntMuscleOxygenMonitor {
 		dataHemoglobinConcentrate.setData(hemoglobinConcentrate,
 				new NDSize(new int[] { 1, hemoglobinConcentrate.length }), new NDSize(2, 0));
 
+		List<Block> blocks = Arrays.asList(block);
+		
 		file.close();
 
+		return blocks.stream();
 	}
 
 	/** Getry a setry **/

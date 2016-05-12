@@ -2,10 +2,13 @@ package cz.zcu.AntPlus2NIXConverter.Profiles;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
 import org.g_node.nix.*;
 
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
+import cz.zcu.AntPlus2NIXConverter.Interface.INixStream;
 
 /**
  * Trida pro zpracovani informaci o ANT plus profilu Light Electic Vehicle
@@ -14,7 +17,7 @@ import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
  * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
-public class AntLightElectricVehicle {
+public class AntLightElectricVehicle implements INixStream{
 
 	/** Aributy tridy **/
 
@@ -82,7 +85,7 @@ public class AntLightElectricVehicle {
 	 * @param fileName
 	 *            Nazev souboru
 	 */
-	public void createNixFile(String fileName) {
+	public Stream<Block> createNixFile(String fileName) {
 
 		convertSysGearState();
 
@@ -117,8 +120,11 @@ public class AntLightElectricVehicle {
 				new NDSize(new int[] { 1, speedDistance.length }));
 		dataSysGearState.setData(sysGearStateB, new NDSize(new int[] { 1, sysGearState.length }), new NDSize(2, 0));
 
+		List<Block> blocks = Arrays.asList(block);
+		
 		file.close();
-
+		
+		return blocks.stream();
 	}
 
 	/** Getry a Setry ***/

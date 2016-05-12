@@ -1,8 +1,13 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
 import org.g_node.nix.*;
 
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
+import cz.zcu.AntPlus2NIXConverter.Interface.INixStream;
 
 /**
  * Trida pro zpracovani informaci o ANT plus profilu Bike Speed Profil pro
@@ -11,7 +16,7 @@ import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
  * 
  * @version 1.0
  */
-public class AntWeightScale {
+public class AntWeightScale implements INixStream{
 
 	/** Aributy tridy **/
 
@@ -48,7 +53,7 @@ public class AntWeightScale {
 	 * @param fileName
 	 *            Nazev souboru
 	 */
-	public void createNixFile(String fileName) {
+	public Stream<Block> createNixFile(String fileName) {
 		file = File.open(fileName, FileMode.Overwrite);
 
 		block = file.createBlock("recording" + index, "recording");
@@ -63,8 +68,11 @@ public class AntWeightScale {
 				new NDSize(new int[] { 1, weight.length }));
 		dataWeight.setData(weight, new NDSize(new int[] { 1, weight.length }), new NDSize(2, 0));
 
+		List<Block> blocks = Arrays.asList(block);
+		
 		file.close();
 
+		return blocks.stream();
 	}
 
 	/** Getry a Setry **/
