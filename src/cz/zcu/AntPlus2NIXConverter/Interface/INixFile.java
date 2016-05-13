@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 import org.g_node.nix.Block;
 import org.g_node.nix.File;
 
-public interface INixStream {
+public interface INixFile {
 
-	Stream<Block> createNixFile(String fileName);
+	void createNixFile(File nixFile);
 }

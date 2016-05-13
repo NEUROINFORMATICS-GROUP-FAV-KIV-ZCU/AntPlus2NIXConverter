@@ -14,7 +14,7 @@ import javax.xml.crypto.Data;
 import org.g_node.nix.*;
 
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
-import cz.zcu.AntPlus2NIXConverter.Interface.INixStream;
+import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
 
 /**
  * Trida pro zpracovani informaci o ANT plus profilu Bike Power Profil pro
@@ -24,7 +24,7 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixStream;
  * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
-public class AntBikePower implements INixStream {
+public class AntBikePower implements INixFile {
 
 	/** Aributy tridy **/
 
@@ -65,11 +65,9 @@ public class AntBikePower implements INixStream {
 	 */
 
 	@Override
-	public Stream<Block> createNixFile(String fileName) {
+	public void createNixFile(File nixFile) {
 		
-		file = File.open(fileName, FileMode.Overwrite);
-
-		block = file.createBlock("recording" + index, "recording");
+		block = nixFile.createBlock("recording" + index, "recording");
 
 		source = block.createSource("bikePower" + index, "antMessage");
 
@@ -79,43 +77,24 @@ public class AntBikePower implements INixStream {
 		/* Naplneni dataArray daty o vykonu */
 		dataArrayBikePower = block.createDataArray("powerOnly" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, power.length }));
-		dataArrayBikePower.setData(power, new NDSize(new int[] { 1, power.length }), new NDSize(2, 0));
-
-		List<Block> blocks = Arrays.asList(block);
+		dataArrayBikePower.setData(power, new NDSize(new int[] { 1, power.length }), new NDSize(2, 0));		
 		
-		file.close();
-
-		return blocks.stream();
+	}
+	
+	
+	public static void main(String[] args) {
+		AntBikePower abp = new AntBikePower(new double[]{2,3,4,5,6,4}, new OdMLData(9, 9, 9, 9, 9, 9, 9, 9, 9));
+	
+		File f = new File();
+		f.open("Testovaci.h5", FileMode.Overwrite);
+		f.createBlock("Testovaci", "Test");
+		abp.createNixFile(f);
+		
+		System.out.println(f.getBlocks().size());
+	
 	}
 
-	/** Getry a Setry **/
-
-	public Section getSection() {
-		return section;
-	}
-
-	public File getFile() {
-		return file;
-	}
-
-	public Block getBlock() {
-		return block;
-	}
-
-	public Source getSource() {
-		return source;
-	}
-
-	public DataArray getDataArrayBikePower() {
-		return dataArrayBikePower;
-	}
-
-	public double[] getPower() {
-		return power;
-	}
-
-	public OdMLData getMetaData() {
-		return metaData;
-	}
-
+	
 }
+
+	
