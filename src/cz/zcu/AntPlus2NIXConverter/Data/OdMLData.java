@@ -73,7 +73,6 @@ public class OdMLData {
 		section.createProperty("manufacturerIdentification", new Value(getManIdentification()));
 		section.createProperty("manufacturerSpecificData", new Value(getManSpecData()));
 		section.createProperty("productInfo", new Value(getProdInfo()));
-		System.out.println(file.getBlock(0).getMetadata());
 		return section;
 
 	}
