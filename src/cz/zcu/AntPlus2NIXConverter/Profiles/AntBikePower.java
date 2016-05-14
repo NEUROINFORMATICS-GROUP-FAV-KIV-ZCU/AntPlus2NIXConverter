@@ -1,16 +1,5 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.ToLongFunction;
-import java.util.stream.Stream;
-
-import javax.xml.crypto.Data;
-
 import org.g_node.nix.*;
 
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
@@ -28,13 +17,7 @@ public class AntBikePower implements INixFile {
 
 	/** Aributy tridy **/
 
-	private int index = 0;
-
-	private File file;
-	private Block block;
-	private Source source;
-	private Section section;
-	private DataArray dataArrayBikePower;
+	private static int index = 0;
 
 	private double[] power;
 
@@ -67,33 +50,46 @@ public class AntBikePower implements INixFile {
 	@Override
 	public void createNixFile(File nixFile) {
 		
-		block = nixFile.createBlock("recording" + index, "recording");
+		Block block = nixFile.createBlock("recording" + index, "recording");
 
-		source = block.createSource("bikePower" + index, "antMessage");
+		block.createSource("bikePower" + index, "antMessage");
 
 		/* Pridani metadat do bloku */
-		section = metaData.createSectionNix(file);
+		block.setMetadata(metaData.createSectionNix(nixFile));
 
 		/* Naplneni dataArray daty o vykonu */
-		dataArrayBikePower = block.createDataArray("powerOnly" + index, "antMessage", DataType.Double,
+		DataArray dataArrayBikePower = block.createDataArray("powerOnly" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, power.length }));
 		dataArrayBikePower.setData(power, new NDSize(new int[] { 1, power.length }), new NDSize(2, 0));		
 		
 	}
 	
+	/***** Getry a Setry *******/
 	
-	public static void main(String[] args) {
-		AntBikePower abp = new AntBikePower(new double[]{2,3,4,5,6,4}, new OdMLData(9, 9, 9, 9, 9, 9, 9, 9, 9));
+	public static int getIndex() {
+		return index;
+	}
 	
-		File f = new File();
-		f.open("Testovaci.h5", FileMode.Overwrite);
-		f.createBlock("Testovaci", "Test");
-		abp.createNixFile(f);
-		
-		System.out.println(f.getBlocks().size());
-	
+	public static void setIndex(int index) {
+		AntBikePower.index = index;
 	}
 
+	public double[] getPower() {
+		return power;
+	}
+
+
+	public void setPower(double[] power) {
+		this.power = power;
+	}
+
+	public OdMLData getMetaData() {
+		return metaData;
+	}
+
+	public void setMetaData(OdMLData metaData) {
+		this.metaData = metaData;
+	}
 	
 }
 

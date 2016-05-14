@@ -1,14 +1,9 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
-
 import org.g_node.nix.*;
 
-import cz.zcu.AntPlus2NIXConverter.Convert.ID;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
-import cz.zcu.AntPlus2NIXConverter.Interface.INixStream;
+import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
 
 /**
  * Trida pro zpracovani informaci o ANT plus profilu Bike Speed Profil pro
@@ -17,18 +12,11 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixStream;
  * 
  * @version 1.0
  */
-public class AntBikeSpeed implements INixStream{
+public class AntBikeSpeed implements INixFile{
 
 	/** Aributy tridy **/
 
-	private int index = 0;
-
-	private File file;
-	private Block block;
-	private Source source;
-	private Section section;
-	private DataArray dataArrayLatSpEvTime;
-	private DataArray dataArrayCumWheelRew;
+	private static int index = 0;
 
 	private int[] cumWheelRew;
 	private int[] latSpEvTime;
@@ -62,69 +50,60 @@ public class AntBikeSpeed implements INixStream{
 	 *            Nazev souboru
 	 */
 	@Override
-	public Stream<Block> createNixFile(String fileName) {
-		file = File.open(fileName, FileMode.Overwrite);
+	public void createNixFile(File nixFile) {
 
-		block = file.createBlock("recording" + index, "recording");
+		Block block = nixFile.createBlock("recording" + index, "recording");
 
-		source = block.createSource("bikeSpeed" + index, "antMessage");
+		block.createSource("bikeSpeed" + index, "antMessage");
 
 		/* Pridani metadat do bloku */
-		section = metaData.createSectionNix(file);
+		block.setMetadata(metaData.createSectionNix(nixFile));
 
 		/* Naplneni dataArray daty o case */
-		dataArrayLatSpEvTime = block.createDataArray("LatSpEvTime" + index, "antMessage", DataType.Int32,
+		DataArray dataArrayLatSpEvTime = block.createDataArray("LatSpEvTime" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, latSpEvTime.length }));
 		dataArrayLatSpEvTime.setData(latSpEvTime, new NDSize(new int[] { 1, latSpEvTime.length }), new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o otaceni kola */
-		dataArrayCumWheelRew = block.createDataArray("CumWheelRew" + index, "antMessage", DataType.Int32,
+		DataArray dataArrayCumWheelRew = block.createDataArray("CumWheelRew" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, cumWheelRew.length }));
 		dataArrayCumWheelRew.setData(cumWheelRew, new NDSize(new int[] { 1, cumWheelRew.length }), new NDSize(2, 0));
-
-		List<Block> blocks = Arrays.asList(block);
 		
-		file.close();
-		
-		return blocks.stream();
 	}
 
 	/***** Getry a Setry *******/
-
-	public Block getBlock() {
-		return block;
+	
+	public static int getIndex() {
+		return index;
 	}
-
-	public Source getSource() {
-		return source;
+	
+	public static void setIndex(int index) {
+		AntBikeSpeed.index = index;
 	}
-
-	public DataArray getDataArrayLatSpEvTime() {
-		return dataArrayLatSpEvTime;
-	}
-
-	public DataArray getDataArrayCumWheelRew() {
-		return dataArrayCumWheelRew;
-	}
-
+	
 	public int[] getCumWheelRew() {
 		return cumWheelRew;
+	}
+
+
+	public void setCumWheelRew(int[] cumWheelRew) {
+		this.cumWheelRew = cumWheelRew;
 	}
 
 	public int[] getLatSpEvTime() {
 		return latSpEvTime;
 	}
 
+	public void setLatSpEvTime(int[] latSpEvTime) {
+		this.latSpEvTime = latSpEvTime;
+	}
+
 	public OdMLData getMetaData() {
 		return metaData;
 	}
 
-	public Section getSection() {
-		return section;
-	}
-
-	public File getFile() {
-		return file;
+	public void setMetaData(OdMLData metaData) {
+		this.metaData = metaData;
 	}
 
 }

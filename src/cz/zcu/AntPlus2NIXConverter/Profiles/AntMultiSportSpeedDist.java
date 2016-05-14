@@ -1,14 +1,9 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
-
 import org.g_node.nix.*;
 
-import cz.zcu.AntPlus2NIXConverter.Convert.ID;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
-import cz.zcu.AntPlus2NIXConverter.Interface.INixStream;
+import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
 
 /**
  * Trida pro zpracovani informaci o ANT plus profilu Bike Speed Profil pro
@@ -17,18 +12,11 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixStream;
  * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
-public class AntMultiSportSpeedDist implements INixStream{
+public class AntMultiSportSpeedDist implements INixFile{
 
 	/** Aributy tridy **/
 
-	private int index = 0;
-
-	private File file;
-	private Block block;
-	private Source source;
-	private Section section;
-	private DataArray dataTime;
-	private DataArray dataDistance;
+	private static int index = 0;
 
 	private double[] timeStamp;
 	private double[] distance;
@@ -60,70 +48,52 @@ public class AntMultiSportSpeedDist implements INixStream{
 	 * @param fileName
 	 *            Nazev souboru
 	 */
-	public Stream<Block> createNixFile(String fileName) {
+	@Override
+	public void createNixFile(File nixFile) {
 
-		file = File.open(fileName, FileMode.Overwrite);
+		Block block = nixFile.createBlock("recording" + index, "recording");
 
-		block = file.createBlock("recording" + index, "recording");
-
-		source = block.createSource("multiSportSpeedDist" + index, "antMessage");
+		block.createSource("multiSportSpeedDist" + index, "antMessage");
 		
 		/* Pridani metadat do bloku */
-		section = metaData.createSectionNix(file);
+		block.setMetadata(metaData.createSectionNix(nixFile));
 		
 		/* Naplneni dataArray daty o case */
-		dataTime = block.createDataArray("dataTime" + index, "antMessage", DataType.Double,
+		DataArray dataTime = block.createDataArray("dataTime" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, timeStamp.length }));
 		dataTime.setData(timeStamp, new NDSize(new int[] { 1, timeStamp.length }), new NDSize(2, 0));
 		
 		/* Naplneni dataArray daty o vzdalenosti */
-		dataDistance = block.createDataArray("dataDistance" + index, "antMessage", DataType.Double,
+		DataArray dataDistance = block.createDataArray("dataDistance" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, distance.length }));
 		dataDistance.setData(distance, new NDSize(new int[] { 1, distance.length }), new NDSize(2, 0));
 		
-		List<Block> blocks = Arrays.asList(block);
-		
-		file.close();
-		
-		return blocks.stream();
 	}
 
 	/*** Getry a Setry ***/
-	public File getFile() {
-		return file;
+
+	public static int getIndex() {
+		return index;
 	}
 
-
-	public Block getBlock() {
-		return block;
+	public static void setIndex(int index) {
+		AntMultiSportSpeedDist.index = index;
 	}
-
-
-	public Source getSource() {
-		return source;
-	}
-
-	public Section getSection() {
-		return section;
-	}
-
-	public DataArray getDataTime() {
-		return dataTime;
-	}
-
-
-	public DataArray getDataDistance() {
-		return dataDistance;
-	}
-
 
 	public double[] getTimeStamp() {
 		return timeStamp;
 	}
 
+	public void setTimeStamp(double[] timeStamp) {
+		this.timeStamp = timeStamp;
+	}
 
 	public double[] getDistance() {
 		return distance;
+	}
+
+	public void setDistance(double[] distance) {
+		this.distance = distance;
 	}
 
 	public OdMLData getMetaData() {

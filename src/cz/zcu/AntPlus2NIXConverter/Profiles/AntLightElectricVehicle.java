@@ -1,14 +1,10 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
 
 import org.g_node.nix.*;
 
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
-import cz.zcu.AntPlus2NIXConverter.Interface.INixStream;
+import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
 
 /**
  * Trida pro zpracovani informaci o ANT plus profilu Light Electic Vehicle
@@ -17,24 +13,14 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixStream;
  * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
-public class AntLightElectricVehicle implements INixStream{
+public class AntLightElectricVehicle implements INixFile{
 
 	/** Aributy tridy **/
 
-	private int index = 0;
+	private static int index = 0;
 
-	private File file;
-	private Block block;
-	private Source source;
-	private Section section;
-	private DataArray dataSpeedDistance;
-	private DataArray dataSysGearState;
-	private DataArray dataMode;
-	private DataArray dataBatStatus;
 	private double[] speedDistance;
-	private byte[] sysGearStateB;
 	private boolean[] sysGearState;
-
 	private int[] mode;
 	private int[] batStatus;
 	private OdMLData metaData;
@@ -69,14 +55,15 @@ public class AntLightElectricVehicle implements INixStream{
 	 * Byty pro ulozeni do formatu NIX
 	 **/
 
-	private void convertSysGearState() {
+	private byte[] convertSysGearState() {
 
-		sysGearStateB = new byte[sysGearState.length];
+		byte[] sysGearStateB = new byte[sysGearState.length];
 
 		for (int i = 0; i < sysGearState.length; i++) {
 
 			sysGearStateB[i] = Byte.parseByte(String.valueOf(sysGearState[i]));
 		}
+		return sysGearStateB;
 	}
 
 	/**
@@ -85,108 +72,91 @@ public class AntLightElectricVehicle implements INixStream{
 	 * @param fileName
 	 *            Nazev souboru
 	 */
-	public Stream<Block> createNixFile(String fileName) {
+	@Override
+	public void createNixFile(File nixFile) {
 
-		convertSysGearState();
+		byte[] sysGearStateB = convertSysGearState();
 
-		file = File.open(fileName, FileMode.Overwrite);
+		Block block = nixFile.createBlock("recording" + index, "recording");
 
-		block = file.createBlock("recording" + index, "recording");
-
-		source = block.createSource("lightElVeh" + index, "antMessage");
+		block.createSource("lightElVeh" + index, "antMessage");
 
 		/* Pridani metadat do bloku */
 
-		section = metaData.createSectionNix(file);
+		block.setMetadata(metaData.createSectionNix(nixFile));
 
 		/* Naplneni dataArray daty o baterii */
 
-		dataBatStatus = block.createDataArray("batStatus" + index, "antMessage", DataType.Int32,
+		DataArray dataBatStatus = block.createDataArray("batStatus" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, batStatus.length }));
 		dataBatStatus.setData(batStatus, new NDSize(new int[] { 1, batStatus.length }), new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o modu */
-		dataMode = block.createDataArray("mode" + index, "antMessage", DataType.Int32,
+		DataArray dataMode = block.createDataArray("mode" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, mode.length }));
 		dataMode.setData(mode, new NDSize(new int[] { 1, mode.length }), new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o rychlosti */
-		dataSpeedDistance = block.createDataArray("speedDistance" + index, "antMessage", DataType.Double,
+		DataArray dataSpeedDistance = block.createDataArray("speedDistance" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, speedDistance.length }));
 		dataSpeedDistance.setData(speedDistance, new NDSize(new int[] { 1, speedDistance.length }), new NDSize(2, 0));
 
 		/* Naplneni dataArray daty systrmu a zarizeni */
-		dataSysGearState = block.createDataArray("sysGearState" + index, "antMessage", DataType.Int16,
+		DataArray dataSysGearState = block.createDataArray("sysGearState" + index, "antMessage", DataType.Int16,
 				new NDSize(new int[] { 1, speedDistance.length }));
 		dataSysGearState.setData(sysGearStateB, new NDSize(new int[] { 1, sysGearState.length }), new NDSize(2, 0));
-
-		List<Block> blocks = Arrays.asList(block);
 		
-		file.close();
-		
-		return blocks.stream();
 	}
 
 	/** Getry a Setry ***/
-
-	public Section getSection() {
-		return section;
-	}
-
-	public File getFile() {
-		return file;
-	}
-
-	public int getIndex() {
+	
+	public static int getIndex() {
 		return index;
 	}
-
-	public Block getBlock() {
-		return block;
-	}
-
-	public Source getSource() {
-		return source;
-	}
-
-	public DataArray getDataSpeedDistance() {
-		return dataSpeedDistance;
-	}
-
-	public DataArray getDataSysGearState() {
-		return dataSysGearState;
-	}
-
-	public DataArray getDataMode() {
-		return dataMode;
-	}
-
-	public DataArray getDataBatStatus() {
-		return dataBatStatus;
+	
+	public static void setIndex(int index) {
+		AntLightElectricVehicle.index = index;
 	}
 
 	public double[] getSpeedDistance() {
 		return speedDistance;
 	}
 
-	public byte[] getSysGearStateB() {
-		return sysGearStateB;
+
+	public void setSpeedDistance(double[] speedDistance) {
+		this.speedDistance = speedDistance;
 	}
 
 	public boolean[] getSysGearState() {
 		return sysGearState;
 	}
 
+	public void setSysGearState(boolean[] sysGearState) {
+		this.sysGearState = sysGearState;
+	}
+
 	public int[] getMode() {
 		return mode;
+	}
+
+	public void setMode(int[] mode) {
+		this.mode = mode;
 	}
 
 	public int[] getBatStatus() {
 		return batStatus;
 	}
 
+	public void setBatStatus(int[] batStatus) {
+		this.batStatus = batStatus;
+	}
+
 	public OdMLData getMetaData() {
 		return metaData;
+	}
+
+	public void setMetaData(OdMLData metaData) {
+		this.metaData = metaData;
 	}
 
 }

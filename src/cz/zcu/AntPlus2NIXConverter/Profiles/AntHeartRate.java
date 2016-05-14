@@ -1,11 +1,9 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
+import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
 
 import org.g_node.nix.*;
 
@@ -17,22 +15,14 @@ import org.g_node.nix.*;
  * @version 1.0
  */
 
-public class AntHeartRate {
+public class AntHeartRate implements INixFile{
 
 	/** Aributy tridy **/
-	private int index = 0;
+	private static int index = 0;
 
-	private File file;
-	private Block block;
-	private Source source;
-	private Section section;
-	private DataArray dataHeartBeatCounter;
-	private DataArray dataComputedHeartRate;
-	private DataArray dataTimeOfPreviousHeartBeat;
-
-	private int[] heartBeatCounter = new int[4];
-	private int[] computedHeartRate = new int[4];
-	private double[] timeOfPreviousHeartBeat = new double[3];
+	private int[] heartBeatCounter;
+	private int[] computedHeartRate;
+	private double[] timeOfPreviousHeartBeat;
 
 	private OdMLData metaData;
 
@@ -68,78 +58,65 @@ public class AntHeartRate {
 	 *            Nazev souboru
 	 * @throws IOException 
 	 */
-	public Stream<Block> createNixFile(String fileName){
-		file = File.open(fileName, FileMode.Overwrite);
+	@Override
+	public void createNixFile(File nixFile){
 		
-		block = file.createBlock("recording" + index, "recording");
+		Block block = nixFile.createBlock("recording" + index, "recording");
 
-		System.out.println(block.toString());
-		source = block.createSource("heartRate" + index, "antMessage");
+		block.createSource("heartRate" + index, "antMessage");
 
 		/* Pridani metadat do bloku */
-
-		section = metaData.createSectionNix(file);
+		block.setMetadata(metaData.createSectionNix(nixFile));
 
 		/* Naplneni dataArray daty o tlukotu srdce */
-		dataHeartBeatCounter = block.createDataArray("heartBeatCount" + index, "antMessage", DataType.Int32,
+		DataArray dataHeartBeatCounter = block.createDataArray("heartBeatCount" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, heartBeatCounter.length }));
 		dataHeartBeatCounter.setData(heartBeatCounter, new NDSize(new int[] { 1, heartBeatCounter.length }),
 				new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o vypoctech */
-		dataComputedHeartRate = block.createDataArray("comluptedHeartRate" + index, "antMessage", DataType.Int32,
+		DataArray dataComputedHeartRate = block.createDataArray("comluptedHeartRate" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, computedHeartRate.length }));
 		dataComputedHeartRate.setData(computedHeartRate, new NDSize(new int[] { 1, computedHeartRate.length }),
 				new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o case prechoziho tepu */
-		dataTimeOfPreviousHeartBeat = block.createDataArray("timeOfPreviousHeartBeat" + index, "antMessage",
+		DataArray dataTimeOfPreviousHeartBeat = block.createDataArray("timeOfPreviousHeartBeat" + index, "antMessage",
 				DataType.Double, new NDSize(new int[] { 1, timeOfPreviousHeartBeat.length }));
 		dataTimeOfPreviousHeartBeat.setData(timeOfPreviousHeartBeat,
 				new NDSize(new int[] { 1, timeOfPreviousHeartBeat.length }), new NDSize(2, 0));
-		
-		List<Block> blocks = Arrays.asList(block);
-	
-		file.close();
-		
-		return blocks.stream();
 	}
 
-	/**** Getry a Setry *****/
-	public Block getBlock() {
-		return block;
+	public static int getIndex() {
+		return index;
 	}
 
-	public Section getSection() {
-		return section;
-	}
-
-	public Source getSource() {
-		return source;
-	}
-
-	public DataArray getDataHeartBeatCounter() {
-		return dataHeartBeatCounter;
-	}
-
-	public DataArray getDataComputedHeartRate() {
-		return dataComputedHeartRate;
-	}
-
-	public DataArray getDataTimeOfPreviousHeartBeat() {
-		return dataTimeOfPreviousHeartBeat;
+	public static void setIndex(int index) {
+		AntHeartRate.index = index;
 	}
 
 	public int[] getHeartBeatCounter() {
 		return heartBeatCounter;
 	}
 
+	public void setHeartBeatCounter(int[] heartBeatCounter) {
+		this.heartBeatCounter = heartBeatCounter;
+	}
+
 	public int[] getComputedHeartRate() {
 		return computedHeartRate;
 	}
 
+	public void setComputedHeartRate(int[] computedHeartRate) {
+		this.computedHeartRate = computedHeartRate;
+	}
+
 	public double[] getTimeOfPreviousHeartBeat() {
 		return timeOfPreviousHeartBeat;
+	}
+
+	public void setTimeOfPreviousHeartBeat(double[] timeOfPreviousHeartBeat) {
+		this.timeOfPreviousHeartBeat = timeOfPreviousHeartBeat;
 	}
 
 	public OdMLData getMetaData() {
@@ -149,8 +126,6 @@ public class AntHeartRate {
 	public void setMetaData(OdMLData metaData) {
 		this.metaData = metaData;
 	}
-
-	public File getFile() {
-		return file;
-	}
+	
+	
 }

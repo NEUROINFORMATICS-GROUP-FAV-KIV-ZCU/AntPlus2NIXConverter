@@ -1,14 +1,11 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
-import java.util.Arrays;
 import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.stream.Stream;
 
 import org.g_node.nix.*;
 
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
-import cz.zcu.AntPlus2NIXConverter.Interface.INixStream;
+import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
 
 /**
  * @Trida pro zpracovani informaci o ANT plus profilu BloodPressure Profil pro
@@ -17,25 +14,15 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixStream;
  * 
  * @version 1.0
  */
-public class AntBloodPressure implements INixStream{
+public class AntBloodPressure implements INixFile{
 
 	/** Aributy tridy **/
-	private int index = 0;
-
-	private File file;
-	private Block block;
-	private Source source;
-	private Section section;
-	private DataArray dataSystolic;
-	private DataArray dataDistolic;
-	private DataArray dataHeartRate;
-	private DataArray dataTime;
+	private static int index = 0;
 
 	private int[] systolic;
 	private int[] distolic;
 	private int[] heartRate;
 	private GregorianCalendar[] timeStamp;
-	private byte[] timeStampSt;
 
 	private OdMLData metaData;
 
@@ -71,12 +58,12 @@ public class AntBloodPressure implements INixStream{
 	 * Pomocna metoda pro prevedeni dat ulozenych ve formatu GregorianCalendar
 	 * do datoveho typu Byte pro ulozeni do NIX
 	 */
-	private void convertTimeStamp() {
-		timeStampSt = new byte[timeStamp.length];
+	private byte[] convertTimeStamp() {
+		byte[] timeStampSt = new byte[timeStamp.length];
 		for (int i = 0; i < timeStamp.length; i++) {
 			timeStampSt[i] = Byte.parseByte(timeStamp[i].toString());
 		}
-
+		return timeStampSt;
 	}
 
 	/**
@@ -86,99 +73,53 @@ public class AntBloodPressure implements INixStream{
 	 *            Nazev souboru
 	 */
 	@Override
-	public Stream<Block> createNixFile(String fileName) {
+	public void createNixFile(File nixFile) {
 
-		convertTimeStamp();
-		file = File.open(fileName, FileMode.Overwrite);
+		byte[] timeStampConv = convertTimeStamp();
 
-		block = file.createBlock("recording" + index, "recording");
+		Block block = nixFile.createBlock("recording" + index, "recording");
 
-		source = block.createSource("bloodPressure" + index, "antMessage");
+		block.createSource("bloodPressure" + index, "antMessage");
 
 		/* Pridani metadat do bloku */
-
-		section = metaData.createSectionNix(file);
+		block.setMetadata(metaData.createSectionNix(nixFile));
 
 		/* Naplneni dataArray daty o systolickem tlaku */
-		dataSystolic = block.createDataArray("systolicBloodPress" + index, "antMessage", DataType.Int32,
+		DataArray dataSystolic = block.createDataArray("systolicBloodPress" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, systolic.length }));
 		dataSystolic.setData(systolic, new NDSize(new int[] { 1, systolic.length }), new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o distolickem tlaku */
-		dataDistolic = block.createDataArray("diastolicBloodPress" + index, "antMessage", DataType.Int32,
+		DataArray dataDistolic = block.createDataArray("diastolicBloodPress" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, distolic.length }));
 		dataDistolic.setData(distolic, new NDSize(new int[] { 1, systolic.length }), new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o srdecni cinnosti */
-		dataHeartRate = block.createDataArray("heartRate" + index, "antMessage", DataType.Int32,
+		DataArray dataHeartRate = block.createDataArray("heartRate" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, heartRate.length }));
 		dataHeartRate.setData(heartRate, new NDSize(new int[] { 1, heartRate.length }), new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o case */
-		dataTime = block.createDataArray("timeStamp" + index, "antMessage", DataType.Int16,
-				new NDSize(new int[] { 1, timeStampSt.length }));
-		dataTime.setData(timeStampSt, new NDSize(new int[] { 1, timeStampSt.length }), new NDSize(2, 0));
+		DataArray dataTime = block.createDataArray("timeStamp" + index, "antMessage", DataType.Int16,
+				new NDSize(new int[] { 1, timeStampConv.length }));
+		dataTime.setData(timeStampConv, new NDSize(new int[] { 1, timeStampConv.length }), new NDSize(2, 0));
 
-		List<Block> blocks = Arrays.asList(block);
-		
-		file.close();
-		
-		return blocks.stream();
 	}
 
 	/** Getry a Setry **/
-
-	public Block getBlock() {
-		return block;
+	
+	public static int getIndex() {
+		return index;
 	}
-
-	public void setBlock(Block block) {
-		this.block = block;
+	
+	public static void setIndex(int index) {
+		AntBloodPressure.index = index;
 	}
-
-	public Source getSource() {
-		return source;
-	}
-
-	public void setSource(Source source) {
-		this.source = source;
-	}
-
-	public DataArray getDataSystolic() {
-		return dataSystolic;
-	}
-
-	public void setDataSystolic(DataArray dataSystolic) {
-		this.dataSystolic = dataSystolic;
-	}
-
-	public DataArray getDataDistolic() {
-		return dataDistolic;
-	}
-
-	public void setDataDistolic(DataArray dataDistolic) {
-		this.dataDistolic = dataDistolic;
-	}
-
-	public DataArray getDataHeartRate() {
-		return dataHeartRate;
-	}
-
-	public void setDataHeartRate(DataArray dataHeartRate) {
-		this.dataHeartRate = dataHeartRate;
-	}
-
-	public DataArray getDataTime() {
-		return dataTime;
-	}
-
-	public void setDataTime(DataArray dataTime) {
-		this.dataTime = dataTime;
-	}
-
+	
 	public int[] getSystolic() {
 		return systolic;
 	}
+
 
 	public void setSystolic(int[] systolic) {
 		this.systolic = systolic;
@@ -208,44 +149,12 @@ public class AntBloodPressure implements INixStream{
 		this.timeStamp = timeStamp;
 	}
 
-	public byte[] getTimeStampSt() {
-		return timeStampSt;
-	}
-
-	public void setTimeStampSt(byte[] timeStampSt) {
-		this.timeStampSt = timeStampSt;
-	}
-
 	public OdMLData getMetaData() {
 		return metaData;
 	}
 
 	public void setMetaData(OdMLData metaData) {
 		this.metaData = metaData;
-	}
-
-	public Section getSection() {
-		return section;
-	}
-
-	public void setSection(Section section) {
-		this.section = section;
-	}
-
-	public int getIndex() {
-		return index;
-	}
-
-	public void setIndex(int index) {
-		this.index = index;
-	}
-
-	public File getFile() {
-		return file;
-	}
-
-	public void setFile(File file) {
-		this.file = file;
 	}
 
 }
