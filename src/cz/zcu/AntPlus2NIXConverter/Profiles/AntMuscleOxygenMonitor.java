@@ -14,17 +14,16 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
  */
 public class AntMuscleOxygenMonitor implements INixFile{
 
-	/** Aributy tridy **/
-
+	/** Staticke atributy tridy **/
 	private static int index = 0;
 
+	/** Aributy tridy **/
 	private double[] saturatedHemoglPerc;
 	private double[] hemoglobinConcentrate;
 	private OdMLData metaData;
 
 	/**
-	 * Konstruktor tridy. Naplni atributy tridy informacemi z ANT plus profilu s
-	 * polecne s metadaty
+	 * Konstruktor tridy. Naplni atributy tridy informacemi z ANT plus profilu spolecne s metadaty
 	 * 
 	 * @param saturatedHemoglPerc
 	 *            Predchozi a soucasny hemoglobin
@@ -43,13 +42,13 @@ public class AntMuscleOxygenMonitor implements INixFile{
 	}
 
 	/**
-	 * Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat
+	 * Metoda pro vytvoreni casti NIX, vcetne dat a metadat.
 	 * 
-	 * @param fileName
-	 *            Nazev souboru
+	 * @param nixFile
+	 *            soubor HDF5 pro upraveni na Nix format
 	 */
 	@Override
-	public void createNixFile(File nixFile) {
+	public void fillNixFile(File nixFile) {
 
 		Block block = nixFile.createBlock("recording" + index, "recording");
 
@@ -59,7 +58,6 @@ public class AntMuscleOxygenMonitor implements INixFile{
 		block.setMetadata(metaData.createSectionNix(nixFile));
 
 		/* Naplneni dataArray daty o hemoglobinu v procentech */
-
 		DataArray dataSaturatedHemoglPerc = block.createDataArray("saturatedHemoglPerc" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, saturatedHemoglPerc.length }));
 		dataSaturatedHemoglPerc.setData(saturatedHemoglPerc, new NDSize(new int[] { 1, saturatedHemoglPerc.length }),
@@ -74,14 +72,6 @@ public class AntMuscleOxygenMonitor implements INixFile{
 
 	/** Getry a setry **/
 	
-	public static int getIndex() {
-		return index;
-	}
-
-	public static void setIndex(int index) {
-		AntMuscleOxygenMonitor.index = index;
-	}
-
 	public double[] getSaturatedHemoglPerc() {
 		return saturatedHemoglPerc;
 	}

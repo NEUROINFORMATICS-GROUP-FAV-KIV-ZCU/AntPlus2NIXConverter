@@ -7,5 +7,5 @@ import org.g_node.nix.File;
 
 public interface INixFile {
 
-	void createNixFile(File nixFile);
+	void fillNixFile(File nixFile);
 }

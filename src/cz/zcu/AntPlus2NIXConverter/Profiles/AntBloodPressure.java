@@ -16,11 +16,12 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
  */
 public class AntBloodPressure implements INixFile{
 
-	/** Aributy tridy **/
+	/** Staticke atributy tridy */
 	private static int index = 0;
 
+	/** Aributy tridy **/
 	private int[] systolic;
-	private int[] distolic;
+	private int[] diastolic;
 	private int[] heartRate;
 	private GregorianCalendar[] timeStamp;
 
@@ -32,7 +33,7 @@ public class AntBloodPressure implements INixFile{
 	 * 
 	 * @param systolic
 	 *            Systolicky tlak
-	 * @param distolic
+	 * @param diastolic
 	 *            Distolicky tlak
 	 * @param heartRate
 	 *            Srdecni tep
@@ -41,11 +42,11 @@ public class AntBloodPressure implements INixFile{
 	 * @param metaData
 	 *            MetaData
 	 */
-	public AntBloodPressure(int[] systolic, int[] distolic, int[] heartRate, GregorianCalendar[] timeStamp,
+	public AntBloodPressure(int[] systolic, int[] diastolic, int[] heartRate, GregorianCalendar[] timeStamp,
 			OdMLData metaData) {
 
 		this.systolic = systolic;
-		this.distolic = distolic;
+		this.diastolic = diastolic;
 		this.heartRate = heartRate;
 		this.timeStamp = timeStamp;
 		this.metaData = metaData;
@@ -67,13 +68,13 @@ public class AntBloodPressure implements INixFile{
 	}
 
 	/**
-	 * Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat
+	 * Metoda pro vytvoreni casti NIX, vcetne dat a metadat
 	 * 
-	 * @param fileName
-	 *            Nazev souboru
+	 *@param nixFile
+	 *            soubor HDF5 pro upraveni na Nix format
 	 */
 	@Override
-	public void createNixFile(File nixFile) {
+	public void fillNixFile(File nixFile) {
 
 		byte[] timeStampConv = convertTimeStamp();
 
@@ -89,10 +90,10 @@ public class AntBloodPressure implements INixFile{
 				new NDSize(new int[] { 1, systolic.length }));
 		dataSystolic.setData(systolic, new NDSize(new int[] { 1, systolic.length }), new NDSize(2, 0));
 
-		/* Naplneni dataArray daty o distolickem tlaku */
-		DataArray dataDistolic = block.createDataArray("diastolicBloodPress" + index, "antMessage", DataType.Int32,
-				new NDSize(new int[] { 1, distolic.length }));
-		dataDistolic.setData(distolic, new NDSize(new int[] { 1, systolic.length }), new NDSize(2, 0));
+		/* Naplneni dataArray daty o diastolickem tlaku */
+		DataArray dataDiastolic = block.createDataArray("diastolicBloodPress" + index, "antMessage", DataType.Int32,
+				new NDSize(new int[] { 1, diastolic.length }));
+		dataDiastolic.setData(diastolic, new NDSize(new int[] { 1, systolic.length }), new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o srdecni cinnosti */
 		DataArray dataHeartRate = block.createDataArray("heartRate" + index, "antMessage", DataType.Int32,
@@ -108,13 +109,6 @@ public class AntBloodPressure implements INixFile{
 
 	/** Getry a Setry **/
 	
-	public static int getIndex() {
-		return index;
-	}
-	
-	public static void setIndex(int index) {
-		AntBloodPressure.index = index;
-	}
 	
 	public int[] getSystolic() {
 		return systolic;
@@ -125,12 +119,12 @@ public class AntBloodPressure implements INixFile{
 		this.systolic = systolic;
 	}
 
-	public int[] getDistolic() {
-		return distolic;
+	public int[] getDiastolic() {
+		return diastolic;
 	}
 
-	public void setDistolic(int[] distolic) {
-		this.distolic = distolic;
+	public void setDiastolic(int[] distolic) {
+		this.diastolic = distolic;
 	}
 
 	public int[] getHeartRate() {

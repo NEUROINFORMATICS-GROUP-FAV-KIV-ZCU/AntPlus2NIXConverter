@@ -8,8 +8,9 @@ import java.io.IOException;
 import org.g_node.nix.*;
 
 /**
- * Trida pro zpracovani informaci o ANT plus profilu HeartRate Profil pro
- * vytvoreni­ HDF5 souboru ze zarizeni Heart Rate.* @author Vaclav Janoch, Filip
+ * @Trida pro zpracovani informaci o ANT plus profilu HeartRate Profil pro
+ * vytvoreni­ HDF5 souboru ze zarizeni Heart Rate.
+ * @author Vaclav Janoch, Filip
  * Kupilik, Petr Tobias
  * 
  * @version 1.0
@@ -17,9 +18,10 @@ import org.g_node.nix.*;
 
 public class AntHeartRate implements INixFile{
 
-	/** Aributy tridy **/
+	/** Staticke atributy tridy **/
 	private static int index = 0;
 
+	/** Aributy tridy **/
 	private int[] heartBeatCounter;
 	private int[] computedHeartRate;
 	private double[] timeOfPreviousHeartBeat;
@@ -27,8 +29,7 @@ public class AntHeartRate implements INixFile{
 	private OdMLData metaData;
 
 	/**
-	 * Konstruktor tridy. Naplni atributy tridy informacemi z ANT plus profilu s
-	 * polecne s metadaty
+	 * Konstruktor tridy. Naplni atributy tridy informacemi z ANT plus profilu spolecne s metadaty
 	 * 
 	 * @param heartBeatCounter
 	 *            Pocet srdecnich tepu
@@ -51,15 +52,13 @@ public class AntHeartRate implements INixFile{
 	}
 
 	/**
+	 * Metoda pro vytvoreni casti NIX, vcetne dat a metadat.
 	 * 
-	 * Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat
-	 * 
-	 * @param fileName
-	 *            Nazev souboru
-	 * @throws IOException 
+	 * @param nixFile
+	 *            soubor HDF5 pro upraveni na Nix format
 	 */
 	@Override
-	public void createNixFile(File nixFile){
+	public void fillNixFile(File nixFile){
 		
 		Block block = nixFile.createBlock("recording" + index, "recording");
 
@@ -87,14 +86,9 @@ public class AntHeartRate implements INixFile{
 				new NDSize(new int[] { 1, timeOfPreviousHeartBeat.length }), new NDSize(2, 0));
 	}
 
-	public static int getIndex() {
-		return index;
-	}
-
-	public static void setIndex(int index) {
-		AntHeartRate.index = index;
-	}
-
+	
+	/***** Getry a Setry ****/
+	
 	public int[] getHeartBeatCounter() {
 		return heartBeatCounter;
 	}

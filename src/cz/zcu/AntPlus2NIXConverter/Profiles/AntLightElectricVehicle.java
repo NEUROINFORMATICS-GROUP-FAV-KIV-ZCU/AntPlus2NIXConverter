@@ -1,6 +1,5 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
-
 import org.g_node.nix.*;
 
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
@@ -13,12 +12,12 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
  * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
-public class AntLightElectricVehicle implements INixFile{
+public class AntLightElectricVehicle implements INixFile {
 
-	/** Aributy tridy **/
-
+	/** Staticke atributy tridy **/
 	private static int index = 0;
 
+	/** Aributy tridy **/
 	private double[] speedDistance;
 	private boolean[] sysGearState;
 	private int[] mode;
@@ -67,13 +66,13 @@ public class AntLightElectricVehicle implements INixFile{
 	}
 
 	/**
-	 * Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat
+	 * Metoda pro vytvoreni casti NIX, vcetne dat a metadat.
 	 * 
-	 * @param fileName
-	 *            Nazev souboru
+	 * @param nixFile
+	 *            soubor HDF5 pro upraveni na Nix format
 	 */
 	@Override
-	public void createNixFile(File nixFile) {
+	public void fillNixFile(File nixFile) {
 
 		byte[] sysGearStateB = convertSysGearState();
 
@@ -105,23 +104,14 @@ public class AntLightElectricVehicle implements INixFile{
 		DataArray dataSysGearState = block.createDataArray("sysGearState" + index, "antMessage", DataType.Int16,
 				new NDSize(new int[] { 1, speedDistance.length }));
 		dataSysGearState.setData(sysGearStateB, new NDSize(new int[] { 1, sysGearState.length }), new NDSize(2, 0));
-		
+
 	}
 
 	/** Getry a Setry ***/
-	
-	public static int getIndex() {
-		return index;
-	}
-	
-	public static void setIndex(int index) {
-		AntLightElectricVehicle.index = index;
-	}
 
 	public double[] getSpeedDistance() {
 		return speedDistance;
 	}
-
 
 	public void setSpeedDistance(double[] speedDistance) {
 		this.speedDistance = speedDistance;

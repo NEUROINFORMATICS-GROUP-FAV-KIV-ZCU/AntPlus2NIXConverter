@@ -7,16 +7,19 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
 
 /**
  * Trida pro zpracovani informaci o ANT plus profilu Bike Speed Profil pro
- * vytvoreni­ HDF5 souboru ze zarizeni Bike Speed.@author Vaclav Janoch, Filip
+ * vytvoreni­ HDF5 souboru ze zarizeni Bike Speed.
+ * @author Vaclav Janoch, Filip
  * Kupilik, Petr Tobias
  * 
  * @version 1.0
  */
 public class AntBikeSpeed implements INixFile{
 
-	/** Aributy tridy **/
+	/** Staticky aribut tridy **/
 
 	private static int index = 0;
+
+	/** Aributy tridy **/
 
 	private int[] cumWheelRew;
 	private int[] latSpEvTime;
@@ -44,13 +47,13 @@ public class AntBikeSpeed implements INixFile{
 	}
 
 	/**
-	 * Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat
+	 * Metoda pro vytvoreni casti NIX, vcetne dat a metadat
 	 * 
-	 * @param fileName
-	 *            Nazev souboru
+	 * @param nixFile
+	 *            soubor HDF5 pro upraveni na Nix format
 	 */
 	@Override
-	public void createNixFile(File nixFile) {
+	public void fillNixFile(File nixFile) {
 
 		Block block = nixFile.createBlock("recording" + index, "recording");
 
@@ -72,14 +75,6 @@ public class AntBikeSpeed implements INixFile{
 	}
 
 	/***** Getry a Setry *******/
-	
-	public static int getIndex() {
-		return index;
-	}
-	
-	public static void setIndex(int index) {
-		AntBikeSpeed.index = index;
-	}
 	
 	public int[] getCumWheelRew() {
 		return cumWheelRew;

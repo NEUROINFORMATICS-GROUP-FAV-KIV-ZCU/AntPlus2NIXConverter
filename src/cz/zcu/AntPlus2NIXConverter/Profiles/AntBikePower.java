@@ -7,7 +7,7 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
 
 /**
  * Trida pro zpracovani informaci o ANT plus profilu Bike Power Profil pro
- * vytvoreni≠ HDF5 souboru ze zarizeni Bike Power.Profil pro vytvoren√≠ HDF5
+ * vytvoreni≠ HDF5 souboru ze zarizeni Bike Power.Profil pro vytvoreni≠ HDF5
  * souboru ze zarizeni Bike Power.
  * 
  * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
@@ -15,9 +15,11 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
  */
 public class AntBikePower implements INixFile {
 
-	/** Aributy tridy **/
+	/** Staticke aributy tridy **/
 
 	private static int index = 0;
+
+	/** Aributy tridy **/
 
 	private double[] power;
 
@@ -41,14 +43,14 @@ public class AntBikePower implements INixFile {
 	}
 
 	/**
-	 * Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat.
+	 * Metoda pro vytvoreni casti  NIX, vcetne dat a metadat.
 	 * 
-	 * @param fileName
-	 *            Nazev souboru
+	 * @param nixFile
+	 *            soubor HDF5 pro upraveni na Nix format
 	 */
 
 	@Override
-	public void createNixFile(File nixFile) {
+	public void fillNixFile(File nixFile) {
 		
 		Block block = nixFile.createBlock("recording" + index, "recording");
 
@@ -66,13 +68,6 @@ public class AntBikePower implements INixFile {
 	
 	/***** Getry a Setry *******/
 	
-	public static int getIndex() {
-		return index;
-	}
-	
-	public static void setIndex(int index) {
-		AntBikePower.index = index;
-	}
 
 	public double[] getPower() {
 		return power;

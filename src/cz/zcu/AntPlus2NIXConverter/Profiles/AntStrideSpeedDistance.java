@@ -14,9 +14,10 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
  */
 public class AntStrideSpeedDistance implements INixFile{
 
-	/** Aributy tridy **/
+	/** Staticke atributy tridy **/
 	private static int index = 0;
 
+	/** Aributy tridy **/
 	private long[] strideCount;
 	private double[] distance;
 	private double[] speed;
@@ -46,20 +47,19 @@ public class AntStrideSpeedDistance implements INixFile{
 	}
 
 	/**
-	 * Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat
+	 * Metoda pro vytvoreni casti NIX, vcetne dat a metadat.
 	 * 
-	 * @param fileName
-	 *            Nazev souboru
+	 * @param nixFile
+	 *            soubor HDF5 pro upraveni na Nix format
 	 */
 	@Override
-	public void createNixFile(File nixFile) {
+	public void fillNixFile(File nixFile) {
 
 		Block block = nixFile.createBlock("recording" + index, "recording");
 
 		block.createSource("strideSpeedDistance" + index, "antMessage");
 
 		/* Pridani metadat do bloku */
-
 		block.setMetadata(metaData.createSectionNix(nixFile));
 
 		/* Naplneni dataArray daty chuzi */
@@ -80,14 +80,6 @@ public class AntStrideSpeedDistance implements INixFile{
 	}
 
 	/** Getry a Setry **/
-	
-	public static int getIndex() {
-		return index;
-	}
-
-	public static void setIndex(int index) {
-		AntStrideSpeedDistance.index = index;
-	}
 
 	public long[] getStrideCount() {
 		return strideCount;
