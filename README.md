@@ -17,19 +17,19 @@ Run C:\deps\nixenv.bat
 
 ## Build NIX on Windows
 ```
->git clone https://github.com/G-Node/nix.git
->cd nix
->mkdir build
->cd build
->cmake .. -G"Visual Studio 12"
->cmake --build . --config Release
+> git clone https://github.com/G-Node/nix.git
+> cd nix
+> mkdir build
+> cd build
+> cmake .. -G"Visual Studio 12"
+> cmake --build . --config Release
 ```
 
 ## Build nix-java on Windows
 ```
->git clone https://github.com/G-Node/nix-java.git
->cd nix-java
->mvn clean package -DnixIncludePath=path/to/nix/include -DboostIncludePath=%BOOST_INCLUDEDIR% -DnixLinkPath=path/to/nix/build/Release -Dhdf5LinkPath=%HDF5_BASE%/bin -DskipTests
+> git clone https://github.com/G-Node/nix-java.git
+> cd nix-java
+> mvn clean package -DnixIncludePath=path/to/nix/include -DboostIncludePath=%BOOST_INCLUDEDIR% -DnixLinkPath=path/to/nix/build/Release -Dhdf5LinkPath=%HDF5_BASE%/bin -DskipTests
 ```
 
 In nix-java/tagret directory you can find jar file, which you can add to your project.
@@ -40,20 +40,20 @@ You have to add & install the following software source to your system:
 
 Trusty:
 ```
->deb http://ppa.launchpad.net/gnode/nix/ubuntu trusty main
->deb-src http://ppa.launchpad.net/gnode/nix/ubuntu trusty main
+> deb http://ppa.launchpad.net/gnode/nix/ubuntu trusty main
+> deb-src http://ppa.launchpad.net/gnode/nix/ubuntu trusty main
 ```
 Xenial:
 ```
->deb http://ppa.launchpad.net/gnode/nix/ubuntu xenial main
->deb-src http://ppa.launchpad.net/gnode/nix/ubuntu xenial main
+> deb http://ppa.launchpad.net/gnode/nix/ubuntu xenial main
+> deb-src http://ppa.launchpad.net/gnode/nix/ubuntu xenial main
 ```
 
 by executing:
 ```
->sudo add-apt-repository ppa:gnode/nix
->sudo apt-get update
->sudo apt-get install libnix-dev
+> sudo add-apt-repository ppa:gnode/nix
+> sudo apt-get update
+> sudo apt-get install libnix-dev
 ```
 
 ## Build NIX under Ubuntu
@@ -101,19 +101,24 @@ sudo make install
 
 ##### Instructions
 
+```
+> git clone https://github.com/G-Node/nix-java
+> cd nix-java
+```
+
 Build clean project and generate jars:
 ```
->mvn clean package
+> mvn clean package
 ```
 
 To specify include a link path:
 ```
->mvn clean package -DnixIncludePath=<path> -DnixLinkPath=<path>
+> mvn clean package -DnixIncludePath=<path> -DnixLinkPath=<path>
 ```
 
 Sample usage:
 ```
->mvn clean package -DnixIncludePath=/usr/include/nix -DnixLinkPath=/usr/local/lib //optional -DskipTests
+> mvn clean package -DnixIncludePath=/usr/include/nix -DnixLinkPath=/usr/local/lib //optional -DskipTests
 ```
 In nix-java/tagret directory you can find jar file, which you can add to your project.
 
