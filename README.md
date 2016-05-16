@@ -9,11 +9,12 @@ Software requirements:
   - Maven 3.2.5
   - Platform x86
 
-**Donwload dependencies**
+## Donwload dependencies
+
 Download [nix-dependencies-windows-20150206.zip](https://projects.g-node.org/nix/) and unzip it to C:\deps.
 Run C:\deps\nixenv.bat
 
-** Build NIX on Windows **
+## Build NIX on Windows
 ```
 >git clone https://github.com/G-Node/nix.git
 >cd nix
@@ -23,7 +24,7 @@ Run C:\deps\nixenv.bat
 >cmake --build . --config Release
 ```
 
-** Build nix-java on Windows **
+## Build nix-java on Windows
 ```
 >git clone https://github.com/G-Node/nix-java.git
 >cd nix-java
