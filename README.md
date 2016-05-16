@@ -12,7 +12,8 @@ Software requirements:
 ## Donwload dependencies
 
 Download [nix-dependencies-windows-20150206.zip](https://projects.g-node.org/nix/) and unzip it to C:\deps.
->Run C:\deps\nixenv.bat
+
+Run C:\deps\nixenv.bat
 
 ## Build NIX on Windows
 ```
@@ -32,4 +33,5 @@ Download [nix-dependencies-windows-20150206.zip](https://projects.g-node.org/nix
 ```
 
 In nix-java/tagret directory you can find jar file, which you can add to your project.
->To make everything running, you have to add to your project javacpp library too. You can download it from [here](http://mvnrepository.com/artifact/org.bytedeco/javacpp/1.0) for example.
+
+To make everything running, you have to add to your project javacpp library too. You can download it from [here](http://mvnrepository.com/artifact/org.bytedeco/javacpp/1.0) for example.
