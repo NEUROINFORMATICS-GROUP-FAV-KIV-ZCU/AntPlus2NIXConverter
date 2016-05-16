@@ -9,7 +9,7 @@ Software requirements:
   - Maven 3.2.5
   - Platform x86
 
-** Donwload dependencies **
+**Donwload dependencies**
 Download [nix-dependencies-windows-20150206.zip](https://projects.g-node.org/nix/) and unzip it to C:\deps.
 Run C:\deps\nixenv.bat
 
