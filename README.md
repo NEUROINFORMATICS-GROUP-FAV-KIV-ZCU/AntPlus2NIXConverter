@@ -34,6 +34,6 @@ Run C:\deps\nixenv.bat
 
 In nix-java/tagret directory you can find jar file, which you can add to your project.
 
-To make everything running, you have to add to your project javacpp library too. You can download it from [here](http://mvnrepository.com/artifact/org.bytedeco/javacpp/1.0) for example.
+To make everything running, you have to add to your project javacpp library too. You can download it from [here](http://bytedeco.org/download/) for example.
 
 Now you can add AntPlus2NIXConverter to your project and use it without any restrictions.
