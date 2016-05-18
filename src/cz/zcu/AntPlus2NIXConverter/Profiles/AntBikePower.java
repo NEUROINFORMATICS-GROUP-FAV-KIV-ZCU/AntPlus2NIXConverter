@@ -2,6 +2,7 @@ package cz.zcu.AntPlus2NIXConverter.Profiles;
 
 import org.g_node.nix.*;
 
+import cz.zcu.AntPlus2NIXConverter.Data.ID;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
 
@@ -24,6 +25,8 @@ public class AntBikePower implements INixFile {
 	private double[] power;
 
 	private OdMLData metaData;
+	
+	private ID id;
 
 	/**
 	 * Konstruktor tridy. Naplni atributy tridy informacemi o vykonu a
@@ -36,10 +39,10 @@ public class AntBikePower implements INixFile {
 	 */
 	public AntBikePower(double[] power, OdMLData metaData) {
 
+		id = new ID();
 		this.power = power;
 		this.metaData = metaData;
-		index++;
-
+		
 	}
 
 	/**
@@ -52,15 +55,15 @@ public class AntBikePower implements INixFile {
 	@Override
 	public void fillNixFile(File nixFile) {
 		
-		Block block = nixFile.createBlock("recording" + index, "recording");
-
-		block.createSource("bikePower" + index, "antMessage");
+		Block block = nixFile.createBlock("recording" + id.randomString(24), "recording");
+		block.setDefinition("kiv.zcu.cz");
+		block.createSource("bikePower" + id.randomString(24), "antMessage");
 
 		/* Pridani metadat do bloku */
 		block.setMetadata(metaData.createSectionNix(nixFile));
 
 		/* Naplneni dataArray daty o vykonu */
-		DataArray dataArrayBikePower = block.createDataArray("powerOnly" + index, "antMessage", DataType.Double,
+		DataArray dataArrayBikePower = block.createDataArray("powerOnly" + id.randomString(24), "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, power.length }));
 		dataArrayBikePower.setData(power, new NDSize(new int[] { 1, power.length }), new NDSize(2, 0));		
 		
