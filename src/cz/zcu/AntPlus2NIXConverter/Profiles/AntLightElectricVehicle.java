@@ -1,5 +1,7 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
+import java.util.UUID;
+
 import org.g_node.nix.*;
 
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
@@ -13,9 +15,6 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
  * @version 1.0
  */
 public class AntLightElectricVehicle implements INixFile {
-
-	/** Staticke atributy tridy **/
-	private static int index = 0;
 
 	/** Aributy tridy **/
 	private double[] speedDistance;
@@ -46,7 +45,6 @@ public class AntLightElectricVehicle implements INixFile {
 		this.mode = mode;
 		this.batStatus = BatStatus;
 		this.metaData = metaData;
-		index++;
 	}
 
 	/**
@@ -76,9 +74,9 @@ public class AntLightElectricVehicle implements INixFile {
 
 		byte[] sysGearStateB = convertSysGearState();
 
-		Block block = nixFile.createBlock("recording" + index, "recording");
+		Block block = nixFile.createBlock("kiv.zcu.cz_block_" + UUID.randomUUID().toString(), "recording");
 
-		block.createSource("lightElVeh" + index, "antMessage");
+		block.createSource("kiv.zcu.cz_source_lightElectricVehicle_" + UUID.randomUUID().toString(), "antMessage");
 
 		/* Pridani metadat do bloku */
 
@@ -86,22 +84,22 @@ public class AntLightElectricVehicle implements INixFile {
 
 		/* Naplneni dataArray daty o baterii */
 
-		DataArray dataBatStatus = block.createDataArray("batStatus" + index, "antMessage", DataType.Int32,
+		DataArray dataBatStatus = block.createDataArray("kiv.zcu.cz_data_array_batStatus_" + UUID.randomUUID().toString(), "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, batStatus.length }));
 		dataBatStatus.setData(batStatus, new NDSize(new int[] { 1, batStatus.length }), new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o modu */
-		DataArray dataMode = block.createDataArray("mode" + index, "antMessage", DataType.Int32,
+		DataArray dataMode = block.createDataArray("kiv.zcu.cz_data_array_mode_" + UUID.randomUUID().toString(), "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, mode.length }));
 		dataMode.setData(mode, new NDSize(new int[] { 1, mode.length }), new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o rychlosti */
-		DataArray dataSpeedDistance = block.createDataArray("speedDistance" + index, "antMessage", DataType.Double,
+		DataArray dataSpeedDistance = block.createDataArray("kiv.zcu.cz_data_array_speedDistance_" + UUID.randomUUID().toString(), "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, speedDistance.length }));
 		dataSpeedDistance.setData(speedDistance, new NDSize(new int[] { 1, speedDistance.length }), new NDSize(2, 0));
 
 		/* Naplneni dataArray daty systrmu a zarizeni */
-		DataArray dataSysGearState = block.createDataArray("sysGearState" + index, "antMessage", DataType.Int16,
+		DataArray dataSysGearState = block.createDataArray("kiv.zcu.cz_data_array_sysGearState_" + UUID.randomUUID().toString(), "antMessage", DataType.Int16,
 				new NDSize(new int[] { 1, speedDistance.length }));
 		dataSysGearState.setData(sysGearStateB, new NDSize(new int[] { 1, sysGearState.length }), new NDSize(2, 0));
 

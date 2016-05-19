@@ -1,5 +1,7 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
+import java.util.UUID;
+
 import org.g_node.nix.*;
 
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
@@ -15,14 +17,10 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
  */
 public class AntBikeSpeed implements INixFile{
 
-	/** Staticky aribut tridy **/
-
-	private static int index = 0;
-
 	/** Aributy tridy **/
 
 	private int[] cumWheelRew;
-	private int[] latSpEvTime;
+	private int[] lastSpEvTime;
 
 	private OdMLData metaData;
 
@@ -40,9 +38,8 @@ public class AntBikeSpeed implements INixFile{
 	public AntBikeSpeed(int[] cumWheelRew, int[] latSpEvTime, OdMLData metaData) {
 
 		this.cumWheelRew = cumWheelRew;
-		this.latSpEvTime = latSpEvTime;
+		this.lastSpEvTime = latSpEvTime;
 		this.metaData = metaData;
-		index++;
 
 	}
 
@@ -55,20 +52,20 @@ public class AntBikeSpeed implements INixFile{
 	@Override
 	public void fillNixFile(File nixFile) {
 
-		Block block = nixFile.createBlock("recording" + index, "recording");
+		Block block = nixFile.createBlock("kiv.zcu.cz_block_" + UUID.randomUUID().toString(), "recording");
 
-		block.createSource("bikeSpeed" + index, "antMessage");
+		block.createSource("kiv.zcu.cz_source_bikeSpeed_" + UUID.randomUUID().toString(), "antMessage");
 
 		/* Pridani metadat do bloku */
 		block.setMetadata(metaData.createSectionNix(nixFile));
 
 		/* Naplneni dataArray daty o case */
-		DataArray dataArrayLatSpEvTime = block.createDataArray("LatSpEvTime" + index, "antMessage", DataType.Int32,
-				new NDSize(new int[] { 1, latSpEvTime.length }));
-		dataArrayLatSpEvTime.setData(latSpEvTime, new NDSize(new int[] { 1, latSpEvTime.length }), new NDSize(2, 0));
+		DataArray dataArrayLatSpEvTime = block.createDataArray("kiv.zcu.cz_data_array_lastSpEvTime_" + UUID.randomUUID().toString(), "antMessage", DataType.Int32,
+				new NDSize(new int[] { 1, lastSpEvTime.length }));
+		dataArrayLatSpEvTime.setData(lastSpEvTime, new NDSize(new int[] { 1, lastSpEvTime.length }), new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o otaceni kola */
-		DataArray dataArrayCumWheelRew = block.createDataArray("CumWheelRew" + index, "antMessage", DataType.Int32,
+		DataArray dataArrayCumWheelRew = block.createDataArray("kiv.zcu.cz_data_array_cumWheelRew_" + UUID.randomUUID().toString(), "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, cumWheelRew.length }));
 		dataArrayCumWheelRew.setData(cumWheelRew, new NDSize(new int[] { 1, cumWheelRew.length }), new NDSize(2, 0));
 		
@@ -86,11 +83,11 @@ public class AntBikeSpeed implements INixFile{
 	}
 
 	public int[] getLatSpEvTime() {
-		return latSpEvTime;
+		return lastSpEvTime;
 	}
 
 	public void setLatSpEvTime(int[] latSpEvTime) {
-		this.latSpEvTime = latSpEvTime;
+		this.lastSpEvTime = latSpEvTime;
 	}
 
 	public OdMLData getMetaData() {
