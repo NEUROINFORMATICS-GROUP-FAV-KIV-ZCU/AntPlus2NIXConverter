@@ -19,11 +19,13 @@ public class AntBikePowerTest {
 	public void setUp() {
 		bikePower = new AntBikePower(new double[] { 1.0, 3.2, 5.6, 6.8 }, new OdMLData(33, 23, 4, 5, 2, 4, 4, 2, 5));
 		bikePower.createNixFile("testovaci.h5");
+		bikePower.getFile().open("testovaci.h5");
 		
 	}
 
 	@After
 	public void tearDown(){
+		
 		String location = bikePower.getFile().getLocation();
 		
 		bikePower.getFile().close();

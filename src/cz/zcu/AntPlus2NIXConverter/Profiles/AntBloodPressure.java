@@ -1,46 +1,37 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
 import java.util.GregorianCalendar;
+import java.util.UUID;
 
 import org.g_node.nix.*;
 
-import cz.zcu.AntPlus2NIXConverter.Convert.ID;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
+import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
 
 /**
- * Trida pro zpracovani informaci o ANT plus profilu BloodPressure Profil pro
- * vytvoreni­ HDF5 souboru ze zarizeni Blood Pressure.@author Vaclav Janoch, Filip Kupilik, Petr Tobias
+ * @Trida pro zpracovani informaci o ANT plus profilu BloodPressure Profil pro
+ *        vytvoreni­ HDF5 souboru ze zarizeni Blood Pressure.
+ * @author Vaclav Janoch,Filip Kupilik, Petr Tobias
+ * 
  * @version 1.0
  */
-public class AntBloodPressure {
+public class AntBloodPressure implements INixFile{
 
 	/** Aributy tridy **/
-	private int index = 0;
-
-	private File file;
-	private Block block;
-	private Source source;
-	private Section section;
-	private DataArray dataSystolic;
-	private DataArray dataDistolic;
-	private DataArray dataHeartRate;
-	private DataArray dataTime;
-
 	private int[] systolic;
-	private int[] distolic;
+	private int[] diastolic;
 	private int[] heartRate;
 	private GregorianCalendar[] timeStamp;
-	private byte[] timeStampSt;
 
 	private OdMLData metaData;
 
 	/**
-	  Konstruktor tridy. Naplni atributy tridy informacemi z ANT plus profilu
+	 * Konstruktor tridy. Naplni atributy tridy informacemi z ANT plus profilu
 	 * spolecne s metadaty
 	 * 
 	 * @param systolic
 	 *            Systolicky tlak
-	 * @param distolic
+	 * @param diastolic
 	 *            Distolicky tlak
 	 * @param heartRate
 	 *            Srdecni tep
@@ -49,16 +40,14 @@ public class AntBloodPressure {
 	 * @param metaData
 	 *            MetaData
 	 */
-	public AntBloodPressure(int[] systolic, int[] distolic, int[] heartRate, GregorianCalendar[] timeStamp,
+	public AntBloodPressure(int[] systolic, int[] diastolic, int[] heartRate, GregorianCalendar[] timeStamp,
 			OdMLData metaData) {
 
 		this.systolic = systolic;
-		this.distolic = distolic;
+		this.diastolic = diastolic;
 		this.heartRate = heartRate;
 		this.timeStamp = timeStamp;
 		this.metaData = metaData;
-
-		index++;
 
 	}
 
@@ -66,130 +55,72 @@ public class AntBloodPressure {
 	 * Pomocna metoda pro prevedeni dat ulozenych ve formatu GregorianCalendar
 	 * do datoveho typu Byte pro ulozeni do NIX
 	 */
-	public void prevedTimeStamp() {
-		timeStampSt = new byte[timeStamp.length];
+	private byte[] convertTimeStamp() {
+		byte[] timeStampSt = new byte[timeStamp.length];
 		for (int i = 0; i < timeStamp.length; i++) {
 			timeStampSt[i] = Byte.parseByte(timeStamp[i].toString());
 		}
-
+		return timeStampSt;
 	}
 
 	/**
-	 *Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat 
-	 * @param fileName
-	 *            Nazev souboru 
+	 * Metoda pro vytvoreni casti NIX, vcetne dat a metadat
+	 * 
+	 *@param nixFile
+	 *            soubor HDF5 pro upraveni na Nix format
 	 */
-	public void createNixFile(String fileName) {
+	@Override
+	public void fillNixFile(File nixFile) {
 
-		prevedTimeStamp();
-		file = File.open(fileName, FileMode.Overwrite);
+		byte[] timeStampConv = convertTimeStamp();
 
-		block = file.createBlock("recording" + index, "recording");
+		Block block = nixFile.createBlock("kiv.zcu.cz_block_" + UUID.randomUUID().toString(), "recording");
 
-		source = block.createSource("bloodPressure" + index, "antMessage");
+		block.createSource("kiv.zcu.cz_source_bloodPressure_" + UUID.randomUUID().toString(), "antMessage");
 
 		/* Pridani metadat do bloku */
-		
-		section = file.createSection("AntMetaData", "metadata");
-		section.createProperty("deviceName", new Value(metaData.getDeviceName()));
-		section.createProperty("deviceType", new Value(metaData.getDeviceType()));
-		section.createProperty("deviceState", new Value(metaData.getDeviceState()));
-		section.createProperty("deviceNumber", new Value(metaData.getDeviceNumber()));
-		section.createProperty("batteryStatus", new Value(metaData.getBatteryStatus()));
-		section.createProperty("signalStrength", new Value(metaData.getSignalStrength()));
-		section.createProperty("manufacturerIdentification", new Value(metaData.getManIdentification()));
-		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
-		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
+		block.setMetadata(metaData.createSectionNix(nixFile));
 
 		/* Naplneni dataArray daty o systolickem tlaku */
- 		
-		dataSystolic = block.createDataArray("systolicBloodPress" + index, "antMessage", DataType.Int32,
+		DataArray dataSystolic = block.createDataArray("kiv.zcu.cz_data_array_systolicBloodPress_" + UUID.randomUUID().toString(), "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, systolic.length }));
 		dataSystolic.setData(systolic, new NDSize(new int[] { 1, systolic.length }), new NDSize(2, 0));
-		dataSystolic.setUnit("mmHg");
-		/* Naplneni dataArray daty o distolickem tlaku */		
-		dataDistolic = block.createDataArray("diastolicBloodPress" + index, "antMessage", DataType.Int32,
-				new NDSize(new int[] { 1, distolic.length }));
-		dataDistolic.setData(distolic, new NDSize(new int[] { 1, systolic.length }), new NDSize(2, 0));
-		dataDistolic.setUnit("mmHg");
-		/* Naplneni dataArray daty o srdecni cinnosti */
 
-		dataHeartRate = block.createDataArray("heartRate" + index, "antMessage", DataType.Int32,
+		/* Naplneni dataArray daty o diastolickem tlaku */
+		DataArray dataDiastolic = block.createDataArray("kiv.zcu.cz_data_array_diastolicBloodPress_" + UUID.randomUUID().toString(), "antMessage", DataType.Int32,
+				new NDSize(new int[] { 1, diastolic.length }));
+		dataDiastolic.setData(diastolic, new NDSize(new int[] { 1, systolic.length }), new NDSize(2, 0));
+
+		/* Naplneni dataArray daty o srdecni cinnosti */
+		DataArray dataHeartRate = block.createDataArray("kiv.zcu.cz_data_array_heartRate_" + UUID.randomUUID().toString(), "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, heartRate.length }));
 		dataHeartRate.setData(heartRate, new NDSize(new int[] { 1, heartRate.length }), new NDSize(2, 0));
-		dataHeartRate.setUnit("bpm");
+
 		/* Naplneni dataArray daty o case */
-		dataTime = block.createDataArray("timeStamp" + index, "antMessage", DataType.Int16,
-				new NDSize(new int[] { 1, timeStampSt.length }));
-		dataTime.setData(timeStampSt, new NDSize(new int[] { 1, timeStampSt.length }), new NDSize(2, 0));
-		dataTime.setUnit("N/A");
-		file.close();
+		DataArray dataTime = block.createDataArray("kiv.zcu.cz_data_array_timeStamp_" + UUID.randomUUID().toString(), "antMessage", DataType.Int16,
+				new NDSize(new int[] { 1, timeStampConv.length }));
+		dataTime.setData(timeStampConv, new NDSize(new int[] { 1, timeStampConv.length }), new NDSize(2, 0));
+
 	}
 
 	/** Getry a Setry **/
 	
-	public Block getBlock() {
-		return block;
-	}
-
-	public void setBlock(Block block) {
-		this.block = block;
-	}
-
-	public Source getSource() {
-		return source;
-	}
-
-	public void setSource(Source source) {
-		this.source = source;
-	}
-
-	public DataArray getDataSystolic() {
-		return dataSystolic;
-	}
-
-	public void setDataSystolic(DataArray dataSystolic) {
-		this.dataSystolic = dataSystolic;
-	}
-
-	public DataArray getDataDistolic() {
-		return dataDistolic;
-	}
-
-	public void setDataDistolic(DataArray dataDistolic) {
-		this.dataDistolic = dataDistolic;
-	}
-
-	public DataArray getDataHeartRate() {
-		return dataHeartRate;
-	}
-
-	public void setDataHeartRate(DataArray dataHeartRate) {
-		this.dataHeartRate = dataHeartRate;
-	}
-
-	public DataArray getDataTime() {
-		return dataTime;
-	}
-
-	public void setDataTime(DataArray dataTime) {
-		this.dataTime = dataTime;
-	}
-
+	
 	public int[] getSystolic() {
 		return systolic;
 	}
+
 
 	public void setSystolic(int[] systolic) {
 		this.systolic = systolic;
 	}
 
-	public int[] getDistolic() {
-		return distolic;
+	public int[] getDiastolic() {
+		return diastolic;
 	}
 
-	public void setDistolic(int[] distolic) {
-		this.distolic = distolic;
+	public void setDiastolic(int[] distolic) {
+		this.diastolic = distolic;
 	}
 
 	public int[] getHeartRate() {
@@ -208,14 +139,6 @@ public class AntBloodPressure {
 		this.timeStamp = timeStamp;
 	}
 
-	public byte[] getTimeStampSt() {
-		return timeStampSt;
-	}
-
-	public void setTimeStampSt(byte[] timeStampSt) {
-		this.timeStampSt = timeStampSt;
-	}
-
 	public OdMLData getMetaData() {
 		return metaData;
 	}
@@ -223,30 +146,5 @@ public class AntBloodPressure {
 	public void setMetaData(OdMLData metaData) {
 		this.metaData = metaData;
 	}
-
-	public Section getSection() {
-		return section;
-	}
-
-	public void setSection(Section section) {
-		this.section = section;
-	}
-
-	public int getIndex() {
-		return index;
-	}
-
-	public void setIndex(int index) {
-		this.index = index;
-	}
-
-	public File getFile() {
-		return file;
-	}
-
-	public void setFile(File file) {
-		this.file = file;
-	}
-	
 
 }

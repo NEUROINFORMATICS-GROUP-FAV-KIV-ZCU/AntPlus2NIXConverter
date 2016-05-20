@@ -1,9 +1,11 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
+import java.util.UUID;
+
 import org.g_node.nix.*;
 
-import cz.zcu.AntPlus2NIXConverter.Convert.ID;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
+import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
 
 /**
  * Trida pro zpracovani informaci o ANT plus profilu Bike Speed Profil pro
@@ -12,19 +14,9 @@ import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
  * @author Vaclav Janoch, Filip Kupilik, Petr Tobias
  * @version 1.0
  */
-public class AntMultiSportSpeedDist {
+public class AntMultiSportSpeedDist implements INixFile{
 
 	/** Aributy tridy **/
-
-	private int index = 0;
-
-	private File file;
-	private Block block;
-	private Source source;
-	private Section section;
-	private DataArray dataTime;
-	private DataArray dataDistance;
-
 	private double[] timeStamp;
 	private double[] distance;
 	private OdMLData metaData;
@@ -45,99 +37,38 @@ public class AntMultiSportSpeedDist {
 		this.timeStamp = timeStamp;
 		this.distance = distance;
 		this.metaData = metaData;
-
-		index++;
 	}
 
 	/**
-	 *  Metoda pro vytvoreni HDF5 souboru s NIX formatem vcetne dat a metadat
+	 * Metoda pro vytvoreni casti  NIX, vcetne dat a metadat.
 	 * 
-	 * @param fileName
-	 *            Nazev souboru
+	 * @param nixFile
+	 *            soubor HDF5 pro upraveni na Nix format
 	 */
-	public void createNixFile(String fileName) {
+	@Override
+	public void fillNixFile(File nixFile) {
 
-		file = File.open(fileName, FileMode.Overwrite);
+		Block block = nixFile.createBlock("kiv.zcu.cz_block_" + UUID.randomUUID().toString(), "recording");
 
-		block = file.createBlock("recording" + index, "recording");
-
-		source = block.createSource("multiSportSpeedDist" + index, "antMessage");
+		block.createSource("kiv.zcu.cz_source_multiSportSpeedDist_" + UUID.randomUUID().toString(), "antMessage");
 		
 		/* Pridani metadat do bloku */
-		section = file.createSection("AntMetaData", "metadata");
-		section.createProperty("deviceName", new Value(metaData.getDeviceName()));
-		section.createProperty("deviceType", new Value(metaData.getDeviceType()));
-		section.createProperty("deviceState", new Value(metaData.getDeviceState()));
-		section.createProperty("deviceNumber", new Value(metaData.getDeviceNumber()));
-		section.createProperty("batteryStatus", new Value(metaData.getBatteryStatus()));
-		section.createProperty("signalStrength", new Value(metaData.getSignalStrength()));
-		section.createProperty("manufacturerIdentification", new Value(metaData.getManIdentification()));
-		section.createProperty("manufacturerSpecificData", new Value(metaData.getManSpecData()));
-		section.createProperty("productInfo", new Value(metaData.getProdInfo()));
-
+		block.setMetadata(metaData.createSectionNix(nixFile));
+		
 		/* Naplneni dataArray daty o case */
-		dataTime = block.createDataArray("dataTime" + index, "antMessage", DataType.Double,
+		DataArray dataTime = block.createDataArray("kiv.zcu.cz_data_array_dataTime_" + UUID.randomUUID().toString(), "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, timeStamp.length }));
 		dataTime.setData(timeStamp, new NDSize(new int[] { 1, timeStamp.length }), new NDSize(2, 0));
-		dataTime.setUnit("seconds");
-	
+		
 		/* Naplneni dataArray daty o vzdalenosti */
-		dataDistance = block.createDataArray("dataDistance" + index, "antMessage", DataType.Double,
+		DataArray dataDistance = block.createDataArray("kiv.zcu.cz_data_array_dataDistance_" + UUID.randomUUID().toString(), "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, distance.length }));
 		dataDistance.setData(distance, new NDSize(new int[] { 1, distance.length }), new NDSize(2, 0));
-		dataDistance.setUnit("meters");
-		file.close();
-
+		
 	}
 
 	/*** Getry a Setry ***/
-	public File getFile() {
-		return file;
-	}
 
-	public void setFile(File file) {
-		this.file = file;
-	}
-
-	public Block getBlock() {
-		return block;
-	}
-
-	public void setBlock(Block block) {
-		this.block = block;
-	}
-
-	public Source getSource() {
-		return source;
-	}
-
-	public void setSource(Source source) {
-		this.source = source;
-	}
-
-	public Section getSection() {
-		return section;
-	}
-
-	public void setSection(Section section) {
-		this.section = section;
-	}
-
-	public DataArray getDataTime() {
-		return dataTime;
-	}
-
-	public void setDataTime(DataArray dataTime) {
-		this.dataTime = dataTime;
-	}
-
-	public DataArray getDataDistance() {
-		return dataDistance;
-	}
-
-	public void setDataDistance(DataArray dataDistance) {
-		this.dataDistance = dataDistance;
-	}
 
 	public double[] getTimeStamp() {
 		return timeStamp;
@@ -161,14 +92,6 @@ public class AntMultiSportSpeedDist {
 
 	public void setMetaData(OdMLData metaData) {
 		this.metaData = metaData;
-	}
-
-	public int getIndex() {
-		return index;
-	}
-
-	public void setIndex(int index) {
-		this.index = index;
 	}
 
 }
