@@ -24,7 +24,7 @@ public class OdMLData {
 	private int batteryStatus;
 	private int signalStrength;
 	private int manIdentification;
-	private int manSpecData;
+	private int[] manSpecData;
 	private int prodInfo;
 
 	/**
@@ -51,7 +51,7 @@ public class OdMLData {
 	 *            Info
 	 */
 	public OdMLData(int deviceName, int deviceType, String[] deviceState, int deviceNumber, int batteryStatus,
-			int signalStenght, int manIdentifacation, int manSpecData, int prodInfo) {
+			int signalStenght, int manIdentifacation, int[] manSpecData, int prodInfo) {
 		setDeviceName(deviceName);
 		setDeviceNumber(deviceNumber);
 		setDeviceState(deviceState);
@@ -64,12 +64,20 @@ public class OdMLData {
 
 	}
 	
-	private List<Value> convertArray(String[] deviceState){
+	private List<Value> convertStringArray(String[] deviceState){
 		ArrayList<Value> deviceStateList = new ArrayList<>();
 		for(int i = 0; i < deviceState.length; i++){
 			deviceStateList.add(new Value(deviceState[i]));
 		}
 		return deviceStateList;
+	}
+	
+	private List<Value> convertIntArray(int[] specificData){
+		ArrayList<Value> specificDataList = new ArrayList<>();
+		for(int i = 0; i < specificData.length; i++){
+			specificDataList.add(new Value(specificData[i]));
+		}
+		return specificDataList;
 	}
 
 	public Section createSectionNix(File file){
@@ -77,12 +85,12 @@ public class OdMLData {
 		Section section = file.createSection("AntMetaData", "metadata");
 		section.createProperty("deviceName", new Value(getDeviceName()));
 		section.createProperty("deviceType", new Value(getDeviceType()));
-		section.createProperty("deviceState", convertArray(getDeviceState()));
+		section.createProperty("deviceState", convertStringArray(getDeviceState()));
 		section.createProperty("deviceNumber", new Value(getDeviceNumber()));
 		section.createProperty("batteryStatus", new Value(getBatteryStatus()));
 		section.createProperty("signalStrength", new Value(getSignalStrength()));
 		section.createProperty("manufacturerIdentification", new Value(getManIdentification()));
-		section.createProperty("manufacturerSpecificData", new Value(getManSpecData()));
+		section.createProperty("manufacturerSpecificData", convertIntArray(getManSpecData()));
 		section.createProperty("productInfo", new Value(getProdInfo()));
 		return section;
 
@@ -122,11 +130,11 @@ public class OdMLData {
 		this.manIdentification = manIdentification;
 	}
 
-	public int getManSpecData() {
+	public int[] getManSpecData() {
 		return manSpecData;
 	}
 
-	public void setManSpecData(int manSpecData) {
+	public void setManSpecData(int[] manSpecData) {
 		this.manSpecData = manSpecData;
 	}
 
