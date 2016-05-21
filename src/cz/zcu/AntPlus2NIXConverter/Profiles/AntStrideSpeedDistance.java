@@ -1,7 +1,5 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
-import java.util.UUID;
-
 import org.g_node.nix.*;
 
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
@@ -17,6 +15,8 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
 public class AntStrideSpeedDistance implements INixFile{
 
 	/** Aributy tridy **/
+	private static int index = 0;
+	
 	private long[] strideCount;
 	private double[] distance;
 	private double[] speed;
@@ -41,7 +41,7 @@ public class AntStrideSpeedDistance implements INixFile{
 		this.distance = distance;
 		this.speed = speed;
 		this.metaData = metaData;
-
+		index++;
 	}
 
 	/**
@@ -53,25 +53,25 @@ public class AntStrideSpeedDistance implements INixFile{
 	@Override
 	public void fillNixFile(File nixFile) {
 
-		Block block = nixFile.createBlock("kiv.zcu.cz_block_" + UUID.randomUUID().toString(), "recording");
+		Block block = nixFile.createBlock("recording" + index, "recording");
 
-		block.createSource("kiv.zcu.cz_source_strideSpeedDistance_" + UUID.randomUUID().toString(), "antMessage");
+		block.createSource("strideSpeedDistance" + index, "antMessage");
 
 		/* Pridani metadat do bloku */
 		block.setMetadata(metaData.createSectionNix(nixFile));
 
 		/* Naplneni dataArray daty chuzi */
-		DataArray dataStrideCount = block.createDataArray("kiv.zcu.cz_data_array_strideCount_" + UUID.randomUUID().toString(), "antMessage", DataType.Int64,
+		DataArray dataStrideCount = block.createDataArray("strideCount" + index, "antMessage", DataType.Int64,
 				new NDSize(new int[] { 1, strideCount.length }));
 		dataStrideCount.setData(strideCount, new NDSize(new int[] { 1, strideCount.length }), new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o vzdalenosti */
-		DataArray dataDistance = block.createDataArray("kiv.zcu.cz_data_array_distance_" + UUID.randomUUID().toString(), "antMessage", DataType.Double,
+		DataArray dataDistance = block.createDataArray("distance" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, distance.length }));
 		dataDistance.setData(distance, new NDSize(new int[] { 1, distance.length }), new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o rychlosti */
-		DataArray dataSpeed = block.createDataArray("kiv.zcu.cz_data_array_speed_" + UUID.randomUUID().toString(), "antMessage", DataType.Double,
+		DataArray dataSpeed = block.createDataArray("speed" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, speed.length }));
 		dataSpeed.setData(speed, new NDSize(new int[] { 1, speed.length }), new NDSize(2, 0));
 

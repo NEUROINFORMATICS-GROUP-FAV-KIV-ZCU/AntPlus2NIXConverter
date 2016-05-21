@@ -1,7 +1,5 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
-import java.util.UUID;
-
 import org.g_node.nix.*;
 
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
@@ -17,6 +15,8 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
 public class AntMuscleOxygenMonitor implements INixFile{
 
 	/** Aributy tridy **/
+	private static int index = 0;
+	
 	private double[] saturatedHemoglPerc;
 	private double[] hemoglobinConcentrate;
 	private OdMLData metaData;
@@ -36,6 +36,7 @@ public class AntMuscleOxygenMonitor implements INixFile{
 		this.saturatedHemoglPerc = saturatedHemoglPerc;
 		this.hemoglobinConcentrate = hemoglobinConcentrate;
 		this.metaData = metaData;
+		index++;
 	}
 
 	/**
@@ -47,21 +48,21 @@ public class AntMuscleOxygenMonitor implements INixFile{
 	@Override
 	public void fillNixFile(File nixFile) {
 
-		Block block = nixFile.createBlock("kiv.zcu.cz_block_" + UUID.randomUUID().toString(), "recording");
+		Block block = nixFile.createBlock("recording" + index, "recording");
 
-		block.createSource("kiv.zcu.cz_source_muscleOxygenMonitor_" + UUID.randomUUID().toString(), "antMessage");
+		block.createSource("muscleOxygenMonitor" + index, "antMessage");
 
 		/* Pridani metadat do bloku */
 		block.setMetadata(metaData.createSectionNix(nixFile));
 
 		/* Naplneni dataArray daty o hemoglobinu v procentech */
-		DataArray dataSaturatedHemoglPerc = block.createDataArray("kiv.zcu.cz_data_array_saturatedHemogPerc_" + UUID.randomUUID().toString(), "antMessage", DataType.Double,
+		DataArray dataSaturatedHemoglPerc = block.createDataArray("saturatedHemoglPerc" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, saturatedHemoglPerc.length }));
 		dataSaturatedHemoglPerc.setData(saturatedHemoglPerc, new NDSize(new int[] { 1, saturatedHemoglPerc.length }),
 				new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o koncentraci hemoglobinu */
-		DataArray dataHemoglobinConcentrate = block.createDataArray("kiv.zcu.cz_data_array_hemoglobinConcentrate_" + UUID.randomUUID().toString(), "antMessage", DataType.Double,
+		DataArray dataHemoglobinConcentrate = block.createDataArray("hemoglobinConcentr" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, hemoglobinConcentrate.length }));
 		dataHemoglobinConcentrate.setData(hemoglobinConcentrate,
 				new NDSize(new int[] { 1, hemoglobinConcentrate.length }), new NDSize(2, 0));

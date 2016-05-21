@@ -1,6 +1,5 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
-import java.util.UUID;
 
 import org.g_node.nix.*;
 
@@ -17,6 +16,8 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
 public class AntWeightScale implements INixFile{
 
 	/** Aributy tridy **/
+	private static int index = 0;
+	
 	private int[] weight;
 	private OdMLData metaData;
 
@@ -33,7 +34,7 @@ public class AntWeightScale implements INixFile{
 
 		this.weight = weight;
 		this.metaData = metaData;
-
+		index++;
 	}
 
 	/**
@@ -45,15 +46,15 @@ public class AntWeightScale implements INixFile{
 	@Override
 	public void fillNixFile(File nixFile) {
 
-		Block block = nixFile.createBlock("kiv.zcu.cz_block_" + UUID.randomUUID().toString(), "recording");
+		Block block = nixFile.createBlock("recording" + index, "recording");
 
-		block.createSource("kiv.zcu.cz_source_weightScale_" + UUID.randomUUID().toString(), "antMessage");
+		block.createSource("weightScale" + index, "antMessage");
 
 		/* Pridani metadat do bloku */
 		block.setMetadata(metaData.createSectionNix(nixFile));
 
 		/* Naplneni dataArray daty o vaze */
-		DataArray dataWeight = block.createDataArray("kiv.zcu.cz_data_array_weight_" + UUID.randomUUID().toString(), "antMessage", DataType.Int32,
+		DataArray dataWeight = block.createDataArray("weight" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, weight.length }));
 		dataWeight.setData(weight, new NDSize(new int[] { 1, weight.length }), new NDSize(2, 0));
 
