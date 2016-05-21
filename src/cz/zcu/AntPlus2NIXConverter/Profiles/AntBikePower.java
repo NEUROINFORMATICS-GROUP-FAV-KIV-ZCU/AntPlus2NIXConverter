@@ -19,7 +19,7 @@ public class AntBikePower implements INixFile {
 	/** Aributy tridy **/
 	private static int index = 0;
 	
-	private double[] powera;
+	private double[] power;
 
 	private OdMLData metaData;
 
