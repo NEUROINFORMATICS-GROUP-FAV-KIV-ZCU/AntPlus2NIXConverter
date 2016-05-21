@@ -1,6 +1,5 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
-import java.util.UUID;
 
 import org.g_node.nix.*;
 
@@ -18,6 +17,7 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
 public class AntBikeSpeed implements INixFile{
 
 	/** Aributy tridy **/
+	private static int index = 0;
 
 	private int[] cumWheelRew;
 	private int[] lastSpEvTime;
@@ -40,7 +40,7 @@ public class AntBikeSpeed implements INixFile{
 		this.cumWheelRew = cumWheelRew;
 		this.lastSpEvTime = latSpEvTime;
 		this.metaData = metaData;
-
+		index++;
 	}
 
 	/**
@@ -52,20 +52,20 @@ public class AntBikeSpeed implements INixFile{
 	@Override
 	public void fillNixFile(File nixFile) {
 
-		Block block = nixFile.createBlock("kiv.zcu.cz_block_" + UUID.randomUUID().toString(), "recording");
+		Block block = nixFile.createBlock("recording" + index, "recording");
 
-		block.createSource("kiv.zcu.cz_source_bikeSpeed_" + UUID.randomUUID().toString(), "antMessage");
+		block.createSource("bikeSpeed" + index, "antMessage");
 
 		/* Pridani metadat do bloku */
 		block.setMetadata(metaData.createSectionNix(nixFile));
 
 		/* Naplneni dataArray daty o case */
-		DataArray dataArrayLatSpEvTime = block.createDataArray("kiv.zcu.cz_data_array_lastSpEvTime_" + UUID.randomUUID().toString(), "antMessage", DataType.Int32,
+		DataArray dataArrayLatSpEvTime = block.createDataArray("LatSpEvTime" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, lastSpEvTime.length }));
 		dataArrayLatSpEvTime.setData(lastSpEvTime, new NDSize(new int[] { 1, lastSpEvTime.length }), new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o otaceni kola */
-		DataArray dataArrayCumWheelRew = block.createDataArray("kiv.zcu.cz_data_array_cumWheelRew_" + UUID.randomUUID().toString(), "antMessage", DataType.Int32,
+		DataArray dataArrayCumWheelRew = block.createDataArray("CumWheelRew" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, cumWheelRew.length }));
 		dataArrayCumWheelRew.setData(cumWheelRew, new NDSize(new int[] { 1, cumWheelRew.length }), new NDSize(2, 0));
 		

@@ -3,8 +3,6 @@ package cz.zcu.AntPlus2NIXConverter.Profiles;
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
 import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
 
-import java.util.UUID;
-
 import org.g_node.nix.*;
 
 /**
@@ -19,6 +17,8 @@ import org.g_node.nix.*;
 public class AntHeartRate implements INixFile{
 
 	/** Aributy tridy **/
+	private static int index = 0;
+	
 	private int[] heartBeatCounter;
 	private int[] computedHeartRate;
 	private double[] timeOfPreviousHeartBeat;
@@ -44,7 +44,7 @@ public class AntHeartRate implements INixFile{
 		this.computedHeartRate = computedHeartRate;
 		this.timeOfPreviousHeartBeat = timeOfPreviousHeartBeat;
 		this.metaData = metaData;
-
+		index++;
 	}
 
 	/**
@@ -56,27 +56,27 @@ public class AntHeartRate implements INixFile{
 	@Override
 	public void fillNixFile(File nixFile){
 		
-		Block block = nixFile.createBlock("kiv.zcu.cz_block_" + UUID.randomUUID().toString(), "recording");
+		Block block = nixFile.createBlock("recording" + index, "recording");
 
-		block.createSource("kiv.zcu.cz_source_heartRate_" + UUID.randomUUID().toString(), "antMessage");
+		block.createSource("heartRate" + index, "antMessage");
 
 		/* Pridani metadat do bloku */
 		block.setMetadata(metaData.createSectionNix(nixFile));
 
 		/* Naplneni dataArray daty o tlukotu srdce */
-		DataArray dataHeartBeatCounter = block.createDataArray("kiv.zcu.cz_data_array_heartBeatCount_" + UUID.randomUUID().toString(), "antMessage", DataType.Int32,
+		DataArray dataHeartBeatCounter = block.createDataArray("heartBeatCount" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, heartBeatCounter.length }));
 		dataHeartBeatCounter.setData(heartBeatCounter, new NDSize(new int[] { 1, heartBeatCounter.length }),
 				new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o vypoctech */
-		DataArray dataComputedHeartRate = block.createDataArray("kiv.zcu.cz_data_array_computedHeartRate_" + UUID.randomUUID().toString(), "antMessage", DataType.Int32,
+		DataArray dataComputedHeartRate = block.createDataArray("comluptedHeartRate" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, computedHeartRate.length }));
 		dataComputedHeartRate.setData(computedHeartRate, new NDSize(new int[] { 1, computedHeartRate.length }),
 				new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o case prechoziho tepu */
-		DataArray dataTimeOfPreviousHeartBeat = block.createDataArray("kiv.zcu.cz_data_array_timeOfPreviousHeartBeat_" + UUID.randomUUID().toString(), "antMessage",
+		DataArray dataTimeOfPreviousHeartBeat = block.createDataArray("timeOfPreviousHeartBeat" + index, "antMessage",
 				DataType.Double, new NDSize(new int[] { 1, timeOfPreviousHeartBeat.length }));
 		dataTimeOfPreviousHeartBeat.setData(timeOfPreviousHeartBeat,
 				new NDSize(new int[] { 1, timeOfPreviousHeartBeat.length }), new NDSize(2, 0));

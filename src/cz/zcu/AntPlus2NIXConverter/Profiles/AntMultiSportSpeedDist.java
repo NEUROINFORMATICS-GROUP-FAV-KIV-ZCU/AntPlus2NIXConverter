@@ -1,7 +1,5 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
-import java.util.UUID;
-
 import org.g_node.nix.*;
 
 import cz.zcu.AntPlus2NIXConverter.Data.OdMLData;
@@ -17,6 +15,8 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
 public class AntMultiSportSpeedDist implements INixFile{
 
 	/** Aributy tridy **/
+	private static int index = 0;
+	
 	private double[] timeStamp;
 	private double[] distance;
 	private OdMLData metaData;
@@ -37,6 +37,7 @@ public class AntMultiSportSpeedDist implements INixFile{
 		this.timeStamp = timeStamp;
 		this.distance = distance;
 		this.metaData = metaData;
+		index++;
 	}
 
 	/**
@@ -48,20 +49,20 @@ public class AntMultiSportSpeedDist implements INixFile{
 	@Override
 	public void fillNixFile(File nixFile) {
 
-		Block block = nixFile.createBlock("kiv.zcu.cz_block_" + UUID.randomUUID().toString(), "recording");
+		Block block = nixFile.createBlock("recording" + index, "recording");
 
-		block.createSource("kiv.zcu.cz_source_multiSportSpeedDist_" + UUID.randomUUID().toString(), "antMessage");
+		block.createSource("multiSportSpeedDist" + index, "antMessage");
 		
 		/* Pridani metadat do bloku */
 		block.setMetadata(metaData.createSectionNix(nixFile));
 		
 		/* Naplneni dataArray daty o case */
-		DataArray dataTime = block.createDataArray("kiv.zcu.cz_data_array_dataTime_" + UUID.randomUUID().toString(), "antMessage", DataType.Double,
+		DataArray dataTime = block.createDataArray("dataTime" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, timeStamp.length }));
 		dataTime.setData(timeStamp, new NDSize(new int[] { 1, timeStamp.length }), new NDSize(2, 0));
 		
 		/* Naplneni dataArray daty o vzdalenosti */
-		DataArray dataDistance = block.createDataArray("kiv.zcu.cz_data_array_dataDistance_" + UUID.randomUUID().toString(), "antMessage", DataType.Double,
+		DataArray dataDistance = block.createDataArray("dataDistance" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, distance.length }));
 		dataDistance.setData(distance, new NDSize(new int[] { 1, distance.length }), new NDSize(2, 0));
 		

@@ -1,5 +1,8 @@
 package cz.zcu.AntPlus2NIXConverter.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.g_node.nix.File;
 import org.g_node.nix.Section;
 import org.g_node.nix.Value;
@@ -16,7 +19,7 @@ public class OdMLData {
 
 	private int deviceName;
 	private int deviceType;
-	private int deviceState;
+	private String[] deviceState;
 	private int deviceNumber;
 	private int batteryStatus;
 	private int signalStrength;
@@ -47,7 +50,7 @@ public class OdMLData {
 	 * @param prodInfo
 	 *            Info
 	 */
-	public OdMLData(int deviceName, int deviceType, int deviceState, int deviceNumber, int batteryStatus,
+	public OdMLData(int deviceName, int deviceType, String[] deviceState, int deviceNumber, int batteryStatus,
 			int signalStenght, int manIdentifacation, int manSpecData, int prodInfo) {
 		setDeviceName(deviceName);
 		setDeviceNumber(deviceNumber);
@@ -60,13 +63,21 @@ public class OdMLData {
 		setProdInfo(prodInfo);
 
 	}
+	
+	private List<Value> convertArray(String[] deviceState){
+		ArrayList<Value> deviceStateList = new ArrayList<>();
+		for(int i = 0; i < deviceState.length; i++){
+			deviceStateList.add(new Value(deviceState[i]));
+		}
+		return deviceStateList;
+	}
 
 	public Section createSectionNix(File file){
 		
 		Section section = file.createSection("AntMetaData", "metadata");
 		section.createProperty("deviceName", new Value(getDeviceName()));
 		section.createProperty("deviceType", new Value(getDeviceType()));
-		section.createProperty("deviceState", new Value(getDeviceState()));
+		section.createProperty("deviceState", convertArray(getDeviceState()));
 		section.createProperty("deviceNumber", new Value(getDeviceNumber()));
 		section.createProperty("batteryStatus", new Value(getBatteryStatus()));
 		section.createProperty("signalStrength", new Value(getSignalStrength()));
@@ -135,11 +146,11 @@ public class OdMLData {
 		this.deviceType = deviceType;
 	}
 
-	public int getDeviceState() {
+	public String[] getDeviceState() {
 		return deviceState;
 	}
 
-	public void setDeviceState(int deviceState) {
+	public void setDeviceState(String[] deviceState) {
 		this.deviceState = deviceState;
 	}
 

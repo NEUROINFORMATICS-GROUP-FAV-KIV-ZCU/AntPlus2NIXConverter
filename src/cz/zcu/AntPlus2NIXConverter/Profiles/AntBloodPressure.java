@@ -1,7 +1,6 @@
 package cz.zcu.AntPlus2NIXConverter.Profiles;
 
 import java.util.GregorianCalendar;
-import java.util.UUID;
 
 import org.g_node.nix.*;
 
@@ -18,6 +17,8 @@ import cz.zcu.AntPlus2NIXConverter.Interface.INixFile;
 public class AntBloodPressure implements INixFile{
 
 	/** Aributy tridy **/
+	private static int index = 0;
+	
 	private int[] systolic;
 	private int[] diastolic;
 	private int[] heartRate;
@@ -48,7 +49,7 @@ public class AntBloodPressure implements INixFile{
 		this.heartRate = heartRate;
 		this.timeStamp = timeStamp;
 		this.metaData = metaData;
-
+		index++;
 	}
 
 	/**
@@ -74,30 +75,30 @@ public class AntBloodPressure implements INixFile{
 
 		byte[] timeStampConv = convertTimeStamp();
 
-		Block block = nixFile.createBlock("kiv.zcu.cz_block_" + UUID.randomUUID().toString(), "recording");
+		Block block = nixFile.createBlock("recording" + index, "recording");
 
-		block.createSource("kiv.zcu.cz_source_bloodPressure_" + UUID.randomUUID().toString(), "antMessage");
+		block.createSource("bloodPressure" + index, "antMessage");
 
 		/* Pridani metadat do bloku */
 		block.setMetadata(metaData.createSectionNix(nixFile));
 
 		/* Naplneni dataArray daty o systolickem tlaku */
-		DataArray dataSystolic = block.createDataArray("kiv.zcu.cz_data_array_systolicBloodPress_" + UUID.randomUUID().toString(), "antMessage", DataType.Int32,
+		DataArray dataSystolic = block.createDataArray("systolicBloodPress" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, systolic.length }));
 		dataSystolic.setData(systolic, new NDSize(new int[] { 1, systolic.length }), new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o diastolickem tlaku */
-		DataArray dataDiastolic = block.createDataArray("kiv.zcu.cz_data_array_diastolicBloodPress_" + UUID.randomUUID().toString(), "antMessage", DataType.Int32,
+		DataArray dataDiastolic = block.createDataArray("diastolicBloodPress" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, diastolic.length }));
 		dataDiastolic.setData(diastolic, new NDSize(new int[] { 1, systolic.length }), new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o srdecni cinnosti */
-		DataArray dataHeartRate = block.createDataArray("kiv.zcu.cz_data_array_heartRate_" + UUID.randomUUID().toString(), "antMessage", DataType.Int32,
+		DataArray dataHeartRate = block.createDataArray("heartRate" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, heartRate.length }));
 		dataHeartRate.setData(heartRate, new NDSize(new int[] { 1, heartRate.length }), new NDSize(2, 0));
 
 		/* Naplneni dataArray daty o case */
-		DataArray dataTime = block.createDataArray("kiv.zcu.cz_data_array_timeStamp_" + UUID.randomUUID().toString(), "antMessage", DataType.Int16,
+		DataArray dataTime = block.createDataArray("timeStamp" + index, "antMessage", DataType.Int16,
 				new NDSize(new int[] { 1, timeStampConv.length }));
 		dataTime.setData(timeStampConv, new NDSize(new int[] { 1, timeStampConv.length }), new NDSize(2, 0));
 
