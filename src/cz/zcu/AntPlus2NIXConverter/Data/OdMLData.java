@@ -17,8 +17,8 @@ public class OdMLData {
 
 	/** Atributy tridy **/
 
-	private int deviceName;
-	private int deviceType;
+	private String deviceName;
+	private String deviceType;
 	private String[] deviceState;
 	private int deviceNumber;
 	private int batteryStatus;
@@ -50,7 +50,7 @@ public class OdMLData {
 	 * @param prodInfo
 	 *            Info
 	 */
-	public OdMLData(int deviceName, int deviceType, String[] deviceState, int deviceNumber, int batteryStatus,
+	public OdMLData(String deviceName, String deviceType, String[] deviceState, int deviceNumber, int batteryStatus,
 			int signalStenght, int manIdentifacation, int[] manSpecData, int prodInfo) {
 		setDeviceName(deviceName);
 		setDeviceNumber(deviceNumber);
@@ -98,11 +98,11 @@ public class OdMLData {
 	
 	/******* Getry a Setry *********/ 
 	
-	public int getDeviceName() {
+	public String getDeviceName() {
 		return deviceName;
 	}
 
-	public void setDeviceName(int deviceName) {
+	public void setDeviceName(String deviceName) {
 		this.deviceName = deviceName;
 	}
 
@@ -146,11 +146,11 @@ public class OdMLData {
 		this.prodInfo = prodInfo;
 	}
 
-	public int getDeviceType() {
+	public String getDeviceType() {
 		return deviceType;
 	}
 
-	public void setDeviceType(int deviceType) {
+	public void setDeviceType(String deviceType) {
 		this.deviceType = deviceType;
 	}
 
