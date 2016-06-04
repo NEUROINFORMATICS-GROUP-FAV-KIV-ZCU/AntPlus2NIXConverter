@@ -53,8 +53,8 @@ public class AntMultiSportSpeedDist implements INixFile{
 
 		block.createSource("multiSportSpeedDist" + index, "antMessage");
 		
-		/* Pridani metadat do bloku */
-		block.setMetadata(metaData.createSectionNix(nixFile));
+		/* Pridani metadat do souboru */
+		metaData.createSectionNix(nixFile);
 		
 		/* Naplneni dataArray daty o case */
 		DataArray dataTime = block.createDataArray("dataTime" + index, "antMessage", DataType.Double,

@@ -79,8 +79,8 @@ public class AntBloodPressure implements INixFile{
 
 		block.createSource("bloodPressure" + index, "antMessage");
 
-		/* Pridani metadat do bloku */
-		block.setMetadata(metaData.createSectionNix(nixFile));
+		/* Pridani metadat do souboru */
+		metaData.createSectionNix(nixFile);
 
 		/* Naplneni dataArray daty o systolickem tlaku */
 		DataArray dataSystolic = block.createDataArray("systolicBloodPress" + index, "antMessage", DataType.Int32,

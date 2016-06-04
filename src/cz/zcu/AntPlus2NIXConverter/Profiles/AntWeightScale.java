@@ -50,8 +50,8 @@ public class AntWeightScale implements INixFile{
 
 		block.createSource("weightScale" + index, "antMessage");
 
-		/* Pridani metadat do bloku */
-		block.setMetadata(metaData.createSectionNix(nixFile));
+		/* Pridani metadat do souboru */
+		metaData.createSectionNix(nixFile);
 
 		/* Naplneni dataArray daty o vaze */
 		DataArray dataWeight = block.createDataArray("weight" + index, "antMessage", DataType.Int32,

@@ -56,9 +56,9 @@ public class AntBikeSpeed implements INixFile{
 
 		block.createSource("bikeSpeed" + index, "antMessage");
 
-		/* Pridani metadat do bloku */
-		block.setMetadata(metaData.createSectionNix(nixFile));
-
+		/* Pridani metadat do souboru */
+		metaData.createSectionNix(nixFile);
+		
 		/* Naplneni dataArray daty o case */
 		DataArray dataArrayLatSpEvTime = block.createDataArray("LatSpEvTime" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, lastSpEvTime.length }));

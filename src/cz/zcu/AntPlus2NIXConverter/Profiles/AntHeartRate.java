@@ -60,8 +60,8 @@ public class AntHeartRate implements INixFile{
 
 		block.createSource("heartRate" + index, "antMessage");
 
-		/* Pridani metadat do bloku */
-		block.setMetadata(metaData.createSectionNix(nixFile));
+		/* Pridani metadat do souboru */
+		metaData.createSectionNix(nixFile);
 
 		/* Naplneni dataArray daty o tlukotu srdce */
 		DataArray dataHeartBeatCounter = block.createDataArray("heartBeatCount" + index, "antMessage", DataType.Int32,
@@ -83,6 +83,12 @@ public class AntHeartRate implements INixFile{
 	}
 
 	
+	public static void main(String[] args) {
+		OdMLData metaData = new OdMLData("", "", new String[1], 0, 0, 0, 0, new int[1], 0);
+		AntHeartRate heartRate = new AntHeartRate(new int[1], new int[1], new double[1], metaData);
+		File nixFile = File.open("nixFile.h5", FileMode.Overwrite);
+		heartRate.fillNixFile(nixFile);
+	}
 	/***** Getry a Setry ****/
 	
 	public int[] getHeartBeatCounter() {

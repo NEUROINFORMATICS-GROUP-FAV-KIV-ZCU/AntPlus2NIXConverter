@@ -53,8 +53,8 @@ public class AntBikePower implements INixFile {
 
 		block.createSource("bikePower" + index, "antMessage");
 
-		/* Pridani metadat do bloku */
-		block.setMetadata(metaData.createSectionNix(nixFile));
+		/* Pridani metadat do souboru */
+		metaData.createSectionNix(nixFile);
 
 		/* Naplneni dataArray daty o vykonu */
 		DataArray dataArrayBikePower = block.createDataArray("powerOnly" + index, "antMessage", DataType.Double,

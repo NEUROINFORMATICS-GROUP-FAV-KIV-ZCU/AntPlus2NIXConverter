@@ -92,8 +92,8 @@ public class OdMLData {
 		section.createProperty("manufacturerIdentification", new Value(getManIdentification()));
 		section.createProperty("manufacturerSpecificData", convertIntArray(getManSpecData()));
 		section.createProperty("productInfo", new Value(getProdInfo()));
-		return section;
 
+		return section;
 	}
 	
 	/******* Getry a Setry *********/ 
