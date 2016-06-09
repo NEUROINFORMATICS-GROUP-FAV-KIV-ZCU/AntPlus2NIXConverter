@@ -87,21 +87,25 @@ public class AntLightElectricVehicle implements INixFile {
 		DataArray dataBatStatus = block.createDataArray("batStatus" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, batStatus.length }));
 		dataBatStatus.setData(batStatus, new NDSize(new int[] { 1, batStatus.length }), new NDSize(2, 0));
+		dataBatStatus.setLabel("Battery status (units not available)");
 
 		/* Naplneni dataArray daty o modu */
 		DataArray dataMode = block.createDataArray("mode" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, mode.length }));
 		dataMode.setData(mode, new NDSize(new int[] { 1, mode.length }), new NDSize(2, 0));
+		dataMode.setLabel("Supported Modes & Current Travel Mode (units not available");
 
 		/* Naplneni dataArray daty o rychlosti */
 		DataArray dataSpeedDistance = block.createDataArray("speedDistance" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, speedDistance.length }));
 		dataSpeedDistance.setData(speedDistance, new NDSize(new int[] { 1, speedDistance.length }), new NDSize(2, 0));
+		dataSpeedDistance.setLabel("Speed & Distance (units not available)");
 
 		/* Naplneni dataArray daty systrmu a zarizeni */
 		DataArray dataSysGearState = block.createDataArray("sysGearState" + index, "antMessage", DataType.Int16,
 				new NDSize(new int[] { 1, speedDistance.length }));
 		dataSysGearState.setData(sysGearStateB, new NDSize(new int[] { 1, sysGearState.length }), new NDSize(2, 0));
+		dataSysGearState.setLabel("System & Gear State (units not available)");
 
 	}
 

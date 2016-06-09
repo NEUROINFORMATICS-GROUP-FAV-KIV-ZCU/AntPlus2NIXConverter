@@ -60,6 +60,7 @@ public class AntBikePower implements INixFile {
 		DataArray dataArrayBikePower = block.createDataArray("powerOnly" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, power.length }));
 		dataArrayBikePower.setData(power, new NDSize(new int[] { 1, power.length }), new NDSize(2, 0));		
+		dataArrayBikePower.setLabel("Watts");
 		
 	}
 	

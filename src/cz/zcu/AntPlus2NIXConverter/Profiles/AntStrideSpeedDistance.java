@@ -64,16 +64,20 @@ public class AntStrideSpeedDistance implements INixFile{
 		DataArray dataStrideCount = block.createDataArray("strideCount" + index, "antMessage", DataType.Int64,
 				new NDSize(new int[] { 1, strideCount.length }));
 		dataStrideCount.setData(strideCount, new NDSize(new int[] { 1, strideCount.length }), new NDSize(2, 0));
+		dataStrideCount.setLabel("Strides");
 
 		/* Naplneni dataArray daty o vzdalenosti */
 		DataArray dataDistance = block.createDataArray("distance" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, distance.length }));
 		dataDistance.setData(distance, new NDSize(new int[] { 1, distance.length }), new NDSize(2, 0));
+		dataDistance.setLabel("Meters");
+		dataDistance.setUnit("m");
 
 		/* Naplneni dataArray daty o rychlosti */
 		DataArray dataSpeed = block.createDataArray("speed" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, speed.length }));
 		dataSpeed.setData(speed, new NDSize(new int[] { 1, speed.length }), new NDSize(2, 0));
+		dataSpeed.setLabel("Meters/second");
 
 	}
 

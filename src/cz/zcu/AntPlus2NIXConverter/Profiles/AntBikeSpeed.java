@@ -63,11 +63,13 @@ public class AntBikeSpeed implements INixFile{
 		DataArray dataArrayLatSpEvTime = block.createDataArray("LatSpEvTime" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, lastSpEvTime.length }));
 		dataArrayLatSpEvTime.setData(lastSpEvTime, new NDSize(new int[] { 1, lastSpEvTime.length }), new NDSize(2, 0));
+		dataArrayLatSpEvTime.setLabel("Latest Speed Event Time (units not available)");
 
 		/* Naplneni dataArray daty o otaceni kola */
 		DataArray dataArrayCumWheelRew = block.createDataArray("CumWheelRew" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, cumWheelRew.length }));
 		dataArrayCumWheelRew.setData(cumWheelRew, new NDSize(new int[] { 1, cumWheelRew.length }), new NDSize(2, 0));
+		dataArrayCumWheelRew.setLabel("Cumulative Wheel Revolutions (Events)");
 		
 	}
 
