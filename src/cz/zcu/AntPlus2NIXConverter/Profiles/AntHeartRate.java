@@ -80,15 +80,9 @@ public class AntHeartRate implements INixFile{
 				DataType.Double, new NDSize(new int[] { 1, timeOfPreviousHeartBeat.length }));
 		dataTimeOfPreviousHeartBeat.setData(timeOfPreviousHeartBeat,
 				new NDSize(new int[] { 1, timeOfPreviousHeartBeat.length }), new NDSize(2, 0));
+		
 	}
 
-	
-	public static void main(String[] args) {
-		OdMLData metaData = new OdMLData("", "", new String[1], 0, 0, 0, 0, new int[1], 0);
-		AntHeartRate heartRate = new AntHeartRate(new int[1], new int[1], new double[1], metaData);
-		File nixFile = File.open("nixFile.h5", FileMode.Overwrite);
-		heartRate.fillNixFile(nixFile);
-	}
 	/***** Getry a Setry ****/
 	
 	public int[] getHeartBeatCounter() {
