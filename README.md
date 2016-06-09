@@ -7,10 +7,11 @@ The library for storing data from ANT+ profiles (https://www.thisisant.com/devel
 ###Build project and generate jars :
 You must download pom.xml and get it to root folder of project
 ```
-> mvn package shade:shade -DnixIncludePath=<path>
+> mvn package shade:shade -DnixIncludePath=<path> -DjavacppPath=<path>
 
 ```
-nixIncludePath should contain jar file with nix.  
+nixIncludePath should contain jar file with nix. 
+javacppPath should contain javacpp jar file. 
 In tagret directory you can find jar file, which you can add to your project.
 
 # NIX library on Windows
