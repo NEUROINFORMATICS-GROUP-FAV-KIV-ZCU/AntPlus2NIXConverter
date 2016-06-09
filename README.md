@@ -1,6 +1,17 @@
 # AntPlus2NIXConverter
 The library for storing data from ANT+ profiles (https://www.thisisant.com/developer/ant-plus/ant-plus-basics) into the NIX data format  (https://github.com/G-Node/nix)
 
+
+# Buil AntPlus2NIXConverter library
+
+###Build project and generate jars :
+You must download pom.xml and get it to root folder of project
+```
+> mvn package shade:shade -DnixIncludePath=<path>
+
+```
+In tagret directory you can find jar file, which you can add to your project.
+
 # NIX library on Windows
 
 Software requirements:
@@ -33,6 +44,7 @@ Run C:\deps\nixenv.bat
 ```
 
 In nix-java/tagret directory you can find jar file, which you can add to your project.
+
 
 # NIX on Linux (Ubuntu)
 
