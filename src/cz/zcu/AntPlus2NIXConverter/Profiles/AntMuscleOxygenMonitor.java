@@ -60,12 +60,14 @@ public class AntMuscleOxygenMonitor implements INixFile{
 				new NDSize(new int[] { 1, saturatedHemoglPerc.length }));
 		dataSaturatedHemoglPerc.setData(saturatedHemoglPerc, new NDSize(new int[] { 1, saturatedHemoglPerc.length }),
 				new NDSize(2, 0));
+		dataSaturatedHemoglPerc.setLabel("Percent");
 
 		/* Naplneni dataArray daty o koncentraci hemoglobinu */
 		DataArray dataHemoglobinConcentrate = block.createDataArray("hemoglobinConcentr" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, hemoglobinConcentrate.length }));
 		dataHemoglobinConcentrate.setData(hemoglobinConcentrate,
 				new NDSize(new int[] { 1, hemoglobinConcentrate.length }), new NDSize(2, 0));
+		dataHemoglobinConcentrate.setLabel("Hemoglobin unit (Gram/deciliter");
 	}
 
 	/** Getry a setry **/

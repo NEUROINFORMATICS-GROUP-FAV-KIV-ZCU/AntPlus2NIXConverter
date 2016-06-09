@@ -86,21 +86,25 @@ public class AntBloodPressure implements INixFile{
 		DataArray dataSystolic = block.createDataArray("systolicBloodPress" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, systolic.length }));
 		dataSystolic.setData(systolic, new NDSize(new int[] { 1, systolic.length }), new NDSize(2, 0));
+		dataSystolic.setLabel("Milimeter of mercury");
 
 		/* Naplneni dataArray daty o diastolickem tlaku */
 		DataArray dataDiastolic = block.createDataArray("diastolicBloodPress" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, diastolic.length }));
 		dataDiastolic.setData(diastolic, new NDSize(new int[] { 1, systolic.length }), new NDSize(2, 0));
+		dataDiastolic.setLabel("Milimeter of mercury");
 
 		/* Naplneni dataArray daty o srdecni cinnosti */
 		DataArray dataHeartRate = block.createDataArray("heartRate" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, heartRate.length }));
 		dataHeartRate.setData(heartRate, new NDSize(new int[] { 1, heartRate.length }), new NDSize(2, 0));
+		dataHeartRate.setLabel("Beats per minute");
 
 		/* Naplneni dataArray daty o case */
 		DataArray dataTime = block.createDataArray("timeStamp" + index, "antMessage", DataType.Int16,
 				new NDSize(new int[] { 1, timeStampConv.length }));
 		dataTime.setData(timeStampConv, new NDSize(new int[] { 1, timeStampConv.length }), new NDSize(2, 0));
+		dataTime.setLabel("Date");
 
 	}
 

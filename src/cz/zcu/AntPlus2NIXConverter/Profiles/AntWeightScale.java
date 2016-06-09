@@ -57,6 +57,8 @@ public class AntWeightScale implements INixFile{
 		DataArray dataWeight = block.createDataArray("weight" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, weight.length }));
 		dataWeight.setData(weight, new NDSize(new int[] { 1, weight.length }), new NDSize(2, 0));
+		dataWeight.setLabel("Kilograms");
+		dataWeight.setUnit("kg");
 
 	}
 

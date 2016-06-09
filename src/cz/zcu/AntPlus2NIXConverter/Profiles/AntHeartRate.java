@@ -7,7 +7,7 @@ import org.g_node.nix.*;
 
 /**
  * @Trida pro zpracovani informaci o ANT plus profilu HeartRate Profil pro
- * vytvoreni­ HDF5 souboru ze zarizeni Heart Rate.
+ * vytvoreniï¿½ HDF5 souboru ze zarizeni Heart Rate.
  * @author Vaclav Janoch, Filip
  * Kupilik, Petr Tobias
  * 
@@ -68,27 +68,25 @@ public class AntHeartRate implements INixFile{
 				new NDSize(new int[] { 1, heartBeatCounter.length }));
 		dataHeartBeatCounter.setData(heartBeatCounter, new NDSize(new int[] { 1, heartBeatCounter.length }),
 				new NDSize(2, 0));
+		dataHeartBeatCounter.setLabel("Beats per minute");
 
 		/* Naplneni dataArray daty o vypoctech */
 		DataArray dataComputedHeartRate = block.createDataArray("comluptedHeartRate" + index, "antMessage", DataType.Int32,
 				new NDSize(new int[] { 1, computedHeartRate.length }));
 		dataComputedHeartRate.setData(computedHeartRate, new NDSize(new int[] { 1, computedHeartRate.length }),
 				new NDSize(2, 0));
+		dataComputedHeartRate.setLabel("Number of beats");
 
 		/* Naplneni dataArray daty o case prechoziho tepu */
 		DataArray dataTimeOfPreviousHeartBeat = block.createDataArray("timeOfPreviousHeartBeat" + index, "antMessage",
 				DataType.Double, new NDSize(new int[] { 1, timeOfPreviousHeartBeat.length }));
 		dataTimeOfPreviousHeartBeat.setData(timeOfPreviousHeartBeat,
 				new NDSize(new int[] { 1, timeOfPreviousHeartBeat.length }), new NDSize(2, 0));
+		dataTimeOfPreviousHeartBeat.setLabel("Seconds");
+		dataTimeOfPreviousHeartBeat.setLabel("s");
+		
 	}
 
-	
-	public static void main(String[] args) {
-		OdMLData metaData = new OdMLData("", "", new String[1], 0, 0, 0, 0, new int[1], 0);
-		AntHeartRate heartRate = new AntHeartRate(new int[1], new int[1], new double[1], metaData);
-		File nixFile = File.open("nixFile.h5", FileMode.Overwrite);
-		heartRate.fillNixFile(nixFile);
-	}
 	/***** Getry a Setry ****/
 	
 	public int[] getHeartBeatCounter() {

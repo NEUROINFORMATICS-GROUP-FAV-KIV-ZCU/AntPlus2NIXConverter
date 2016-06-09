@@ -60,11 +60,15 @@ public class AntMultiSportSpeedDist implements INixFile{
 		DataArray dataTime = block.createDataArray("dataTime" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, timeStamp.length }));
 		dataTime.setData(timeStamp, new NDSize(new int[] { 1, timeStamp.length }), new NDSize(2, 0));
+		dataTime.setLabel("Seconds");
+		dataTime.setUnit("s");
 		
 		/* Naplneni dataArray daty o vzdalenosti */
 		DataArray dataDistance = block.createDataArray("dataDistance" + index, "antMessage", DataType.Double,
 				new NDSize(new int[] { 1, distance.length }));
 		dataDistance.setData(distance, new NDSize(new int[] { 1, distance.length }), new NDSize(2, 0));
+		dataDistance.setLabel("Meters");
+		dataDistance.setUnit("m");
 		
 	}
 
