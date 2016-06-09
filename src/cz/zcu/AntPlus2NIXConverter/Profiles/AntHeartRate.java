@@ -83,7 +83,7 @@ public class AntHeartRate implements INixFile{
 		dataTimeOfPreviousHeartBeat.setData(timeOfPreviousHeartBeat,
 				new NDSize(new int[] { 1, timeOfPreviousHeartBeat.length }), new NDSize(2, 0));
 		dataTimeOfPreviousHeartBeat.setLabel("Seconds");
-		dataTimeOfPreviousHeartBeat.setLabel("s");
+		dataTimeOfPreviousHeartBeat.setUnit("s");
 		
 	}
 
