@@ -8,12 +8,13 @@
 	<packaging>jar</packaging>
 	<description>Ant+ to Nix convert library</description>
 
-	 <properties>
-        <nixIncludePath>${basedir}\lib\nix-java.jar</nixIncludePath>
-        <javacppPath>${basedir}\lib\javacpp.jar</javacppPath>
-        </properties>
+	<properties>
+		<nixIncludePath>${basedir}/lib/nix-windows-x86.jar</nixIncludePath>
+	</properties>
 
 	<dependencies>
+	
+		
 		<dependency>
 			<groupId>NIX</groupId>
 			<artifactId>NIX</artifactId>
@@ -21,13 +22,13 @@
 			<version>1.0</version>
 			<systemPath>${nixIncludePath}</systemPath>
 		</dependency>
+
 		<dependency>
-			<groupId>javacpp</groupId>
+			<groupId>org.bytedeco</groupId>
 			<artifactId>javacpp</artifactId>
-			<scope>system</scope>
-			<version>1.0</version>
-			<systemPath>${javacppPath}</systemPath>
+			<version>1.2.1</version>
 		</dependency>
+
 	</dependencies>
 
 	<build>
